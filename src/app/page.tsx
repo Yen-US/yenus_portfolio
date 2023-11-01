@@ -6,7 +6,7 @@ import Experience from '@/components/experience-content'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-14 space-y-6">
+    <main className="flex min-h-screen flex-col items-center justify-between p-14 space-y-32">
       <NavBar></NavBar>
       <Welcome></Welcome>
       <Experience></Experience>

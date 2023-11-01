@@ -2,11 +2,11 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -16,6 +16,12 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        "radial-gradient-dark":
+          "radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%)",
+        "radial-gradient":
+          "radial-gradient(ellipse at bottom, #fffad1 0%, #f7f9ff 100%)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -65,12 +71,17 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        star: {
+          from: { transform: 'translateY(0)' },
+          to: { transform: 'translateY(-3000px)' },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'star' : 'star 60s linear infinite'
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
