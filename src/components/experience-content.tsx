@@ -5,6 +5,8 @@ import H4Typo from "./typography/h4-typo"
 import STypo from "./typography/small-typo"
 import MutedTypo from "./typography/muted-typo"
 import { Badge } from "@/components/ui/badge"
+import ReactSVG from "./icons/react-icon"
+import NodeSVG from "./icons/node-icon"
 
 
 export default function Experience() {
@@ -19,11 +21,12 @@ export default function Experience() {
                     <MutedTypo>2023 / 09 - Current</MutedTypo>
                 </article>
                 <aside className="space-x-2">
-                    <Badge>NodeJS</Badge>
-                    <Badge>React</Badge>
+                    <Badge className="p-0.5 group/react hover:bg-transparent hover:animate-pulse" title="Node"><NodeSVG fill="dark:fill-black fill-white group-hover/react:fill-[#8CC84B]"/></Badge>
+                    <Badge className="p-0.5 group/react hover:bg-transparent hover:animate-pulse" title="React"><ReactSVG fill="dark:fill-black fill-white group-hover/react:fill-[#00d8ff]"/></Badge>
                     <Badge>Java</Badge>
                     <Badge>Linux</Badge>
                     <Badge>Nginx</Badge>
+                    <Badge>Express</Badge>
                 </aside>
             </section>
             <Separator></Separator>
