@@ -22,9 +22,9 @@ import JiraSVG from "./icons/jira-icon"
 
 export default function Experience() {
     return (
-        <section className="text-xl flex flex-col w-2/3 space-y-6 mb-2">
+        <section className="text-xl flex flex-col lg:w-2/3 space-y-6 mb-2">
             <H2Typo>Experience</H2Typo>
-            <section className="px-10 flex justify-between items-center">
+            <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2"> 
                     <H3Typo>Junior Software Tools Engineer</H3Typo>
                     <H4Typo>Wind River</H4Typo>
@@ -43,7 +43,7 @@ export default function Experience() {
                 </aside>
             </section>
             <Separator></Separator>
-            <section className="px-10 flex justify-between items-center">
+            <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2">
                     <H3Typo>Software Developer Internship</H3Typo>
                     <H4Typo>Wind River</H4Typo>
@@ -59,7 +59,7 @@ export default function Experience() {
                 </aside>
             </section>
             <Separator></Separator>
-            <section className="px-10 flex justify-between items-center">
+            <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2">
                     <H3Typo>Technical Support Engineer <br /> Solutions Development Engineer</H3Typo>
                     <H4Typo>Onereach.ai</H4Typo>
@@ -75,7 +75,7 @@ export default function Experience() {
                 </aside>
             </section>
             <Separator></Separator>
-            <section className="px-10 flex justify-between items-center">
+            <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2">
                     <H3Typo>Technical Support Engineer</H3Typo>
                     <H4Typo>Wrike</H4Typo>
@@ -90,7 +90,7 @@ export default function Experience() {
                 </aside>
             </section>
             <Separator></Separator>
-            <section className="px-10 flex justify-between items-center">
+            <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2">
                     <H3Typo>Tier 2, Technical Support Engineer, SME</H3Typo>
                     <H4Typo>DocuSign (Sitel)</H4Typo>
@@ -105,7 +105,7 @@ export default function Experience() {
                 </aside>
             </section>
             <Separator></Separator>
-            <section className="px-10 flex justify-between items-center">
+            <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2">
                     <H3Typo>Customer Service Advisor</H3Typo>
                     <H4Typo>Santander bank (Concentrix)</H4Typo>

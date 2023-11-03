@@ -7,9 +7,9 @@ import MutedTypo from "./typography/muted-typo"
 
 export default function Education() {
     return (
-        <section className="text-xl flex flex-col w-2/3 space-y-6">
+        <section className="text-xl flex flex-col lg:w-2/3 space-y-6">
             <H2Typo>Education</H2Typo>
-            <section className="px-10 flex justify-between">
+            <section className="px-2 lg:px-10 flex justify-between">
                 <article>
                     <H3Typo>Computer Engineer</H3Typo>
                     <H4Typo>Technological Institute of Costa Rica (TEC)</H4Typo>
@@ -18,21 +18,21 @@ export default function Education() {
                 </article>
             </section>
             <Separator></Separator>
-            <article className="pl-10">
+            <article className="px-2 lg:px-10">
                 <H3Typo>Python I</H3Typo>
                 <H4Typo>SITEL Technical Academy</H4Typo>
                 <STypo>Heredia, Costa Rica</STypo>
                 <MutedTypo>2021 - 2021</MutedTypo>
             </article>
             <Separator></Separator>
-            <article className="pl-10">
+            <article className="px-2 lg:px-10">
                 <H3Typo>CISCO IT Essentials</H3Typo>
                 <H4Typo>SITEL Technical Academy</H4Typo>
                 <STypo>Heredia, Costa Rica</STypo>
                 <MutedTypo>2021 - 2021</MutedTypo>
             </article>
             <Separator></Separator>
-            <article className="pl-10">
+            <article className="px-2 lg:px-10">
                 <H3Typo>High School Diploma</H3Typo>
                 <H4Typo>Santa Maria De Guadalupe School</H4Typo>
                 <STypo>Heredia, Costa Rica</STypo>

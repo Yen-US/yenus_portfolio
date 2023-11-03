@@ -22,7 +22,7 @@ import TSSVG from "./icons/ts-icon"
 
 export default function Skills() {
     return (
-        <section className="text-xl flex flex-col w-2/3 space-y-6 mb-2">
+        <section className="text-xl flex flex-col lg:w-2/3 space-y-6 mb-2">
             <H2Typo>Skills</H2Typo>
             <H3Typo>Technical Skills</H3Typo>
             <article className="flex items-center flex-wrap justify-center mb-4">

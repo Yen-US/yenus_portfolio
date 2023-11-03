@@ -24,9 +24,9 @@ export default function Welcome() {
                         <H2Typo>Yenson Umaña Solano - YenUS</H2Typo>
                     </article>
                     <aside className="flex items-center flex-wrap justify-end">
-                        <Button size="icon" className="p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="Linkedin" asChild><Link href="https://www.linkedin.com/in/yenson-umaña-solano-a47949175/" target="_blank" rel="noopener"><LinkedinSVG/> </Link></Button>
-                        <Button size="icon" className="p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="GitHub" asChild><Link href="https://github.com/Yen-US" target="_blank" rel="noopener"><GitSVG/></Link></Button>
-                        <Button size="icon" className="p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="Download CV/Resume"asChild><Link href="./api"><CVSVG/></Link></Button>
+                        <Button size="icon" className="p-0 lg:p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="Linkedin" asChild><Link href="https://www.linkedin.com/in/yenson-umaña-solano-a47949175/" target="_blank" rel="noopener"><LinkedinSVG/> </Link></Button>
+                        <Button size="icon" className="p-0 lg:p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="GitHub" asChild><Link href="https://github.com/Yen-US" target="_blank" rel="noopener"><GitSVG/></Link></Button>
+                        <Button size="icon" className="p-0 lg:p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="Download CV/Resume"asChild><Link href="./api"><CVSVG/></Link></Button>
                     </aside>
                 </section>
                 <H1Typo>Junior Full Stack Software Engineer</H1Typo>

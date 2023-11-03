@@ -10,8 +10,8 @@ const JSSVG: React.FC<SvgComponentProps> = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     aria-label="JavaScript"
     viewBox="-40 -45 600 600"
-    width={props.size ?? '2vw'}
-    height={props.size ?? '2vw'}
+    width={props.size ?? '3vh'}
+    height={props.size ?? '3vh'}
     {...props}
   >
     <rect width={512} height={512} className='dark:fill-black fill-white group-hover/icons:fill-[#f7df1e]' rx="15%" />

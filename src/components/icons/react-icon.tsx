@@ -9,8 +9,8 @@ const ReactSVG: React.FC<SvgComponentProps> = (props) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlSpace="preserve"
-        width={props.size ?? '2vw'}
-        height={props.size ?? '2vw'}
+        width={props.size ?? '3vh'}
+        height={props.size ?? '3vh'}
         style={{
             fillRule: "evenodd",
             clipRule: "evenodd",
