@@ -16,6 +16,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-geist-sans)'],
+      },
       backgroundImage: {
         "radial-gradient-dark":
           "radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%)",

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { GeistSans } from 'geist/font'
 
 interface TypoProps {
     children?: ReactNode;
@@ -6,7 +7,7 @@ interface TypoProps {
 
 export default function H1Typo({ children }: TypoProps) {
     return (
-        <h1 className="scroll-m-20 text-3xl font-bold tracking-tight lg:text-5xl">
+        <h1 className="scroll-m-20 text-3xl tracking-tight lg:text-5xl font-medium">
             {children}
         </h1>
     );

@@ -6,7 +6,7 @@ interface TypoProps {
 
 export default function MutedTypo({ children }: TypoProps) {
     return (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground font-thin">
             {children}
         </p>
     );

@@ -6,7 +6,7 @@ interface TypoProps {
 
 export default function STypo({ children }: TypoProps) {
     return (
-        <small className="text-sm font-medium leading-none">
+        <small className="text-sm font-lightleading-none">
             {children}
         </small>
     );
