@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import StarField from "@/components/star-field";
+import Footer from '@/components/footer'
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -31,12 +32,11 @@ export default function RootLayout({
         <StarField>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="dark"
             disableTransitionOnChange
           >
             {children}
-
+            <Footer></Footer>
           </ThemeProvider>
         </StarField>
       </body>
