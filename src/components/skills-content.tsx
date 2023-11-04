@@ -16,6 +16,7 @@ import SQLSVG from "./icons/sql-icon"
 import APISVG from "./icons/api-icon"
 import JiraSVG from "./icons/jira-icon"
 import TSSVG from "./icons/ts-icon"
+import DockerSVG from "./icons/docker-icon"
 
 export default function Skills() {
     return (
@@ -37,6 +38,7 @@ export default function Skills() {
                 <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="SQL"><SQLSVG /></Badge>
                 <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="API"><APISVG /></Badge>
                 <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Jira & Project Management"><JiraSVG /></Badge>
+                <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Docker"><DockerSVG /></Badge>
             </article>
             <Separator />
             <H3Typo>Soft Skills</H3Typo>

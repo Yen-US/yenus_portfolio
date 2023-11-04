@@ -18,6 +18,7 @@ import PSSQLSVG from "./icons/postgre-icon"
 import SQLSVG from "./icons/sql-icon"
 import APISVG from "./icons/api-icon"
 import JiraSVG from "./icons/jira-icon"
+import DockerSVG from "./icons/docker-icon"
 
 
 export default function Experience() {
@@ -40,6 +41,7 @@ export default function Experience() {
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Java"><JavaSVG /></Badge>
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Linux"><LinuxSVG /></Badge>
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Nginx"><NginxSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Docker"><DockerSVG /></Badge>
                 </aside>
             </section>
             <Separator></Separator>
@@ -56,6 +58,8 @@ export default function Experience() {
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="React"><ReactSVG /></Badge>
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Linux"><LinuxSVG /></Badge>
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Nginx"><NginxSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Docker"><DockerSVG /></Badge>
+
                 </aside>
             </section>
             <Separator></Separator>
