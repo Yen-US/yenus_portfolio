@@ -23,7 +23,7 @@ import DockerSVG from "./icons/docker-icon"
 
 export default function Experience() {
     return (
-        <section className="text-xl flex flex-col lg:w-2/3 space-y-6 mb-2">
+        <section className="text-xl flex flex-col lg:w-1/2 space-y-6 mb-2">
             <H2Typo>Experience</H2Typo>
             <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2"> 
