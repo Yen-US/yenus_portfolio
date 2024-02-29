@@ -6,7 +6,7 @@ import { GeistSans } from 'geist/font/sans'
 
 export const metadata: Metadata = {
   title: "YenUS Portfolio",
-  description: "Made with Next.js, Tailwind CSS, and TypeScript by YenUS", 
+  description: "Yenson Umaña, Full Stack developer, site made with Next.js, Tailwind CSS, and TypeScript by YenUS", 
 };
 
 export default function RootLayout({
