@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import StarField from "@/components/star-field";
-import Footer from '@/components/footer'
-import { GeistSans } from 'geist/font'
+import { GeistSans } from 'geist/font/sans'
 
 export const metadata: Metadata = {
   title: "YenUS Portfolio",
   description: "Made with Next.js, Tailwind CSS, and TypeScript by YenUS", 
 };
-
-export const geist = GeistSans
 
 export default function RootLayout({
   children,
