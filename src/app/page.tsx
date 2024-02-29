@@ -4,6 +4,7 @@ import Education from '@/components/education-content'
 import Experience from '@/components/experience-content'
 import Skills from '@/components/skills-content'
 import Footer from '@/components/footer'
+import Projects from '@/components/projects-content'
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <NavBar></NavBar>
       <Welcome></Welcome>
       <Experience></Experience>
+      <Projects></Projects>
       <Skills></Skills>
       <Education></Education>
       <Footer></Footer>
