@@ -68,7 +68,7 @@ export default function Experience() {
                     <H3Typo>Technical Support Engineer <br /> Solutions Development Engineer</H3Typo>
                     <H4Typo>Onereach.ai</H4Typo>
                     <STypo>US (Remote)</STypo>
-                    <MutedTypo>2022 / 10 - 2023 / 04 </MutedTypo>
+                    <MutedTypo>2022 / 10 - 2024 / 02 </MutedTypo>
                 </article>
                 <aside className="flex items-center flex-wrap justify-end">
                     <Badge className="hover:animate-pulse m-1" title="Adaptability">Adaptability</Badge>
