@@ -29,7 +29,7 @@ export default function Welcome() {
                         <Button size="icon" className="p-0 lg:p-1.5 group/icons hover:bg-transparent rounded-lg m-1" title="Download CV/Resume"asChild><Link href="./api"><CVSVG/></Link></Button>
                     </aside>
                 </section>
-                <H1Typo>Jr Full Stack Software Engineer</H1Typo>
+                <H1Typo>Full Stack Software Engineer</H1Typo>
             </article>
         </section>
     )
