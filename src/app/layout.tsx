@@ -26,21 +26,16 @@ export default function RootLayout({
           GeistSans.variable
         )}
       >
-        <div className="fixed top-0 z-[-2] h-screen w-full bg-[radial-gradient(circle_600px_at_50%_45%,#C9EBFF,transparent)] dark:bg-neutral-950 dark:bg-[radial-gradient(ellipse_80%_100%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-            
-        
-        
+        <StarField>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             disableTransitionOnChange
           >
             {children}
-            
             <Footer></Footer>
-            
           </ThemeProvider>
-        
+          </StarField>
       </body>
     </html>
   );
