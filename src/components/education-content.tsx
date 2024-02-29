@@ -7,7 +7,7 @@ import MutedTypo from "./typography/muted-typo"
 
 export default function Education() {
     return (
-        <section className="text-xl flex flex-col lg:w-2/3 space-y-6">
+        <section className="text-xl flex flex-col lg:w-1/2 space-y-6">
             <H2Typo>Education</H2Typo>
             <section className="px-2 lg:px-10 flex justify-between">
                 <article>

@@ -3,6 +3,7 @@ import Welcome from '@/components/welcome-content'
 import Education from '@/components/education-content'
 import Experience from '@/components/experience-content'
 import Skills from '@/components/skills-content'
+import Footer from '@/components/footer'
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Experience></Experience>
       <Skills></Skills>
       <Education></Education>
+      <Footer></Footer>
     </main>
   )
 }
