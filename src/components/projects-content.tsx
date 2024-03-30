@@ -14,6 +14,22 @@ export default function Projects() {
             <H2Typo>Side Projects</H2Typo>
             <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2"> 
+                    <LinkTypo>YUS Automation</LinkTypo>
+                    <H4Typo>Full Stack Project</H4Typo>
+                    <STypo>CEO and Founder of my Professional services bussiness focused on IA processes and business automations.</STypo>
+                    <MutedTypo>2024 / 03 - Current</MutedTypo>
+                </article>
+                <aside className="flex items-center flex-wrap justify-end">
+                    <Badge className="hover:animate-pulse m-1" title="Automations">Automations</Badge>
+                    <Badge className="hover:animate-pulse m-1" title="Simple chat">v1.0</Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="React"><ReactSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Nextjs"><NextSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="TypeScript"><TSSVG /></Badge>
+
+                </aside>
+            </section>
+            <section className="px-2 lg:px-10 flex justify-between items-center">
+                <article className="w-1/2"> 
                     <LinkTypo>Notery.ai</LinkTypo>
                     <H4Typo>Full Stack Project</H4Typo>
                     <STypo>Personal chat GPT like tool, focused on improving notes, Open source and completely free.</STypo>
@@ -28,6 +44,7 @@ export default function Projects() {
 
                 </aside>
             </section>
+            
         </section>
     )
 }

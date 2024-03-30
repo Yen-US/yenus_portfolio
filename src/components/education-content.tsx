@@ -14,7 +14,7 @@ export default function Education() {
                     <H3Typo>Computer Engineer</H3Typo>
                     <H4Typo>Technological Institute of Costa Rica (TEC)</H4Typo>
                     <STypo>Cartago, Costa Rica</STypo>
-                    <MutedTypo>2018 - In progress</MutedTypo>
+                    <MutedTypo>2026</MutedTypo>
                 </article>
             </section>
             <Separator></Separator>
