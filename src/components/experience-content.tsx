@@ -19,6 +19,7 @@ import SQLSVG from "./icons/sql-icon"
 import APISVG from "./icons/api-icon"
 import JiraSVG from "./icons/jira-icon"
 import DockerSVG from "./icons/docker-icon"
+import XsTypo from "./typography/xs-typo"
 
 
 export default function Experience() {
@@ -30,6 +31,7 @@ export default function Experience() {
                     <H3Typo>Junior Software Tools Engineer</H3Typo>
                     <H4Typo>Wind River</H4Typo>
                     <STypo>San Jose, Costa Rica (WFH)</STypo>
+                    <XsTypo>Solo software engineer for the Engineering Excellence department, I design, develop and mantain software solutions for the department, including but not limited to automations, documentation websites, project management tools, billing dashboards.</XsTypo>
                     <MutedTypo>2023 / 09 - Current</MutedTypo>
                 </article>
                 <aside className="flex items-center flex-wrap justify-end">
@@ -50,6 +52,7 @@ export default function Experience() {
                     <H3Typo>Software Developer Internship</H3Typo>
                     <H4Typo>Wind River</H4Typo>
                     <STypo>San Jose, Costa Rica (WFH)</STypo>
+                    <XsTypo>Created, improved and mantained the first scaled agile framework documentation website in the whole company, implemented visibility features such as analytics, and a blog where all users can share their agile ideas and experiences.</XsTypo>
                     <MutedTypo>2023 / 04 - 2023 / 09 </MutedTypo>
                 </article>
                 <aside className="flex items-center flex-wrap justify-end">
@@ -68,6 +71,7 @@ export default function Experience() {
                     <H3Typo>Technical Support Engineer <br /> Solutions Development Engineer</H3Typo>
                     <H4Typo>Onereach.ai</H4Typo>
                     <STypo>US (Remote)</STypo>
+                    <XsTypo>Executed a multidisciplinary role, leading, automating, and supporting the OneReach.ai support team, strived to provide top level support while taking advantage of my development skills and automated several repetitive tasks such as first responses, automatic triaging, after hours notifications and more.</XsTypo>
                     <MutedTypo>2022 / 10 - 2024 / 04 </MutedTypo>
                 </article>
                 <aside className="flex items-center flex-wrap justify-end">
