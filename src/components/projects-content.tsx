@@ -15,6 +15,50 @@ export default function Projects() {
       <H2Typo>Side Projects</H2Typo>
       <section className="px-2 lg:px-10 flex justify-between items-center">
         <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
+          <Link href="https://losticoscustoms.tech/" target="blank">
+            <img src="/LTC.webp" className="w-80 hidden dark:block" />
+            <img src="/LTC.webp" className="w-80 dark:hidden" />
+          </Link>
+        </button>
+        <article className="w-1/2">
+          <LinkTypo href="https://losticoscustoms.tech/">
+            Los Ticos Customs Store
+          </LinkTypo>
+          <H4Typo>Full Stack Project</H4Typo>
+          <STypo>
+            CEO and Founder of a Costa Rican custom tech store.
+          </STypo>
+          <MutedTypo>2024 / 04 - Current</MutedTypo>
+        </article>
+        <aside className="flex items-center flex-wrap justify-end">
+        <Badge className="hover:animate-pulse m-1" title="Simple chat">
+            Marketplace
+          </Badge>
+          <Badge className="hover:animate-pulse m-1" title="Simple chat">
+            v1.0
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="React"
+          >
+            <ReactSVG />
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="Nextjs"
+          >
+            <NextSVG />
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="TypeScript"
+          >
+            <TSSVG />
+          </Badge>
+        </aside>
+      </section>
+      <section className="px-2 lg:px-10 flex justify-between items-center">
+        <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
           <Link href="https://ecoticocrafts.com/" target="blank">
             <img src="/ecoticolanding.webp" className="w-80 hidden dark:block" />
             <img src="/ecoticolanding.webp" className="w-80 dark:hidden" />
