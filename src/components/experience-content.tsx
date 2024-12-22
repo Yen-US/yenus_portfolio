@@ -28,11 +28,32 @@ export default function Experience() {
             <H2Typo>Experience</H2Typo>
             <section className="px-2 lg:px-10 flex justify-between items-center">
                 <article className="w-1/2"> 
+                    <H3Typo>Full Stack Software Engineer</H3Typo>
+                    <H4Typo>Wind River</H4Typo>
+                    <STypo>San Jose, Costa Rica (WFH)</STypo>
+                    <XsTypo>I design and develop systems on the cloud using Angular, Vue.js, JavaScript, Golang, Next.js, Java, and utilize Postgres databases. I leverage technologies like Docker, REST APIs, GRPC, Protobuf, Pulsar, and GraphQL. A key part of my role involves exploring AI methodologies to enhance software components. I ensure system performance through testing and maintenance, collaborating in an Agile environment.</XsTypo>
+                    <MutedTypo>2024 / 10 - Current</MutedTypo>
+                </article>
+                <aside className="flex items-center flex-wrap justify-end">
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="React"><ReactSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Angular"><AngularSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Node"><NodeSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Express"><ExpressSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="PostgreSQL"><PSSQLSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Java"><JavaSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Linux"><LinuxSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Nginx"><NginxSVG /></Badge>
+                    <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="Docker"><DockerSVG /></Badge>
+                </aside>
+            </section>
+            <Separator></Separator>
+            <section className="px-2 lg:px-10 flex justify-between items-center">
+                <article className="w-1/2"> 
                     <H3Typo>Junior Software Tools Engineer</H3Typo>
                     <H4Typo>Wind River</H4Typo>
                     <STypo>San Jose, Costa Rica (WFH)</STypo>
                     <XsTypo>Solo software engineer for the Engineering Excellence department, I design, develop and mantain software solutions for the department, including but not limited to automations, documentation websites, project management tools, billing dashboards.</XsTypo>
-                    <MutedTypo>2023 / 09 - Current</MutedTypo>
+                    <MutedTypo>2023 / 09 - 2024 / 10</MutedTypo>
                 </article>
                 <aside className="flex items-center flex-wrap justify-end">
                     <Badge className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1" title="React"><ReactSVG /></Badge>
