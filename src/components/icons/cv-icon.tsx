@@ -1,4 +1,3 @@
-import { IdCardIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 
 interface SvgComponentProps {

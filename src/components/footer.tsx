@@ -1,8 +1,13 @@
 export default function Footer() {
-    return (
-
-        <footer className="mb-14 lg:mb-2 grid text-center">
-            Made with ❤
-        </footer>
-    )
+  return (
+    <footer className="py-8 text-center text-sm text-muted-foreground">
+      <p>
+        Made with{" "}
+        <span className="text-red-500" aria-label="love">
+          &hearts;
+        </span>{" "}
+        by YenUS &middot; {new Date().getFullYear()}
+      </p>
+    </footer>
+  );
 }

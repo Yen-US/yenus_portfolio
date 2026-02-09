@@ -1,16 +1,30 @@
-import { ModeToggle } from '@/components/mode-toggle'
-import H4Typo from './typography/h4-typo'
-import Image from 'next/image'
+"use client";
+
+import { ModeToggle } from "@/components/mode-toggle";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function NavBar() {
-    return (
-        <header className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-            <aside className="fixed bottom-0 left-0 flex h-10 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none lg:rounded-full lg:border lg:bg-gray-200 lg:p-0 lg:dark:bg-zinc-800/30">
-                <Image src='/logo.png' width={100} height={100} className="w-12 h-12 lg:w-16 lg:h-16" alt="YenUS logo" title='YenUS logo'></Image>
-            </aside>
-            <aside className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-1 pt-2 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-2 lg:dark:bg-zinc-800/30">
-                <ModeToggle></ModeToggle>
-            </aside>
-        </header>
-    )
+  return (
+    <motion.header
+      className="sticky top-0 z-40 w-full"
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 100, damping: 15 }}
+    >
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div className="flex items-center gap-2">
+          <Image
+            src="/logo.png"
+            width={100}
+            height={100}
+            className="h-10 w-10"
+            alt="YenUS logo"
+            title="YenUS logo"
+          />
+        </div>
+        <ModeToggle />
+      </div>
+    </motion.header>
+  );
 }
