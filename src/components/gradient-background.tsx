@@ -1,21 +1,10 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-
 export function GradientBackground() {
-  const { scrollYProgress } = useScroll();
-
-  const hueShift = useTransform(scrollYProgress, [0, 0.5, 1], [220, 260, 300]);
-
   return (
-    <motion.div
+    <div
       className="fixed inset-0 z-[-2]"
       aria-hidden="true"
-      style={
-        {
-          "--hue": hueShift,
-        } as React.CSSProperties
-      }
     >
       {/* Light mode */}
       <div className="absolute inset-0 bg-gray-50 dark:hidden" />
@@ -38,6 +27,6 @@ export function GradientBackground() {
           backgroundSize: "400% 400%",
         }}
       />
-    </motion.div>
+    </div>
   );
 }
