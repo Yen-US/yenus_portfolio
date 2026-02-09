@@ -66,6 +66,11 @@ export function GlassCard({
 
   const glowX = useTransform(mouseX, [0, 1], [0, 100]);
   const glowY = useTransform(mouseY, [0, 1], [0, 100]);
+  const glowBackground = useTransform(
+    [glowX, glowY],
+    ([x, y]) =>
+      `radial-gradient(circle at ${x}% ${y}%, rgba(120, 119, 198, 0.15), transparent 60%)`
+  );
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (!ref.current || !shouldTilt) return;
@@ -106,11 +111,7 @@ export function GlassCard({
         <motion.div
           className="pointer-events-none absolute -inset-px z-0 rounded-2xl transition-opacity duration-300"
           style={{
-            background: useTransform(
-              [glowX, glowY],
-              ([x, y]) =>
-                `radial-gradient(circle at ${x}% ${y}%, rgba(120, 119, 198, 0.15), transparent 60%)`
-            ),
+            background: glowBackground,
             opacity: isHovered ? 1 : 0,
           }}
           aria-hidden="true"
