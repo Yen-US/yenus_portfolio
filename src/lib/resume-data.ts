@@ -164,49 +164,49 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    name: "Los Ticos Customs Store",
-    url: "https://losticoscustoms.tech/",
-    type: "Full Stack Project",
-    description: "CEO and Founder of a Costa Rican custom tech store.",
-    period: "2024 / 04 - Current",
-    image: "/LTC.webp",
-    tags: ["Marketplace", "v1.0"],
-    techBadges: ["React", "Next.js", "TypeScript"],
-  },
-  {
-    name: "Eco Tico Crafts Store",
-    url: "https://ecoticocrafts.com/",
-    type: "Full Stack Project",
-    description:
-      "CEO and Founder of a Costa Rican conservation project for local endangered species.",
-    period: "2024 / 04 - Current",
-    image: "/ecoticolanding.webp",
-    tags: ["Marketplace", "v1.0"],
-    techBadges: ["React", "Next.js", "TypeScript"],
-  },
-  {
     name: "YUS Automation",
     url: "https://yus-automation.vercel.app/",
     type: "Full Stack Project",
     description:
-      "CEO and Founder of a professional services business focused on AI automations processes and business.",
+      "Professional services business focused on AI automations and business processes.",
     period: "2024 / 03 - Current",
     image: "/yus.webp",
     imageDark: "/yus-light.webp",
-    tags: ["Automations", "v1.0"],
-    techBadges: ["React", "Next.js", "TypeScript"],
+    tags: ["Automations", "Services"],
+    techBadges: ["Next.js", "React", "TypeScript"],
   },
   {
-    name: "Notery.ai Simple Chat",
-    url: "https://notery-ai-simple-chat.vercel.app",
-    type: "Full Stack Project",
+    name: "YenUS Chatbot",
+    url: "https://chat.yenus.dev",
+    type: "AI Assistant",
     description:
-      "Personal ChatGPT-like tool, focused on improving notes. Open source and completely free.",
-    period: "2024 / 01 - Current",
-    image: "/notery.webp",
-    imageDark: "/notery-light.webp",
-    tags: ["Simple chat", "v1.0"],
-    techBadges: ["React", "Next.js", "TypeScript"],
+      "Personal extension of the Vercel chatbot with RAG on my data, web search, and image generation for personal use.",
+    period: "Ongoing",
+    image: "/chat.yenus.dev.webp",
+    tags: ["RAG", "Web Search"],
+    techBadges: ["Vercel AI SDK", "OpenAI", "Next.js"],
+  },
+  {
+    name: "Ikido",
+    url: "https://ikido.app",
+    type: "Product Platform",
+    description:
+      "Goal-driven Human OS planning software for building and tracking life systems.",
+    period: "Ongoing",
+    image: "/ikido.app.webp",
+    tags: ["Human OS", "Planning"],
+    techBadges: ["SaaS", "Product Design", "Goals"],
+  },
+  {
+    name: "Memoria Studio",
+    url: "https://memorias.studio",
+    type: "E-commerce Business",
+    description:
+      "Successful AI-generated 3D-printed figurine business created by me.",
+    period: "Ongoing",
+    image: "/memorias.studio.webp",
+    tags: ["3D Printing", "AI"],
+    techBadges: ["E-commerce", "Operations", "Fulfillment"],
   },
 ];
 
@@ -294,7 +294,7 @@ export const education: Education[] = [
     degree: "Computer Engineering (Licentiate)",
     institution: "Tecnologico de Costa Rica",
     location: "Cartago, Costa Rica",
-    period: "In Progress",
-    status: "In Progress",
+    period: "On Hold",
+    status: "On Hold",
   },
 ];

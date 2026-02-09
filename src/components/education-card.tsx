@@ -21,14 +21,17 @@ export function EducationCard() {
           <div key={i} className="border-l-2 border-white/10 pl-3">
             <h3 className="text-sm font-semibold">{edu.degree}</h3>
             <p className="text-xs text-muted-foreground">{edu.institution}</p>
-            <p className="text-xs text-muted-foreground/70">
-              {edu.location}
+            <div className="text-xs text-muted-foreground/70">
+              <span>{edu.location}</span>
               {edu.status && (
-                <Badge variant="outline" className="ml-2 text-[10px] px-1.5 py-0 border-amber-500/30 text-amber-400">
+                <Badge
+                  variant="outline"
+                  className="ml-2 text-[10px] px-1.5 py-0 border-amber-500/30 text-amber-400"
+                >
                   {edu.status}
                 </Badge>
               )}
-            </p>
+            </div>
           </div>
         ))}
       </div>

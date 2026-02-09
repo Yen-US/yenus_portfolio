@@ -152,7 +152,7 @@ export function AiSummaryCard() {
                 {isTyping && (
                   <span className="inline-block w-0.5 h-4 ml-0.5 bg-purple-500 animate-pulse align-middle" />
                 )}
-                {!isTyping && displayedText && "&rdquo;"}
+                {!isTyping && displayedText && '"'}
               </p>
             </motion.div>
           )}

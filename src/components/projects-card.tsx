@@ -19,7 +19,7 @@ export function ProjectsCard() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <FolderGit2 className="h-5 w-5 text-blue-500" />
-        <h2 className="text-xl font-semibold">Projects</h2>
+        <h2 className="text-xl font-semibold">Projects and Business</h2>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

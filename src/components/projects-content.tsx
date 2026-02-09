@@ -15,94 +15,6 @@ export default function Projects() {
       <H2Typo>Side Projects</H2Typo>
       <section className="px-2 lg:px-10 flex justify-between items-center">
         <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
-          <Link href="https://losticoscustoms.tech/" target="blank">
-            <img src="/LTC.webp" className="w-80 hidden dark:block" />
-            <img src="/LTC.webp" className="w-80 dark:hidden" />
-          </Link>
-        </button>
-        <article className="w-1/2">
-          <LinkTypo href="https://losticoscustoms.tech/">
-            Los Ticos Customs Store
-          </LinkTypo>
-          <H4Typo>Full Stack Project</H4Typo>
-          <STypo>
-            CEO and Founder of a Costa Rican custom tech store.
-          </STypo>
-          <MutedTypo>2024 / 04 - Current</MutedTypo>
-        </article>
-        <aside className="flex items-center flex-wrap justify-end">
-        <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            Marketplace
-          </Badge>
-          <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            v1.0
-          </Badge>
-          <Badge
-            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
-            title="React"
-          >
-            <ReactSVG />
-          </Badge>
-          <Badge
-            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
-            title="Nextjs"
-          >
-            <NextSVG />
-          </Badge>
-          <Badge
-            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
-            title="TypeScript"
-          >
-            <TSSVG />
-          </Badge>
-        </aside>
-      </section>
-      <section className="px-2 lg:px-10 flex justify-between items-center">
-        <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
-          <Link href="https://ecoticocrafts.com/" target="blank">
-            <img src="/ecoticolanding.webp" className="w-80 hidden dark:block" />
-            <img src="/ecoticolanding.webp" className="w-80 dark:hidden" />
-          </Link>
-        </button>
-        <article className="w-1/2">
-          <LinkTypo href="https://ecoticocrafts.com/">
-            Eco Tico Crafts Store
-          </LinkTypo>
-          <H4Typo>Full Stack Project</H4Typo>
-          <STypo>
-            CEO and Founder of a Costa Rican conservation project for local endagered species.
-          </STypo>
-          <MutedTypo>2024 / 04 - Current</MutedTypo>
-        </article>
-        <aside className="flex items-center flex-wrap justify-end">
-        <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            Marketplace
-          </Badge>
-          <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            v1.0
-          </Badge>
-          <Badge
-            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
-            title="React"
-          >
-            <ReactSVG />
-          </Badge>
-          <Badge
-            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
-            title="Nextjs"
-          >
-            <NextSVG />
-          </Badge>
-          <Badge
-            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
-            title="TypeScript"
-          >
-            <TSSVG />
-          </Badge>
-        </aside>
-      </section>
-      <section className="px-2 lg:px-10 flex justify-between items-center">
-        <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
           <Link href="https://yus-automation.vercel.app/" target="blank">
             <img src="/yus.webp" className="w-80 hidden dark:block" />
             <img src="/yus-light.webp" className="w-80 dark:hidden" />
@@ -114,8 +26,8 @@ export default function Projects() {
           </LinkTypo>
           <H4Typo>Full Stack Project</H4Typo>
           <STypo>
-            CEO and Founder of a professional services bussiness focused on AI
-            automations processes and business.
+            Professional services business focused on AI automations and business
+            processes.
           </STypo>
           <MutedTypo>2024 / 03 - Current</MutedTypo>
         </article>
@@ -123,8 +35,8 @@ export default function Projects() {
           <Badge className="hover:animate-pulse m-1" title="Automations">
             Automations
           </Badge>
-          <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            v1.0
+          <Badge className="hover:animate-pulse m-1" title="Services">
+            Services
           </Badge>
           <Badge
             className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
@@ -148,28 +60,126 @@ export default function Projects() {
       </section>
       <section className="px-2 lg:px-10 flex justify-between items-center">
         <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
-          <Link href="https://notery-ai-simple-chat.vercel.app" target="blank">
-            <img src="/notery.webp" className="w-80 hidden dark:block" />
-            <img src="/notery-light.webp" className="w-80 dark:hidden" />
+          <Link href="https://chat.yenus.dev" target="blank">
+            <img src="/chat.yenus.dev.webp" className="w-80 hidden dark:block" />
+            <img src="/chat.yenus.dev.webp" className="w-80 dark:hidden" />
           </Link>
         </button>
         <article className="w-1/2">
-          <LinkTypo href="https://notery-ai-simple-chat.vercel.app">
-            Notery.ai Simple chat
+          <LinkTypo href="https://chat.yenus.dev">
+            YenUS Chat
           </LinkTypo>
-          <H4Typo>Full Stack Project</H4Typo>
+          <H4Typo>AI Assistant</H4Typo>
           <STypo>
-            Personal chat GPT like tool, focused on improving notes, Open source
-            and completely free.
+            Personal extension of the Vercel chatbot with RAG on my data, web
+            search, and image generation for personal use.
           </STypo>
-          <MutedTypo>2024 / 01 - Current</MutedTypo>
+          <MutedTypo>Ongoing</MutedTypo>
         </article>
         <aside className="flex items-center flex-wrap justify-end">
-          <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            Simple chat
+          <Badge className="hover:animate-pulse m-1" title="RAG">
+            RAG
           </Badge>
-          <Badge className="hover:animate-pulse m-1" title="Simple chat">
-            v1.0
+          <Badge className="hover:animate-pulse m-1" title="Web Search">
+            Web Search
+          </Badge>
+          <Badge className="hover:animate-pulse m-1" title="Image Gen">
+            Image Gen
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="React"
+          >
+            <ReactSVG />
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="Nextjs"
+          >
+            <NextSVG />
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="TypeScript"
+          >
+            <TSSVG />
+          </Badge>
+        </aside>
+      </section>
+      <section className="px-2 lg:px-10 flex justify-between items-center">
+        <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
+          <Link href="https://ikido.app" target="blank">
+            <img src="/ikido.app.webp" className="w-80 hidden dark:block" />
+            <img src="/ikido.app.webp" className="w-80 dark:hidden" />
+          </Link>
+        </button>
+        <article className="w-1/2">
+          <LinkTypo href="https://ikido.app">
+            Ikido
+          </LinkTypo>
+          <H4Typo>Product Platform</H4Typo>
+          <STypo>
+            Goal-driven Human OS planning software for building and tracking
+            life systems.
+          </STypo>
+          <MutedTypo>Ongoing</MutedTypo>
+        </article>
+        <aside className="flex items-center flex-wrap justify-end">
+          <Badge className="hover:animate-pulse m-1" title="Human OS">
+            Human OS
+          </Badge>
+          <Badge className="hover:animate-pulse m-1" title="Planning">
+            Planning
+          </Badge>
+          <Badge className="hover:animate-pulse m-1" title="Goals">
+            Goals
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="React"
+          >
+            <ReactSVG />
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="Nextjs"
+          >
+            <NextSVG />
+          </Badge>
+          <Badge
+            className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
+            title="TypeScript"
+          >
+            <TSSVG />
+          </Badge>
+        </aside>
+      </section>
+      <section className="px-2 lg:px-10 flex justify-between items-center">
+        <button className="mr-6 hover:animate-zoom-in shadow-image-shadow hidden md:block">
+          <Link href="https://memorias.studio" target="blank">
+            <img src="/memorias.studio.webp" className="w-80 hidden dark:block" />
+            <img src="/memorias.studio.webp" className="w-80 dark:hidden" />
+          </Link>
+        </button>
+        <article className="w-1/2">
+          <LinkTypo href="https://memorias.studio">
+            Memoria Studio
+          </LinkTypo>
+          <H4Typo>E-commerce Business</H4Typo>
+          <STypo>
+            Successful AI-generated 3D-printed figurine business created by me.
+          </STypo>
+          <MutedTypo>Ongoing</MutedTypo>
+        </article>
+        <aside className="flex items-center flex-wrap justify-end">
+          <Badge className="hover:animate-pulse m-1" title="3D Printing">
+            3D Printing
+          </Badge>
+          <Badge className="hover:animate-pulse m-1" title="AI">
+            AI
+          </Badge>
+          <Badge className="hover:animate-pulse m-1" title="E-commerce">
+            E-commerce
           </Badge>
           <Badge
             className="p-0.5 group/icons hover:bg-transparent hover:animate-pulse m-1"
