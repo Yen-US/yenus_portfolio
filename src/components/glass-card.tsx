@@ -23,14 +23,33 @@ export function GlassCard({
 }: GlassCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [supportsHover, setSupportsHover] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    const updateSupport = () => {
+      setSupportsHover(mediaQuery.matches);
+    };
+
+    updateSupport();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateSupport);
+      return () => {
+        mediaQuery.removeEventListener("change", updateSupport);
+      };
+    }
+
+    mediaQuery.addListener(updateSupport);
+
+    return () => {
+      mediaQuery.removeListener(updateSupport);
+    };
   }, []);
 
-  const shouldTilt = tiltEnabled && !isTouchDevice && !prefersReducedMotion;
+  const shouldTilt = tiltEnabled && supportsHover && !prefersReducedMotion;
 
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
