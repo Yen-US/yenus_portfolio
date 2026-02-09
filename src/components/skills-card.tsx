@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { technicalSkills, softSkills } from "@/lib/resume-data";
+import { skills } from "@/lib/resume-data";
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +11,13 @@ import {
 import { Code2 } from "lucide-react";
 import { motion } from "framer-motion";
 
+const categories = [
+  { label: "Languages", items: skills.languages, color: "hover:bg-blue-500/20" },
+  { label: "Frameworks", items: skills.frameworks, color: "hover:bg-purple-500/20" },
+  { label: "Infrastructure & Tools", items: skills.infrastructure, color: "hover:bg-green-500/20" },
+  { label: "Specializations", items: skills.specializations, color: "hover:bg-amber-500/20" },
+];
+
 export function SkillsCard() {
   return (
     <div className="space-y-4">
@@ -19,63 +26,42 @@ export function SkillsCard() {
         <h2 className="text-xl font-semibold">Skills</h2>
       </div>
 
-      <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Technical
-        </p>
-        <TooltipProvider>
-          <div className="flex flex-wrap gap-1.5">
-            {technicalSkills.map((skill, i) => (
-              <Tooltip key={skill}>
-                <TooltipTrigger asChild>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.03 }}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <Badge
-                      variant="secondary"
-                      className="bg-white/10 dark:bg-white/5 cursor-default transition-colors hover:bg-blue-500/20"
-                    >
-                      {skill}
-                    </Badge>
-                  </motion.div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{skill}</p>
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
-        </TooltipProvider>
-      </div>
-
-      <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Soft Skills
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {softSkills.map((skill, i) => (
-            <motion.div
-              key={skill}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.03 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <Badge
-                variant="outline"
-                className="border-white/10 cursor-default transition-colors hover:border-purple-500/30 hover:bg-purple-500/10"
-              >
-                {skill}
-              </Badge>
-            </motion.div>
+      <TooltipProvider>
+        <div className="space-y-3">
+          {categories.map((cat) => (
+            <div key={cat.label}>
+              <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                {cat.label}
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {cat.items.map((skill, i) => (
+                  <Tooltip key={skill}>
+                    <TooltipTrigger asChild>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.03 }}
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <Badge
+                          variant="secondary"
+                          className={`bg-white/10 dark:bg-white/5 cursor-default transition-colors ${cat.color}`}
+                        >
+                          {skill}
+                        </Badge>
+                      </motion.div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{skill}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
-      </div>
+      </TooltipProvider>
     </div>
   );
 }

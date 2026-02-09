@@ -1,22 +1,30 @@
 export const profile = {
   name: "Yenson Umana Solano",
   alias: "YenUS",
-  title: "Full Stack Software Engineer",
+  title: "Full-Stack AI/ML Engineer",
   avatar: "/YenUSPP2.webp",
   location: "Costa Rica",
+  email: "yen21000@gmail.com",
+  website: "yenus.dev",
+  headline: "3 promotions in 2 years | Azure AI-102 & AZ-204 Certified | 5+ years in tech",
   links: {
     linkedin: "https://www.linkedin.com/in/yenus/",
     github: "https://github.com/Yen-US",
     cv: "/api",
+    website: "https://yenus.dev",
   },
 };
 
 export interface Experience {
   role: string;
   company: string;
+  companyNote?: string;
   location: string;
   period: string;
+  tenure?: string;
+  promoted?: boolean;
   description?: string;
+  highlights?: string[];
   techBadges: string[];
   softBadges: string[];
 }
@@ -25,87 +33,113 @@ export const experiences: Experience[] = [
   {
     role: "Full Stack Software Engineer",
     company: "Wind River",
-    location: "San Jose, Costa Rica (WFH)",
-    period: "2024 / 10 - Current",
-    description:
-      "I design and develop systems on the cloud using Angular, Vue.js, JavaScript, Golang, Next.js, Java, and utilize Postgres databases. I leverage technologies like Docker, REST APIs, GRPC, Protobuf, Pulsar, and GraphQL. A key part of my role involves exploring AI methodologies to enhance software components.",
+    location: "San Jose, Costa Rica (Remote)",
+    period: "Oct 2024 – Present",
+    tenure: "2 years 10 months total",
+    promoted: true,
+    highlights: [
+      "Architect and develop cloud-based systems using Angular, Vue.js, Next.js, Golang, and Java with PostgreSQL",
+      "Lead AI integration initiatives, implementing AI methodologies to enhance software components and developer productivity",
+      "Design scalable microservices leveraging Docker, REST APIs, gRPC, Protobuf, Apache Pulsar, and GraphQL",
+      "Drive system reliability through comprehensive testing strategies and performance optimization in Agile",
+    ],
     techBadges: [
-      "React",
       "Angular",
-      "Node",
-      "Express",
-      "PostgreSQL",
+      "Vue.js",
+      "Next.js",
+      "Golang",
       "Java",
-      "Linux",
-      "Nginx",
+      "PostgreSQL",
       "Docker",
+      "gRPC",
+      "GraphQL",
     ],
     softBadges: [],
   },
   {
     role: "Junior Software Tools Engineer",
     company: "Wind River",
-    location: "San Jose, Costa Rica (WFH)",
-    period: "2023 / 09 - 2024 / 10",
-    description:
-      "Solo software engineer for the Engineering Excellence department, I design, develop and maintain software solutions for the department, including automations, documentation websites, project management tools, billing dashboards.",
+    location: "San Jose, Costa Rica (Remote)",
+    period: "Sep 2023 – Oct 2024",
+    promoted: true,
+    highlights: [
+      "Sole engineer for Engineering Excellence, owning end-to-end development of critical internal tools",
+      "Built automation systems, documentation platforms, project management tools, and billing dashboards",
+      "Reduced manual processes and improved team efficiency through custom-built solutions",
+    ],
     techBadges: [
       "React",
       "Angular",
-      "Node",
-      "Express",
+      "Node.js",
       "PostgreSQL",
-      "Java",
-      "Linux",
-      "Nginx",
       "Docker",
+      "Linux",
     ],
     softBadges: [],
   },
   {
-    role: "Software Developer Internship",
+    role: "Software Developer Intern",
     company: "Wind River",
-    location: "San Jose, Costa Rica (WFH)",
-    period: "2023 / 04 - 2023 / 09",
-    description:
-      "Created, improved and maintained the first scaled agile framework documentation website in the whole company, implemented visibility features such as analytics, and a blog.",
+    location: "San Jose, Costa Rica (Remote)",
+    period: "Apr 2023 – Sep 2023",
+    highlights: [
+      "Pioneered the company's first Scaled Agile Framework (SAFe) documentation website",
+      "Implemented analytics and visibility features to track adoption across the organization",
+      "Launched a collaborative blog platform for Agile best practices",
+    ],
     techBadges: ["React", "Linux", "Nginx", "Docker"],
     softBadges: ["Growth Mindset", "Lean-Agile"],
   },
   {
     role: "Technical Support Engineer / Solutions Development Engineer",
-    company: "Onereach.ai",
-    location: "US (Remote)",
-    period: "2022 / 10 - 2024 / 04",
-    description:
-      "Led, automated, and supported the OneReach.ai support team, automated several repetitive tasks such as first responses, automatic triaging, and after hours notifications.",
-    techBadges: ["JavaScript", "NextJS", "SQL"],
+    company: "OneReach.ai",
+    location: "United States (Remote)",
+    period: "Oct 2022 – Apr 2024",
+    tenure: "1 year 6 months",
+    highlights: [
+      "Led multidisciplinary support operations while leveraging dev skills to automate workflows",
+      "Built intelligent automation for first responses, ticket triaging, and after-hours notifications",
+      "Elevated support quality through technical expertise and process optimization",
+    ],
+    techBadges: ["JavaScript", "Next.js", "SQL"],
     softBadges: ["Adaptability", "Time Management"],
   },
   {
     role: "Technical Support Engineer",
     company: "Wrike",
-    location: "Heredia, Costa Rica (WFH)",
-    period: "2022 / 02 - 2023 / 04",
-    description: undefined,
+    location: "Heredia, Costa Rica (Remote)",
+    period: "Feb 2022 – Apr 2023",
+    tenure: "1 year 2 months",
+    highlights: [
+      "Provided expert technical support for enterprise project management software",
+      "Developed deep product knowledge for integrations, workflows, and advanced configurations",
+    ],
     techBadges: ["API", "Jira"],
-    softBadges: ["Work etiquette", "Customer Focus"],
+    softBadges: ["Work Etiquette", "Customer Focus"],
   },
   {
-    role: "Tier 2, Technical Support Engineer, SME",
-    company: "DocuSign (Sitel)",
-    location: "San Jose, Costa Rica (WFH)",
-    period: "2021 / 01 - 2022 / 02",
-    description: undefined,
+    role: "Tier 2 Technical Support Engineer & SME",
+    company: "DocuSign (via Sitel)",
+    location: "San Jose, Costa Rica (Remote)",
+    period: "Jan 2021 – Feb 2022",
+    tenure: "1 year 1 month",
+    promoted: true,
+    highlights: [
+      "Promoted to Tier 2 and recognized as Subject Matter Expert for technical excellence",
+      "Mentored team members and led knowledge-sharing sessions on complex product features",
+    ],
     techBadges: [],
     softBadges: ["Leadership", "Teamwork", "Presentation", "Conflict Resolution"],
   },
   {
     role: "Customer Service Advisor",
-    company: "Santander bank (Concentrix)",
+    company: "Santander Bank (via Concentrix)",
     location: "Heredia, Costa Rica",
-    period: "2020 / 10 - 2021 / 01",
-    description: undefined,
+    period: "Oct 2020 – Jan 2021",
+    tenure: "3 months",
+    highlights: [
+      "Delivered high-quality customer service for banking products, building rapport and resolving inquiries",
+    ],
     techBadges: [],
     softBadges: [
       "Empathy & Rapport",
@@ -137,7 +171,7 @@ export const projects: Project[] = [
     period: "2024 / 04 - Current",
     image: "/LTC.webp",
     tags: ["Marketplace", "v1.0"],
-    techBadges: ["React", "NextJS", "TypeScript"],
+    techBadges: ["React", "Next.js", "TypeScript"],
   },
   {
     name: "Eco Tico Crafts Store",
@@ -148,7 +182,7 @@ export const projects: Project[] = [
     period: "2024 / 04 - Current",
     image: "/ecoticolanding.webp",
     tags: ["Marketplace", "v1.0"],
-    techBadges: ["React", "NextJS", "TypeScript"],
+    techBadges: ["React", "Next.js", "TypeScript"],
   },
   {
     name: "YUS Automation",
@@ -160,7 +194,7 @@ export const projects: Project[] = [
     image: "/yus.webp",
     imageDark: "/yus-light.webp",
     tags: ["Automations", "v1.0"],
-    techBadges: ["React", "NextJS", "TypeScript"],
+    techBadges: ["React", "Next.js", "TypeScript"],
   },
   {
     name: "Notery.ai Simple Chat",
@@ -172,26 +206,48 @@ export const projects: Project[] = [
     image: "/notery.webp",
     imageDark: "/notery-light.webp",
     tags: ["Simple chat", "v1.0"],
-    techBadges: ["React", "NextJS", "TypeScript"],
+    techBadges: ["React", "Next.js", "TypeScript"],
   },
 ];
 
+// Organized by category as in the resume
+export const skills = {
+  languages: [
+    "JavaScript",
+    "TypeScript",
+    "Golang",
+    "Java",
+    "Python",
+  ],
+  frameworks: [
+    "Angular",
+    "Vue.js",
+    "Next.js",
+    "React",
+  ],
+  infrastructure: [
+    "Docker",
+    "PostgreSQL",
+    "REST APIs",
+    "gRPC",
+    "Protobuf",
+    "GraphQL",
+    "Apache Pulsar",
+    "Azure Cloud",
+  ],
+  specializations: [
+    "AI/ML Integration",
+    "Solution Architecture",
+    "Agile/SAFe Methodologies",
+    "Process Automation",
+  ],
+};
+
+// Flat list for backward compat
 export const technicalSkills = [
-  "React",
-  "Angular",
-  "Node",
-  "Express",
-  "PostgreSQL",
-  "Java",
-  "Linux",
-  "Nginx",
-  "JavaScript",
-  "TypeScript",
-  "NextJS",
-  "SQL",
-  "API",
-  "Jira",
-  "Docker",
+  ...skills.languages,
+  ...skills.frameworks,
+  ...skills.infrastructure,
 ];
 
 export const softSkills = [
@@ -199,7 +255,7 @@ export const softSkills = [
   "Lean-Agile",
   "Adaptability",
   "Time Management",
-  "Work etiquette",
+  "Work Etiquette",
   "Customer Focus",
   "Leadership",
   "Teamwork",
@@ -211,36 +267,34 @@ export const softSkills = [
   "Negotiation",
 ];
 
+export interface Certification {
+  name: string;
+  issuer?: string;
+}
+
+export const certifications: Certification[] = [
+  { name: "AI-102: Azure AI Engineer Associate", issuer: "Microsoft" },
+  { name: "AZ-204: Azure Developer Associate", issuer: "Microsoft" },
+  { name: "Agile Foundations" },
+  { name: "Project Management" },
+  { name: "Agile Project Leadership" },
+  { name: "Jira Software" },
+];
+
 export interface Education {
   degree: string;
   institution: string;
   location: string;
   period: string;
+  status?: string;
 }
 
 export const education: Education[] = [
   {
-    degree: "Computer Engineer",
-    institution: "Technological Institute of Costa Rica (TEC)",
+    degree: "Computer Engineering (Licentiate)",
+    institution: "Tecnologico de Costa Rica",
     location: "Cartago, Costa Rica",
-    period: "2026",
-  },
-  {
-    degree: "Python I",
-    institution: "SITEL Technical Academy",
-    location: "Heredia, Costa Rica",
-    period: "2021",
-  },
-  {
-    degree: "CISCO IT Essentials",
-    institution: "SITEL Technical Academy",
-    location: "Heredia, Costa Rica",
-    period: "2021",
-  },
-  {
-    degree: "High School Diploma",
-    institution: "Santa Maria De Guadalupe School",
-    location: "Heredia, Costa Rica",
-    period: "2013 - 2017",
+    period: "In Progress",
+    status: "In Progress",
   },
 ];

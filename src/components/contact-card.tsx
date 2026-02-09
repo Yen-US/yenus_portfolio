@@ -1,12 +1,24 @@
 "use client";
 
 import { profile } from "@/lib/resume-data";
-import { Github, Linkedin, MapPin, FileText } from "lucide-react";
+import { Github, Linkedin, MapPin, FileText, Mail, Globe } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 export function ContactCard() {
   const links = [
+    {
+      icon: Mail,
+      label: profile.email,
+      href: `mailto:${profile.email}`,
+      color: "hover:text-amber-500",
+    },
+    {
+      icon: Globe,
+      label: "Website",
+      href: profile.links.website,
+      color: "hover:text-pink-500",
+    },
     {
       icon: Linkedin,
       label: "LinkedIn",

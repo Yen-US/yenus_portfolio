@@ -2,10 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { experiences } from "@/lib/resume-data";
-import { Briefcase } from "lucide-react";
+import { Briefcase, ArrowUpCircle } from "lucide-react";
 
 export function ExperienceCard() {
-  // Show top 4 most relevant experiences in the card
   const featured = experiences.slice(0, 4);
 
   return (
@@ -23,9 +22,14 @@ export function ExperienceCard() {
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold leading-tight">
-                  {exp.role}
-                </h3>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold leading-tight">
+                    {exp.role}
+                  </h3>
+                  {exp.promoted && (
+                    <span title="Promoted"><ArrowUpCircle className="h-3.5 w-3.5 shrink-0 text-green-500" /></span>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground">{exp.company}</p>
                 <p className="text-xs text-muted-foreground/70">
                   {exp.period}
@@ -33,9 +37,9 @@ export function ExperienceCard() {
               </div>
             </div>
 
-            {exp.description && (
+            {exp.highlights && exp.highlights.length > 0 && (
               <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground line-clamp-2">
-                {exp.description}
+                {exp.highlights[0]}
               </p>
             )}
 
