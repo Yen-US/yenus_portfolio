@@ -14,17 +14,16 @@ export function BentoGrid({ children, className }: BentoGridProps) {
   return (
     <motion.div
       className={cn(
-        "grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-5",
+        "grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-5 lg:gap-6",
         className
       )}
       initial={prefersReducedMotion ? "visible" : "hidden"}
-      animate="visible"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
       variants={{
         hidden: {},
         visible: {
-          transition: {
-            staggerChildren: prefersReducedMotion ? 0 : 0.1,
-          },
+          transition: { staggerChildren: prefersReducedMotion ? 0 : 0.08 },
         },
       }}
     >
@@ -36,8 +35,8 @@ export function BentoGrid({ children, className }: BentoGridProps) {
 interface BentoCardProps {
   children: React.ReactNode;
   className?: string;
-  colSpan?: 1 | 2 | 3;
-  rowSpan?: 1 | 2;
+  colSpan?: 1 | 2 | 3 | 4;
+  rowSpan?: 1 | 2 | 3;
 }
 
 export function BentoCard({
@@ -52,24 +51,26 @@ export function BentoCard({
     1: "md:col-span-1",
     2: "md:col-span-2",
     3: "md:col-span-3",
+    4: "md:col-span-4",
   }[colSpan];
 
   const rowSpanClass = {
     1: "row-span-1",
-    2: "row-span-2",
+    2: "md:row-span-2",
+    3: "md:row-span-3",
   }[rowSpan];
 
   return (
     <motion.div
-      className={cn(colSpanClass, rowSpanClass, className)}
+      className={cn(colSpanClass, rowSpanClass, "min-h-0", className)}
       variants={{
-        hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
+        hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 24 },
         visible: {
           opacity: 1,
           y: 0,
           transition: prefersReducedMotion
             ? { duration: 0 }
-            : { type: "spring", stiffness: 100, damping: 15 },
+            : { type: "spring", stiffness: 110, damping: 18 },
         },
       }}
     >

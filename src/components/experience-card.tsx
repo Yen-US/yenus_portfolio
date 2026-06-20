@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { experiences } from "@/lib/resume-data";
-import { Briefcase, ArrowUpCircle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function ExperienceCard() {
@@ -20,144 +20,105 @@ export function ExperienceCard() {
       <DialogTrigger asChild>
         <motion.button
           type="button"
-          className="w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
+          className="group/exp h-full w-full text-left focus-ring"
+          whileTap={{ scale: 0.995 }}
           aria-label="View full experience"
         >
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-purple-500" />
-              <h2 className="text-xl font-semibold">Experience</h2>
-            </div>
+          <div className="flex h-full flex-col gap-5">
+            <SectionLabel kicker="01" title="Experience" />
 
-            <div className="space-y-4">
+            <ol className="-mt-1 flex-1 space-y-0">
               {featured.map((exp, i) => (
-                <div
+                <li
                   key={i}
-                  className="group relative rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:bg-white/10 dark:border-white/5 dark:bg-white/[0.02]"
+                  className="group/row relative grid grid-cols-[auto_1fr_auto] items-baseline gap-3 border-t border-border/50 py-3 first:border-t-0"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="text-sm font-semibold leading-tight">
-                          {exp.role}
-                        </h3>
-                        {exp.promoted && (
-                          <span title="Promoted">
-                            <ArrowUpCircle className="h-3.5 w-3.5 shrink-0 text-green-500" />
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {exp.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground/70">
-                        {exp.period}
-                      </p>
-                    </div>
-                  </div>
-
-                  {exp.highlights && exp.highlights.length > 0 && (
-                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground line-clamp-2">
-                      {exp.highlights[0]}
+                  <span className="font-mono text-[10px] tabular text-muted-foreground">
+                    {periodShort(exp.period)}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {exp.role}
                     </p>
-                  )}
-
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {exp.techBadges.slice(0, 4).map((badge) => (
-                      <Badge
-                        key={badge}
-                        variant="secondary"
-                        className="bg-white/10 text-[10px] px-1.5 py-0 dark:bg-white/5 hover:scale-105 transition-transform"
-                      >
-                        {badge}
-                      </Badge>
-                    ))}
-                    {exp.techBadges.length > 4 && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-white/10 text-[10px] px-1.5 py-0 dark:bg-white/5"
-                      >
-                        +{exp.techBadges.length - 4}
-                      </Badge>
-                    )}
-                    {exp.softBadges.slice(0, 2).map((badge) => (
-                      <Badge
-                        key={badge}
-                        variant="outline"
-                        className="text-[10px] px-1.5 py-0 border-white/10 hover:scale-105 transition-transform"
-                      >
-                        {badge}
-                      </Badge>
-                    ))}
+                    <p className="truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                      {exp.company}
+                      {exp.companyNote && (
+                        <span className="text-muted-foreground/60">
+                          {" "}· {exp.companyNote}
+                        </span>
+                      )}
+                    </p>
                   </div>
-                </div>
+                  <div className="flex items-center gap-1">
+                    {exp.current && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-brass" title="Current" />
+                    )}
+                    {exp.founder && (
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-brass">
+                        Founder
+                      </span>
+                    )}
+                    {exp.promoted && !exp.founder && (
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-signal">
+                        ↑ Promoted
+                      </span>
+                    )}
+                  </div>
+                </li>
               ))}
-            </div>
+            </ol>
 
-            {experiences.length > 4 && (
-              <p className="text-xs text-center text-muted-foreground">
-                View full experience
-              </p>
-            )}
+            <div className="mt-auto flex items-center justify-between border-t border-border/50 pt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              <span>{experiences.length} total roles</span>
+              <span className="flex items-center gap-1 text-foreground/70 transition-colors group-hover/exp:text-brass">
+                View all
+                <ArrowUpRight className="h-3 w-3" />
+              </span>
+            </div>
           </div>
         </motion.button>
       </DialogTrigger>
 
-      <DialogContent className="backdrop-blur-xl bg-white/80 dark:bg-slate-950/80 border-white/20">
+      <DialogContent className="max-w-2xl border-border/60 bg-card/95 backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            Experience
+          <DialogTitle className="font-display text-2xl tracking-tight">
+            Full experience
           </DialogTitle>
         </DialogHeader>
-        <div className="max-h-[70vh] space-y-4 overflow-y-auto pr-1">
+        <div className="max-h-[70vh] space-y-0 overflow-y-auto pr-2">
           {experiences.map((exp, i) => (
             <div
               key={i}
-              className="rounded-lg border border-white/10 bg-white/5 p-3 dark:border-white/5 dark:bg-white/[0.02]"
+              className="border-t border-border/50 py-5 first:border-t-0"
             >
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="text-sm font-semibold leading-tight">
-                      {exp.role}
-                    </h3>
-                    {exp.promoted && (
-                      <span title="Promoted">
-                        <ArrowUpCircle className="h-3.5 w-3.5 shrink-0 text-green-500" />
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {exp.company}
-                  </p>
-                  {exp.companyNote && (
-                    <p className="text-xs text-muted-foreground/70">
-                      {exp.companyNote}
-                    </p>
-                  )}
-                  <p className="text-xs text-muted-foreground/70">
-                    {exp.location}
-                  </p>
-                  <p className="text-xs text-muted-foreground/70">
-                    {exp.period}
-                    {exp.tenure ? ` | ${exp.tenure}` : ""}
-                  </p>
-                </div>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 className="font-display text-lg leading-tight text-foreground">
+                  {exp.role}
+                </h3>
+                <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground tabular">
+                  {exp.period}
+                </span>
               </div>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                {exp.company}
+                {exp.companyNote && (
+                  <span className="text-muted-foreground/70"> · {exp.companyNote}</span>
+                )}
+                <span className="text-muted-foreground/70"> · {exp.location}</span>
+              </p>
 
               {exp.description && (
-                <p className="mt-2 text-xs text-muted-foreground">
+                <p className="mt-3 text-sm leading-relaxed text-foreground/90">
                   {exp.description}
                 </p>
               )}
 
               {exp.highlights && exp.highlights.length > 0 && (
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-muted-foreground">
-                  {exp.highlights.map((highlight) => (
-                    <li key={highlight} className="leading-relaxed">
-                      {highlight}
+                <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
+                  {exp.highlights.map((h) => (
+                    <li key={h} className="flex gap-2 leading-relaxed">
+                      <span className="mt-2 h-px w-3 shrink-0 bg-brass/60" />
+                      <span>{h}</span>
                     </li>
                   ))}
                 </ul>
@@ -165,12 +126,11 @@ export function ExperienceCard() {
 
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {exp.techBadges.map((badge) => (
-                  <Badge key={badge} variant="secondary">
-                    {badge}
-                  </Badge>
-                ))}
-                {exp.softBadges.map((badge) => (
-                  <Badge key={badge} variant="outline">
+                  <Badge
+                    key={badge}
+                    variant="secondary"
+                    className="rounded-full border-border/60 bg-secondary/60 font-mono text-[10px] font-normal uppercase tracking-wider"
+                  >
                     {badge}
                   </Badge>
                 ))}
@@ -181,4 +141,26 @@ export function ExperienceCard() {
       </DialogContent>
     </Dialog>
   );
+}
+
+function SectionLabel({ kicker, title }: { kicker: string; title: string }) {
+  return (
+    <div className="flex items-baseline gap-3">
+      <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brass">
+        {kicker}
+      </span>
+      <h2 className="font-display text-2xl leading-none tracking-tight">
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+function periodShort(period: string) {
+  // Pull the trailing year(s) like "May 2024 – Present" → "'24→"
+  const match = period.match(/(\d{4})/g);
+  if (!match) return period;
+  const start = match[0].slice(2);
+  const end = period.toLowerCase().includes("present") ? "→" : match[1] ? match[1].slice(2) : "";
+  return `’${start}${end ? `–’${end}` : ""}`;
 }

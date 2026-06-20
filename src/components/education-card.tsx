@@ -1,70 +1,81 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { education, certifications } from "@/lib/resume-data";
-import { GraduationCap, Award } from "lucide-react";
 
 export function EducationCard() {
   const azureCerts = certifications.filter((c) => c.issuer === "Microsoft");
   const otherCerts = certifications.filter((c) => !c.issuer);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <GraduationCap className="h-5 w-5 text-amber-500" />
-        <h2 className="text-xl font-semibold">Education & Certs</h2>
-      </div>
+    <div className="flex h-full flex-col gap-6">
+      <SectionLabel kicker="06" title="Credentials" />
 
-      {/* Education */}
-      <div className="space-y-3">
-        {education.map((edu, i) => (
-          <div key={i} className="border-l-2 border-white/10 pl-3">
-            <h3 className="text-sm font-semibold">{edu.degree}</h3>
-            <p className="text-xs text-muted-foreground">{edu.institution}</p>
-            <div className="text-xs text-muted-foreground/70">
-              <span>{edu.location}</span>
-              {edu.status && (
-                <Badge
-                  variant="outline"
-                  className="ml-2 text-[10px] px-1.5 py-0 border-amber-500/30 text-amber-400"
-                >
-                  {edu.status}
-                </Badge>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Azure Certifications */}
-      <div>
-        <div className="flex items-center gap-1.5 mb-2">
-          <Award className="h-4 w-4 text-blue-500" />
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Certifications
+      <div className="space-y-5">
+        <div className="space-y-2">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brass">
+            Microsoft certifications
           </p>
+          <ul className="space-y-1.5">
+            {azureCerts.map((cert) => (
+              <li
+                key={cert.name}
+                className="flex items-baseline gap-2 text-sm text-foreground/90"
+              >
+                <span className="font-mono text-[10px] text-brass">▸</span>
+                <span>{cert.name}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="flex flex-wrap gap-1.5">
-          {azureCerts.map((cert) => (
-            <Badge
-              key={cert.name}
-              variant="secondary"
-              className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px]"
-            >
-              {cert.name}
-            </Badge>
-          ))}
-          {otherCerts.map((cert) => (
-            <Badge
-              key={cert.name}
-              variant="outline"
-              className="text-[10px] px-1.5 py-0 border-white/10"
-            >
-              {cert.name}
-            </Badge>
+
+        {otherCerts.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Also
+            </p>
+            <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+              {otherCerts.map((cert, i) => (
+                <li key={cert.name} className="flex items-baseline gap-3">
+                  <span>{cert.name}</span>
+                  {i < otherCerts.length - 1 && (
+                    <span aria-hidden="true" className="text-muted-foreground/40">·</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="space-y-2 border-t border-border/50 pt-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            Education
+          </p>
+          {education.map((edu, i) => (
+            <div key={i}>
+              <p className="text-sm text-foreground">{edu.degree}</p>
+              <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                {edu.institution}
+                {edu.status && (
+                  <span className="text-muted-foreground/70"> · {edu.status}</span>
+                )}
+              </p>
+            </div>
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+function SectionLabel({ kicker, title }: { kicker: string; title: string }) {
+  return (
+    <div className="flex items-baseline gap-3">
+      <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brass">
+        {kicker}
+      </span>
+      <h2 className="font-display text-2xl leading-none tracking-tight">
+        {title}
+      </h2>
     </div>
   );
 }

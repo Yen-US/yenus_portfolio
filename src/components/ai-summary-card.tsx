@@ -32,11 +32,10 @@ export function AiSummaryCard() {
         clearInterval(interval);
         setIsTyping(false);
       }
-    }, 20);
+    }, 18);
     return () => clearInterval(interval);
   }, []);
 
-  // Type out the initial summary on mount
   useEffect(() => {
     const cleanup = typeText(summaries[0]);
     return cleanup;
@@ -101,32 +100,37 @@ export function AiSummaryCard() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-purple-500 animate-sparkle" />
-          <h2 className="text-lg font-semibold">AI Insight</h2>
+    <div className="flex h-full flex-col gap-5">
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="flex items-baseline gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brass">
+            02
+          </span>
+          <h2 className="font-display text-2xl leading-none tracking-tight">
+            Ask me
+          </h2>
         </div>
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 rounded-full hover:bg-white/10"
+          className="h-7 w-7 rounded-full text-muted-foreground hover:bg-foreground/5 hover:text-brass"
           onClick={handleRefresh}
           disabled={isTyping || isLoading}
           title="Refresh insight"
+          aria-label="Refresh insight"
         >
-          <motion.div
-            whileTap={{ rotate: 360 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.div whileTap={{ rotate: 360 }} transition={{ duration: 0.5 }}>
             <RotateCw className="h-3.5 w-3.5" />
           </motion.div>
         </Button>
       </div>
 
-      {/* Summary display */}
-      <div className="flex-1 min-h-[80px]">
+      <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <Sparkles className="h-3 w-3 text-brass" />
+        {isOnDemand ? "Live response" : "Pre-generated"}
+      </div>
+
+      <div className="flex-1 min-h-[120px]">
         <AnimatePresence mode="wait">
           {isLoading && !displayedText ? (
             <motion.div
@@ -136,9 +140,9 @@ export function AiSummaryCard() {
               exit={{ opacity: 0 }}
               className="space-y-2"
             >
-              <Skeleton className="h-4 w-full bg-white/10" />
-              <Skeleton className="h-4 w-3/4 bg-white/10" />
-              <Skeleton className="h-4 w-1/2 bg-white/10" />
+              <Skeleton className="h-4 w-full bg-foreground/5" />
+              <Skeleton className="h-4 w-5/6 bg-foreground/5" />
+              <Skeleton className="h-4 w-3/5 bg-foreground/5" />
             </motion.div>
           ) : (
             <motion.div
@@ -147,20 +151,22 @@ export function AiSummaryCard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                &ldquo;{displayedText}
+              <p className="font-display text-base leading-relaxed text-foreground/90">
+                <span className="text-brass">“</span>
+                {displayedText}
                 {isTyping && (
-                  <span className="inline-block w-0.5 h-4 ml-0.5 bg-purple-500 animate-pulse align-middle" />
+                  <span className="ml-0.5 inline-block h-4 w-px bg-brass align-middle animate-caret-blink" />
                 )}
-                {!isTyping && displayedText && '"'}
+                {!isTyping && displayedText && (
+                  <span className="text-brass">”</span>
+                )}
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Ask input */}
-      <div className="space-y-2">
+      <div className="space-y-2 border-t border-border/50 pt-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -172,27 +178,24 @@ export function AiSummaryCard() {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder={
-              requestCount >= MAX_REQUESTS
-                ? "Limit reached"
-                : "Ask about me..."
+              requestCount >= MAX_REQUESTS ? "Limit reached" : "Ask something specific…"
             }
             disabled={isLoading || requestCount >= MAX_REQUESTS}
-            className="bg-white/5 border-white/10 text-sm placeholder:text-muted-foreground/50"
+            className="h-10 rounded-full border-border/60 bg-secondary/40 text-sm placeholder:text-muted-foreground/60 focus-visible:ring-brass/40"
             maxLength={200}
           />
           <Button
             type="submit"
             size="icon"
-            variant="ghost"
             disabled={!question.trim() || isLoading || requestCount >= MAX_REQUESTS}
-            className="shrink-0 hover:bg-white/10"
+            className="h-10 w-10 shrink-0 rounded-full bg-brass text-background hover:bg-brass/90 disabled:bg-secondary disabled:text-muted-foreground"
+            aria-label="Ask"
           >
             <SendHorizontal className="h-4 w-4" />
           </Button>
         </form>
-        <p className="text-[10px] text-muted-foreground/50 text-center">
-          {requestCount}/{MAX_REQUESTS} questions used
-          {!isOnDemand && " · Pre-generated insight"}
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/60">
+          {requestCount}/{MAX_REQUESTS} questions · powered by GPT-4o
         </p>
       </div>
     </div>

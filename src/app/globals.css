@@ -4,65 +4,78 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Sovereign — light mode (warm off-white, deep ink, brass accent) */
+    --background: 40 30% 97%;
+    --foreground: 30 12% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 30 12% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 30 12% 10%;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 30 12% 10%;
+    --primary-foreground: 40 30% 97%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 35 14% 92%;
+    --secondary-foreground: 30 12% 10%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 35 14% 92%;
+    --muted-foreground: 30 7% 36%;
 
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 36 45% 38%;
+    --accent-foreground: 40 30% 97%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 40 30% 97%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --border: 32 14% 86%;
+    --input: 32 14% 86%;
+    --ring: 36 45% 38%;
 
-    --radius: 0.5rem;
+    /* Brand accents — warm brass, signal teal */
+    --brass: 36 45% 38%;
+    --brass-soft: 38 55% 70%;
+    --brass-glow: 40 90% 60%;
+    --signal: 165 60% 40%;
+
+    --radius: 0.875rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Sovereign — dark mode (warm near-black, brass accent) */
+    --background: 28 14% 5%;
+    --foreground: 38 30% 94%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 28 16% 8%;
+    --card-foreground: 38 30% 94%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 28 16% 8%;
+    --popover-foreground: 38 30% 94%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 38 30% 94%;
+    --primary-foreground: 28 14% 5%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 28 14% 12%;
+    --secondary-foreground: 38 30% 94%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 28 14% 12%;
+    --muted-foreground: 30 12% 65%;
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 42 55% 62%;
+    --accent-foreground: 28 14% 5%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 38 30% 94%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 28 14% 15%;
+    --input: 28 14% 15%;
+    --ring: 42 55% 62%;
+
+    --brass: 42 55% 62%;
+    --brass-soft: 40 50% 75%;
+    --brass-glow: 42 80% 65%;
+    --signal: 165 70% 55%;
   }
 }
 
@@ -70,17 +83,21 @@
   * {
     @apply border-border;
   }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv02", "cv11";
   }
 
-  /* Smooth theme color transitions */
-  *,
-  *::before,
-  *::after {
-    transition-property: background-color, border-color;
-    transition-duration: 300ms;
-    transition-timing-function: ease;
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
 
   /* Respect reduced motion preferences */
@@ -94,11 +111,49 @@
       scroll-behavior: auto !important;
     }
   }
+
+  ::selection {
+    background-color: hsl(var(--brass) / 0.3);
+    color: hsl(var(--foreground));
+  }
 }
 
-/* Focus visible styling for keyboard navigation */
 @layer utilities {
+  .font-display {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-feature-settings: "ss01", "ss02";
+    letter-spacing: -0.025em;
+  }
+  .font-mono {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .text-brass {
+    color: hsl(var(--brass));
+  }
+  .bg-brass {
+    background-color: hsl(var(--brass));
+  }
+  .border-brass {
+    border-color: hsl(var(--brass));
+  }
   .focus-ring {
     @apply outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  /* Hairline divider — premium 1px line that handles HiDPI */
+  .hairline {
+    box-shadow: inset 0 1px 0 0 hsl(var(--border));
+  }
+  /* Subtle warm noise texture for that "printed" feel */
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    pointer-events: none;
+    mix-blend-mode: overlay;
   }
 }
