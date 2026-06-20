@@ -4,6 +4,7 @@ import {
   projects,
   caseStudies,
   speaking,
+  conferences,
   skills,
   softSkills,
   education,
@@ -49,6 +50,11 @@ ${speaking
   .map((s) => `- ${s.title} — ${s.audience} (${s.format}${s.cadence ? `, ${s.cadence}` : ""})`)
   .join("\n")}
 
+## Conferences attended (continuous learning — actively staying on the cutting edge)
+${conferences
+  .map((c) => `- ${c.name} — ${c.location} · ${c.years.join(", ")}${c.note ? ` — ${c.note}` : ""}`)
+  .join("\n")}
+
 ## Featured Projects
 ${projects.map((p) => `- ${p.name}${p.featured ? " [FLAGSHIP]" : ""}: ${p.description} (${p.period}) — ${p.techBadges.join(", ")}`).join("\n")}
 
@@ -75,6 +81,7 @@ Important instructions:
 - Lead with the AI architecture and agentic systems angle — that's the current focus
 - When asked about availability or consulting, mention that ${profile.name} is open to advisory engagements and that booking lives at presencia.studio
 - Emphasize the Microsoft + Microsoft for Startups context and the 1-week Azure migration case study when relevant
+- When relevant, mention the continuous learning posture — traveling to MWC, Talent Arena, and JSConf Spain to stay on the cutting edge of mobile, AI, and runtime evolution
 - If asked something not covered, say you can only speak to what's in the portfolio
 `;
 

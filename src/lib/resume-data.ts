@@ -8,7 +8,7 @@ export const profile = {
   email: "yen21000@gmail.com",
   website: "yenus.dev",
   status: "Available for AI advisory & architecture consulting",
-  bookingUrl: "https://presencia.studio",
+  bookingUrl: "https://www.presencia.studio/agendar",
   headline:
     "Architecting AI for Microsoft Startups · Early agent adopter, now expert · Open to advisory engagements",
   signals: [
@@ -22,6 +22,7 @@ export const profile = {
     cv: "/Yenson_Umana_Resume.pdf",
     website: "https://yenus.dev",
     presencia: "https://presencia.studio",
+    booking: "https://www.presencia.studio/agendar",
   },
 };
 
@@ -293,6 +294,34 @@ export const speaking: Speaking[] = [
     format: "Strategy session",
     cadence: "On request",
     topics: ["Migration planning", "Agent-driven execution", "Risk management"],
+  },
+];
+
+export interface Conference {
+  name: string;
+  location: string;
+  years: string[];
+  note?: string;
+}
+
+export const conferences: Conference[] = [
+  {
+    name: "Mobile World Congress",
+    location: "Barcelona",
+    years: ["2026"],
+    note: "Mobile, AI, and connectivity at industry scale",
+  },
+  {
+    name: "Talent Arena",
+    location: "Barcelona",
+    years: ["2025", "2026"],
+    note: "Engineering culture and the future of work",
+  },
+  {
+    name: "JSConf Spain",
+    location: "Madrid",
+    years: ["2025", "2026"],
+    note: "Bleeding-edge JavaScript and runtime evolution",
   },
 ];
 

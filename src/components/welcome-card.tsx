@@ -82,7 +82,7 @@ export function HeroSection() {
               asChild
               className="group h-11 rounded-full bg-brass px-5 text-background hover:bg-brass/90"
             >
-              <Link href={profile.links.presencia} target="_blank" rel="noopener">
+              <Link href={profile.links.booking} target="_blank" rel="noopener">
                 Book an advisory session
                 <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </Link>

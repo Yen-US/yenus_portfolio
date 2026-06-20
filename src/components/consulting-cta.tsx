@@ -49,12 +49,12 @@ export function ConsultingCta() {
 
         <div className="flex flex-col items-start gap-3 md:col-span-4 md:items-end">
           <Link
-            href={profile.links.presencia}
+            href={profile.links.booking}
             target="_blank"
             rel="noopener"
             className="group/cta inline-flex items-center gap-2 rounded-full bg-brass px-6 py-3 text-sm font-medium text-background transition-colors hover:bg-brass/90 focus-ring"
           >
-            Book at presencia.studio
+            Book at presencia.studio/agendar
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5" />
           </Link>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">

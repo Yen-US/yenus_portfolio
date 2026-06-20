@@ -1,7 +1,7 @@
 "use client";
 
-import { speaking } from "@/lib/resume-data";
-import { Mic } from "lucide-react";
+import { speaking, conferences } from "@/lib/resume-data";
+import { Mic, MapPin } from "lucide-react";
 
 export function SpeakingCard() {
   return (
@@ -49,6 +49,61 @@ export function SpeakingCard() {
           </li>
         ))}
       </ol>
+
+      {/* Continuously learning rail */}
+      <div className="mt-auto rounded-2xl border border-brass/20 bg-brass/[0.04] p-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brass">
+              On the ground
+            </span>
+            <p className="font-display text-base leading-none text-foreground">
+              Staying on the cutting edge
+              <span className="text-muted-foreground/40">.</span>
+            </p>
+          </div>
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground md:block">
+            Conferences attended
+          </span>
+        </div>
+
+        <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {conferences.map((c) => (
+            <li
+              key={c.name}
+              className="rounded-xl border border-border/60 bg-background/60 p-3"
+            >
+              <p className="font-display text-sm leading-tight text-foreground">
+                {c.name}
+              </p>
+              <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                <MapPin className="h-3 w-3 text-brass/70" />
+                {c.location}
+              </p>
+              <p className="mt-2 flex flex-wrap items-baseline gap-1.5 font-mono text-[11px] tabular text-brass">
+                {c.years.map((y, idx) => (
+                  <span key={y} className="flex items-baseline gap-1.5">
+                    {y}
+                    {idx < c.years.length - 1 && (
+                      <span aria-hidden="true" className="text-muted-foreground/40">·</span>
+                    )}
+                  </span>
+                ))}
+              </p>
+              {c.note && (
+                <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
+                  {c.note}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+          Travel to where the field is moving — agents, runtimes, and product
+          craft — and bring back what's worth shipping.
+        </p>
+      </div>
     </div>
   );
 }

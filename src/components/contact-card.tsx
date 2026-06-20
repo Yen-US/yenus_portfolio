@@ -50,7 +50,7 @@ export function ContactCard() {
       </ul>
 
       <Link
-        href={profile.links.presencia}
+        href={profile.links.booking}
         target="_blank"
         rel="noopener"
         className="group/booking mt-auto flex items-center justify-between rounded-xl border border-brass/30 bg-brass/5 px-4 py-3 transition-colors hover:bg-brass/10 focus-ring"
@@ -60,7 +60,7 @@ export function ContactCard() {
             Booking
           </p>
           <p className="mt-0.5 text-sm font-medium text-foreground">
-            presencia.studio
+            presencia.studio/agendar
           </p>
         </div>
         <ArrowUpRight className="h-4 w-4 text-brass transition-transform group-hover/booking:-translate-y-0.5 group-hover/booking:translate-x-0.5" />
