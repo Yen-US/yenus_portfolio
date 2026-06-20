@@ -51,19 +51,19 @@ export function SpeakingCard() {
       </ol>
 
       {/* Continuously learning rail */}
-      <div className="mt-auto rounded-2xl border border-brass/20 bg-brass/[0.04] p-5">
+      <div className="mt-auto rounded-2xl border border-border/60 bg-secondary/20 p-5">
         <div className="flex items-baseline justify-between gap-3">
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brass">
-              On the ground
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Also attending
             </span>
-            <p className="font-display text-base leading-none text-foreground">
-              Staying on the cutting edge
+            <p className="font-display text-sm leading-none text-foreground/85">
+              Conferences I attend to stay on the cutting edge
               <span className="text-muted-foreground/40">.</span>
             </p>
           </div>
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground md:block">
-            Conferences attended
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 md:block">
+            Attended, not spoken
           </span>
         </div>
 
@@ -71,16 +71,16 @@ export function SpeakingCard() {
           {conferences.map((c) => (
             <li
               key={c.name}
-              className="rounded-xl border border-border/60 bg-background/60 p-3"
+              className="rounded-xl border border-border/50 bg-background/40 p-3"
             >
-              <p className="font-display text-sm leading-tight text-foreground">
+              <p className="font-display text-sm leading-tight text-foreground/85">
                 {c.name}
               </p>
               <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                <MapPin className="h-3 w-3 text-brass/70" />
+                <MapPin className="h-3 w-3 text-muted-foreground/70" />
                 {c.location}
               </p>
-              <p className="mt-2 flex flex-wrap items-baseline gap-1.5 font-mono text-[11px] tabular text-brass">
+              <p className="mt-2 flex flex-wrap items-baseline gap-1.5 font-mono text-[11px] tabular text-muted-foreground">
                 {c.years.map((y, idx) => (
                   <span key={y} className="flex items-baseline gap-1.5">
                     {y}
@@ -91,7 +91,7 @@ export function SpeakingCard() {
                 ))}
               </p>
               {c.note && (
-                <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
+                <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground/80">
                   {c.note}
                 </p>
               )}
@@ -99,8 +99,8 @@ export function SpeakingCard() {
           ))}
         </ul>
 
-        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-          Travel to where the field is moving — agents, runtimes, and product
+        <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">
+          I travel to where the field is moving — agents, runtimes, and product
           craft — and bring back what's worth shipping.
         </p>
       </div>

@@ -66,12 +66,15 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mt-6 max-w-2xl text-balance text-lg leading-relaxed text-foreground/90 md:text-xl"
           >
-            Senior <span className="text-brass">AI Solution Architect</span> at Microsoft.
-            Founder of <Link href={profile.links.presencia} className="underline decoration-brass/40 decoration-2 underline-offset-4 transition hover:decoration-brass" target="_blank" rel="noopener">Presencia Studio</Link>.
+            Senior <span className="text-brass">AI Solution Architect</span> at Microsoft —
+            sole AI advisor for <span className="text-brass">Microsoft for Startups</span> across LATAM.
             <span className="mt-2 block text-foreground/75">
               Shipping production AI since <span className="text-brass">October 2022</span> —
               one month before ChatGPT launched. Early enough to be an expert
               before the rest of the field caught up.
+            </span>
+            <span className="mt-3 block text-sm text-muted-foreground">
+              {profile.commitmentLine}
             </span>
           </motion.p>
 
@@ -87,7 +90,7 @@ export function HeroSection() {
               className="group h-11 rounded-full bg-brass px-5 text-background hover:bg-brass/90"
             >
               <Link href={profile.links.booking} target="_blank" rel="noopener">
-                Book an advisory session
+                Book a 30-min architecture review
                 <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </Link>
             </Button>

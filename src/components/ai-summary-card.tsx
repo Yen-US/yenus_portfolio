@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Sparkles, SendHorizontal, RotateCw } from "lucide-react";
+import { Sparkles, SendHorizontal, RotateCw, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import summaries from "@/data/generated-summaries.json";
+import { profile } from "@/lib/resume-data";
 
 export function AiSummaryCard() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -161,6 +163,32 @@ export function AiSummaryCard() {
                   <span className="text-brass">”</span>
                 )}
               </p>
+
+              {/* Funnel: surface the booking CTA once the AI finishes responding */}
+              {!isTyping && !isLoading && displayedText && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.15 }}
+                  className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-brass/25 bg-brass/[0.05] px-4 py-3"
+                >
+                  <p className="text-xs leading-snug text-foreground/85">
+                    Want to go deeper?{" "}
+                    <span className="text-muted-foreground">
+                      Book a 30-min architecture review — leave with a 1-page plan.
+                    </span>
+                  </p>
+                  <Link
+                    href={profile.links.booking}
+                    target="_blank"
+                    rel="noopener"
+                    className="group/funnel ml-auto inline-flex items-center gap-1 rounded-full bg-brass px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-background transition-colors hover:bg-brass/90"
+                  >
+                    Book
+                    <ArrowUpRight className="h-3 w-3 transition-transform group-hover/funnel:-translate-y-0.5 group-hover/funnel:translate-x-0.5" />
+                  </Link>
+                </motion.div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

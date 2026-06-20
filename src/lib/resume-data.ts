@@ -2,15 +2,21 @@ export const profile = {
   name: "Yenson Umaña Solano",
   alias: "YenUS",
   title: "Senior AI Solution Architect",
-  tagline: "Designing agentic systems at Microsoft. Founder @ Presencia Studio.",
+  tagline:
+    "AI architecture for Microsoft for Startups founders. Agentic systems, Azure migrations, productionization.",
   avatar: "/YenUSPP2.webp",
   location: "Costa Rica",
   email: "yen21000@gmail.com",
   website: "yenus.dev",
-  status: "Available for AI advisory & architecture consulting",
+  status: "Open: Q3 2026 · 2 of 4 advisory slots available",
   bookingUrl: "https://www.presencia.studio/agendar",
   headline:
-    "Architecting AI for Microsoft Startups · Early agent adopter, now expert · Open to advisory engagements",
+    "AI advisor for Microsoft for Startups · Early agent adopter, now expert · 2 of 4 Q3 slots open",
+  // Disclosure that closes the conflict-of-interest gap visitors otherwise have to guess at.
+  commitmentLine:
+    "I take outside engagements with non-conflicting clients via Presencia Studio.",
+  icp:
+    "Microsoft for Startups founders shipping AI to production — and a small number of non-conflicting external clients via Presencia Studio.",
   signals: [
     { label: "Microsoft AI-102 + AZ-204 Certified" },
     { label: "Building AI since before ChatGPT (Oct 2022)" },
@@ -22,6 +28,7 @@ export const profile = {
     cv: "/Yenson_Umana_Resume.pdf",
     website: "https://yenus.dev",
     presencia: "https://presencia.studio",
+    presenciaCatalog: "https://presencia.studio/catalog",
     booking: "https://www.presencia.studio/agendar",
   },
 };
@@ -79,11 +86,11 @@ export const experiences: Experience[] = [
     current: true,
     founder: true,
     description:
-      "Premium aluminum NFC business cards + hosted digital contact profiles. Spanish-first luxury brand for Costa Rican entrepreneurs and brands.",
+      "End-to-end brand experience studio: NFC cards, smart objects, custom brand activations, landing pages, wallet loyalty systems, and monthly digital presence plans. The vehicle through which I take outside advisory and architecture engagements.",
     highlights: [
-      "Designing, building, and operating an end-to-end premium product — brand, e-commerce, fulfillment, and customer experience",
+      "Productized catalog spans physical (NFC cards, smart objects, 3D-printed magnets, merch) and digital (profiles, landing pages, wallet/loyalty cards, smart menus, custom brand experiences)",
       "Shipped MVP on Next.js 16 + Supabase + Vercel with bilingual copy system, loyalty sub-product, and Apple Wallet integration",
-      "Operating model that pairs offline craftsmanship (laser-engraved anodized aluminum) with always-on digital profiles",
+      "Custom brand experiences program — including the Junior Rodríguez NFC-enabled painting series — packages physical objects with connected digital journeys",
     ],
     techBadges: ["Next.js", "Supabase", "Tailwind", "shadcn/ui", "Vercel", "Resend"],
     softBadges: ["Brand", "Product", "Operations"],
@@ -92,8 +99,9 @@ export const experiences: Experience[] = [
     role: "Full Stack Software Engineer",
     company: "Wind River",
     location: "San José, Costa Rica (Remote)",
-    period: "Oct 2024 – Jun 2026",
+    period: "Oct 2024 – Present",
     tenure: "2 years 10 months total at Wind River",
+    current: true,
     promoted: true,
     highlights: [
       "Architected cloud systems with Angular, Vue.js, Next.js, Golang, and Java on PostgreSQL",
@@ -263,6 +271,108 @@ export const caseStudies: CaseStudy[] = [
       { label: "Services moved", value: "Full stack" },
     ],
     stack: ["Azure", "Claude Code", "MCP", "Azure Agent Dev Kit", "Terraform"],
+  },
+  {
+    title: "A painting that comes alive — Junior Rodríguez × Presencia",
+    client: "Junior Rodríguez (artist)",
+    clientNote: "Custom brand experience via Presencia Studio",
+    period: "2026",
+    problem:
+      "An emerging painter wanted to sell more than canvas — to give collectors a story attached to the work, and to capture the moment a viewer first meets the piece without breaking the gallery experience.",
+    approach:
+      "Designed an NFC-enabled painting series: the physical work, the tap interaction, and the connected digital journey behind each piece. Built the artist's catalog page, the on-tap landing, and the content flow that turns each sale into a shareable moment.",
+    outcome:
+      "Each painting now sells with its experience attached, not just the canvas. Collectors photograph, tap, and post the moment — turning the artwork itself into a marketing asset the artist keeps charging for.",
+    metrics: [
+      { label: "Tier", value: "Premium Smart Object" },
+      { label: "Format", value: "Object + landing + content" },
+      { label: "Category", value: "One-of-a-kind in market" },
+    ],
+    stack: ["NFC", "Next.js", "Supabase", "Brand strategy", "Content design"],
+  },
+];
+
+export interface ServiceOffering {
+  name: string;
+  scope: string;
+  duration: string;
+  price: string;
+  deliverables: string[];
+  bestFor: string;
+  featured?: boolean;
+}
+
+export const serviceOfferings: ServiceOffering[] = [
+  {
+    name: "Architecture Review",
+    scope:
+      "Half-day deep-dive on your AI / agent architecture. We pressure-test the design, surface the highest-leverage decisions, and leave you with a one-page plan.",
+    duration: "1 day",
+    price: "From $1,500",
+    deliverables: [
+      "Architecture diagram with annotated risks",
+      "1-page decision plan",
+      "30-min written follow-up after the session",
+    ],
+    bestFor:
+      "MS for Startups founders sanity-checking an agent or RAG architecture before a build sprint.",
+  },
+  {
+    name: "Migration Sprint",
+    scope:
+      "End-to-end migration onto Azure using Claude Code, MCP, and Azure Agent Dev Kit. I author the architecture, run the agentic execution, and hand back an operating model your team keeps using.",
+    duration: "1 week",
+    price: "From $9,000",
+    deliverables: [
+      "Migration architecture + runbook",
+      "Agent-driven repo refactors and infra provisioning",
+      "Acceptance gates + post-mortem + handover",
+    ],
+    bestFor:
+      "MS for Startups founders unlocking Azure credits or consolidating off multi-cloud setups.",
+    featured: true,
+  },
+  {
+    name: "Embedded AI Advisor",
+    scope:
+      "Recurring weekly cadence as your fractional AI architect. Architecture reviews, agent-stack guidance, vendor decisions, and team enablement on a monthly retainer.",
+    duration: "Monthly retainer",
+    price: "From $4,500 / month",
+    deliverables: [
+      "Weekly 60-min working session",
+      "Async architecture reviews via shared channel",
+      "Quarterly written roadmap update",
+    ],
+    bestFor:
+      "Teams productionizing AI who want depth without a six-month consulting wrapper.",
+  },
+];
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export const consultingFaqs: FaqItem[] = [
+  {
+    question: "How does this work alongside your Microsoft role?",
+    answer:
+      "I take outside engagements with non-conflicting clients via Presencia Studio. Anything that overlaps with the Microsoft for Startups portfolio I either decline or route through the program itself.",
+  },
+  {
+    question: "Are you only for Microsoft for Startups members?",
+    answer:
+      "MS for Startups is the core ICP — that's where I spend most of my time and have the deepest context. I also take a small number of non-conflicting external engagements per quarter via Presencia Studio.",
+  },
+  {
+    question: "Confidentiality?",
+    answer:
+      "Standard mutual NDA on request. Nothing client-specific ever crosses into Microsoft work or vice versa.",
+  },
+  {
+    question: "What if my problem doesn't fit one of the packages?",
+    answer:
+      "Book the Architecture Review. If it's a fit, we scope a custom engagement from there. If it isn't, you still leave with a 1-page plan.",
   },
 ];
 

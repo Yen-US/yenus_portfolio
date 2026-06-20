@@ -18,7 +18,7 @@ export function ProjectsCard() {
   return (
     <div className="flex h-full flex-col gap-6">
       <div className="flex items-baseline justify-between gap-3">
-        <SectionLabel kicker="03" title="Ventures" />
+        <SectionLabel kicker="03" title="Other ventures" />
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
           {projects.length} active
         </p>
