@@ -13,8 +13,8 @@ export const profile = {
     "Architecting AI for Microsoft Startups · Early agent adopter, now expert · Open to advisory engagements",
   signals: [
     { label: "Microsoft AI-102 + AZ-204 Certified" },
+    { label: "Building AI since before ChatGPT (Oct 2022)" },
     { label: "3 promotions in 2 years" },
-    { label: "5+ years shipping production AI" },
   ],
   links: {
     linkedin: "https://www.linkedin.com/in/yenus/",
@@ -135,6 +135,7 @@ export const experiences: Experience[] = [
     period: "Oct 2022 – Apr 2024",
     tenure: "1 year 6 months",
     highlights: [
+      "Joined October 2022 — one month before ChatGPT launched. Building production AI before the rest of the field caught up.",
       "First exposure to conversational AI and agent orchestration at production scale",
       "Built intelligent automations for triage, first-response, and after-hours coverage",
     ],

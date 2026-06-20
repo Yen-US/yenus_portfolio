@@ -68,7 +68,11 @@ export function HeroSection() {
           >
             Senior <span className="text-brass">AI Solution Architect</span> at Microsoft.
             Founder of <Link href={profile.links.presencia} className="underline decoration-brass/40 decoration-2 underline-offset-4 transition hover:decoration-brass" target="_blank" rel="noopener">Presencia Studio</Link>.
-            I architect agentic systems for the startups Microsoft bets on — and design the operating models that let small teams ship like big ones.
+            <span className="mt-2 block text-foreground/75">
+              Shipping production AI since <span className="text-brass">October 2022</span> —
+              one month before ChatGPT launched. Early enough to be an expert
+              before the rest of the field caught up.
+            </span>
           </motion.p>
 
           {/* CTA row */}
@@ -119,7 +123,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="mt-12 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4"
           >
-            <Stat label="Years in tech" value="5+" />
+            <Stat label="Building AI since" value="Oct 2022" sub="One month before ChatGPT" />
             <Stat label="Promotions in 2 yrs" value="3" />
             <Stat label="Azure certs" value="AI-102 · AZ-204" />
             <Stat label="Migration record" value="1 week" sub="Vercel+GCP → Azure" />
