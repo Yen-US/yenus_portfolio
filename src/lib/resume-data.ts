@@ -54,14 +54,14 @@ export const experiences: Experience[] = [
     role: "Senior AI Solution Architect",
     company: "Microsoft",
     companyNote: "via Accenture",
-    location: "Remote (LATAM)",
+    location: "Remote (Global)",
     period: "May 2024 – Present",
     tenure: "2 years +",
     current: true,
     description:
-      "Sole AI expert advising the Microsoft for Startups program across LATAM. Architecture reviews, agentic system design, cloud migrations, and enablement.",
+      "Most senior AI advisor for the Microsoft for Startups program worldwide. Architecture reviews, agentic system design, cloud migrations, and enablement.",
     highlights: [
-      "Sole AI advisor for the Microsoft for Startups program — architecture, migrations, cost optimization, agentic systems",
+      "Most senior AI advisor for the Microsoft for Startups program worldwide — architecture, migrations, cost optimization, agentic systems",
       "Led a US-based Y Combinator–backed startup through a full Vercel + GCP → Azure migration in 1 week using Claude Code, MCP, and agentic workflows",
       "Deliver enablement sessions on Azure AI, agent frameworks, and LLM productionization to founders and Microsoft account teams",
       "Hands-on with Azure AI Foundry, Azure Agent Dev Kit, Azure AI Search, OpenAI Responses API, and Microsoft Agent Framework",
