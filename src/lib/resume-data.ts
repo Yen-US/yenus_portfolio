@@ -8,7 +8,7 @@ export const profile = {
   location: "Costa Rica",
   email: "yen21000@gmail.com",
   website: "yenus.dev",
-  status: "Accepting advisory clients · limited capacity · book to check availability",
+  status: "Open to advisory · limited slots",
   bookingUrl: "https://www.presencia.studio/agendar",
   headline:
     "AI advisor for Microsoft for Startups · Early agent adopter, now expert · Accepting advisory clients",
