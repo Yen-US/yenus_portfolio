@@ -8,10 +8,10 @@ export const profile = {
   location: "Costa Rica",
   email: "yen21000@gmail.com",
   website: "yenus.dev",
-  status: "Open: Q3 2026 · 2 of 4 advisory slots available",
+  status: "Accepting advisory clients · limited capacity · book to check availability",
   bookingUrl: "https://www.presencia.studio/agendar",
   headline:
-    "AI advisor for Microsoft for Startups · Early agent adopter, now expert · 2 of 4 Q3 slots open",
+    "AI advisor for Microsoft for Startups · Early agent adopter, now expert · Accepting advisory clients",
   // Disclosure that closes the conflict-of-interest gap visitors otherwise have to guess at.
   commitmentLine:
     "I take outside engagements with non-conflicting clients via Presencia Studio.",
