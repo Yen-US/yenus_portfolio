@@ -25,7 +25,7 @@ export const profile = {
   links: {
     linkedin: "https://www.linkedin.com/in/yenus/",
     github: "https://github.com/Yen-US",
-    cv: "/Yenson_Umana_Resume.pdf",
+    cv: "/yenson-ai-resume.pdf",
     website: "https://yenus.dev",
     presencia: "https://presencia.studio",
     presenciaCatalog: "https://presencia.studio/catalog",

@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  async redirects() {
+    return [
+      {
+        source: "/Yenson_Umana_Resume.pdf",
+        destination: "/yenson-ai-resume.pdf",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
