@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Sparkles, SendHorizontal, RotateCw, ArrowUpRight } from "lucide-react";
+import { Sparkles, SendHorizontal, RotateCw, ArrowUpRight, FileDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import summaries from "@/data/generated-summaries.json";
 import { profile } from "@/lib/resume-data";
@@ -225,6 +225,18 @@ export function AiSummaryCard() {
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/60">
           {requestCount}/{MAX_REQUESTS} questions · powered by GPT-4o
         </p>
+        <div className="pt-1">
+          <a
+            href="/yenson-ai-resume.pdf"
+            download
+            className="group/dl inline-flex items-center gap-1.5 rounded-full border border-brass/30 bg-brass/[0.06] px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-brass transition-colors hover:bg-brass/15"
+            title="Download a plain, ATS-friendly PDF resume tuned for AI screeners"
+          >
+            <FileDown className="h-3 w-3" />
+            AI-optimized resume
+            <span className="font-mono text-[9px] tracking-normal text-brass/60 normal-case">.pdf</span>
+          </a>
+        </div>
       </div>
     </div>
   );
