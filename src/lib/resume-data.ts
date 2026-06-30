@@ -151,16 +151,22 @@ export const experiences: Experience[] = [
     softBadges: ["Adaptability"],
   },
   {
-    role: "Technical Support Engineer",
+    role: "Advanced Technical Support Engineer",
     company: "Wrike",
+    companyNote: "part of Citrix",
     location: "Heredia, Costa Rica (Remote)",
     period: "Feb 2022 – Apr 2023",
     tenure: "1 year 2 months",
+    description:
+      "Early-career role at one of the leading SaaS project-management platforms. Owned advanced enterprise support escalations end-to-end.",
     highlights: [
-      "Expert technical support for enterprise PM software — integrations, workflows, advanced configs",
+      "Supported advanced enterprise features: REST API troubleshooting, SAML / SSO configuration, and developer integrations",
+      "Diagnosed and resolved complex workflow, automation, and permissions issues across global enterprise tenants",
+      "Partnered with engineering on reproductions and root-cause analysis for integration and identity bugs",
+      "Built the deep customer-facing technical fluency that anchored every subsequent role",
     ],
-    techBadges: ["API", "Jira"],
-    softBadges: ["Customer Focus"],
+    techBadges: ["REST API", "SSO / SAML", "Webhooks", "Developer Integrations", "Jira"],
+    softBadges: ["Customer Focus", "Problem Solving", "Enterprise Support"],
   },
   {
     role: "Tier 2 Support Engineer & SME",
