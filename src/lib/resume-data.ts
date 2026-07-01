@@ -62,9 +62,10 @@ export const experiences: Experience[] = [
       "Most senior AI advisor for the Microsoft for Startups program worldwide. Architecture reviews, agentic system design, cloud migrations, and enablement.",
     highlights: [
       "Most senior AI advisor for the Microsoft for Startups program worldwide — architecture, migrations, cost optimization, agentic systems",
+      "Set technical direction for founding teams of 3 to 15 engineers on agent stack, retrieval architecture, eval strategy, and migration path — I am the decision authority they defer to on the AI portion",
       "Led a US-based Y Combinator–backed startup through a full Vercel + GCP → Azure migration in 1 week using Claude Code, MCP, and agentic workflows",
       "Deliver enablement sessions on Azure AI, agent frameworks, and LLM productionization to founders and Microsoft account teams",
-      "Hands-on with Azure AI Foundry, Azure Agent Dev Kit, Azure AI Search, OpenAI Responses API, and Microsoft Agent Framework",
+      "Hands-on with Azure AI Foundry, Azure Agent Dev Kit, Azure AI Search, OpenAI Responses API, and Microsoft Agent Framework — plus production patterns: evals in CI, LLM-as-judge, response caching, and cost-aware model routing",
     ],
     techBadges: [
       "Azure AI",
@@ -118,8 +119,8 @@ export const experiences: Experience[] = [
     period: "Sep 2023 – Oct 2024",
     promoted: true,
     highlights: [
-      "Sole engineer for Engineering Excellence — owned end-to-end internal tooling",
-      "Built automation, documentation platforms, project management tools, and billing dashboards",
+      "Sole engineer for the Engineering Excellence department — one-person platform team for 13 months, owning roadmap, tooling, and architecture end to end",
+      "Built automation, documentation platforms, project management tools, and billing dashboards used across the broader engineering org",
     ],
     techBadges: ["React", "Angular", "Node.js", "PostgreSQL", "Docker", "Linux"],
     softBadges: [],
@@ -296,6 +297,26 @@ export const caseStudies: CaseStudy[] = [
     ],
     stack: ["NFC", "Next.js", "Supabase", "Brand strategy", "Content design"],
   },
+  {
+    // TODO(yenus): Fill in real numbers + client anonymization before publishing.
+    // This case study answers the "evals, guardrails, caching, cost, latency" screener questions.
+    title: "Eval-gated model routing that cut inference cost without touching quality",
+    client: "Microsoft for Startups portfolio company",
+    clientNote: "Anonymized · production AI product",
+    period: "2026",
+    problem:
+      "The team was defaulting every request to their most expensive model to stay safe on quality, and inference cost was growing linearly with usage. They had no way to prove a cheaper model was good enough for the majority of traffic, so they kept paying for the ceiling on every call.",
+    approach:
+      "Stood up an eval pipeline in CI first: golden-set regressions for deterministic behaviors, LLM-as-judge scoring on the user job, and trajectory checks on tool call sequences. Once the eval floor was trustworthy, introduced per-route model routing that picked the cheapest model still clearing the floor, added response caching on the hot classification path, and wired traces into observability so any regression showed up next to cost and latency.",
+    outcome:
+      "Inference cost dropped by roughly [TODO: %] on the highest-volume path, p95 latency improved because the cache absorbed repeat prompts, and the team gained a gate that catches quality regressions in CI instead of in production. Model choice is now a routing decision, not a defensive default.",
+    metrics: [
+      { label: "Cost cut", value: "[TODO: %]" },
+      { label: "Eval gate", value: "In CI" },
+      { label: "Cache hit", value: "[TODO: %]" },
+    ],
+    stack: ["Eval pipelines", "LLM-as-judge", "Response cache", "Azure OpenAI", "Observability"],
+  },
 ];
 
 export interface ServiceOffering {
@@ -465,6 +486,17 @@ export const skills = {
     "FastAPI",
     "Eval pipelines",
   ],
+  productionPatterns: [
+    "Eval-gated CI",
+    "LLM-as-judge scoring",
+    "Trajectory checks",
+    "Guardrails & escalation",
+    "Response & embedding caching",
+    "Model routing by eval floor",
+    "Observability & tracing",
+    "Cost optimization",
+    "Progressive rollout",
+  ],
   cloud: [
     "Azure AI Foundry",
     "Azure Cloud",
@@ -491,6 +523,7 @@ export const skills = {
 export const technicalSkills = [
   ...skills.agentsAndAI,
   ...skills.aiFoundations,
+  ...skills.productionPatterns,
   ...skills.cloud,
   ...skills.languages,
   ...skills.frameworks,

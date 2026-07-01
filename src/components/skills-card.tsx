@@ -5,6 +5,7 @@ import { skills } from "@/lib/resume-data";
 const groups = [
   { key: "agentsAndAI", label: "Agents & AI tooling", items: skills.agentsAndAI },
   { key: "aiFoundations", label: "AI foundations", items: skills.aiFoundations },
+  { key: "productionPatterns", label: "Production AI patterns", items: skills.productionPatterns },
   { key: "cloud", label: "Cloud & architecture", items: skills.cloud },
   { key: "languages", label: "Languages", items: skills.languages },
   { key: "frameworks", label: "Frameworks", items: skills.frameworks },

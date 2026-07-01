@@ -126,7 +126,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="mt-12 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4"
           >
-            <Stat label="Building AI since" value="Oct 2022" sub="One month before ChatGPT" />
+            <Stat label="In production agents" value="3.5 yrs" sub="Since Oct 2022, pre-ChatGPT" />
             <Stat label="Promotions in 2 yrs" value="3" />
             <Stat label="Azure certs" value="AI-102 · AZ-204" />
             <Stat label="Migration record" value="1 week" sub="Vercel+GCP → Azure" />

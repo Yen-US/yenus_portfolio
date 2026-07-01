@@ -80,6 +80,7 @@ ${projects.map((p) => `- ${p.name}${p.featured ? " [FLAGSHIP]" : ""}: ${p.descri
 ## Skills
 Agents & AI tooling: ${skills.agentsAndAI.join(", ")}
 AI foundations: ${skills.aiFoundations.join(", ")}
+Production AI patterns: ${skills.productionPatterns.join(", ")}
 Cloud & architecture: ${skills.cloud.join(", ")}
 Languages: ${skills.languages.join(", ")}
 Frameworks: ${skills.frameworks.join(", ")}
