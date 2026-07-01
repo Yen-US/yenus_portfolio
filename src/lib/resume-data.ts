@@ -298,24 +298,29 @@ export const caseStudies: CaseStudy[] = [
     stack: ["NFC", "Next.js", "Supabase", "Brand strategy", "Content design"],
   },
   {
-    // TODO(yenus): Fill in real numbers + client anonymization before publishing.
-    // This case study answers the "evals, guardrails, caching, cost, latency" screener questions.
-    title: "Eval-gated model routing that cut inference cost without touching quality",
-    client: "Microsoft for Startups portfolio company",
-    clientNote: "Anonymized · production AI product",
+    title: "AOP Beacon: guardrailed AI conversation prompts for a live event",
+    client: "Amplification Of Potential",
+    clientNote: "Presencia Studio · NFC beacons + AI conversation engine",
     period: "2026",
     problem:
-      "The team was defaulting every request to their most expensive model to stay safe on quality, and inference cost was growing linearly with usage. They had no way to prove a cheaper model was good enough for the majority of traffic, so they kept paying for the ceiling on every call.",
+      "AOP runs curated events where the goal is authentic in-person conversation. Static cards felt like a form and generic AI prompts sounded like ChatGPT. Each attendee needed a personalized prompt for the current phase of the event, in under 2.5 seconds, in the AOP tone, with zero risk of the model touching politics, money, or trauma during a warm-up phase.",
     approach:
-      "Stood up an eval pipeline in CI first: golden-set regressions for deterministic behaviors, LLM-as-judge scoring on the user job, and trajectory checks on tool call sequences. Once the eval floor was trustworthy, introduced per-route model routing that picked the cheapest model still clearing the floor, added response caching on the hot classification path, and wired traces into observability so any regression showed up next to cost and latency.",
+      "Designed the Beacon system end to end: NTAG215 NFC pucks per table, a phased web app (Discover, Connect, Collaborate, Amplify), and an OpenAI-backed prompt engine. Each phase runs a system prompt built from four ingredients: phase objective, explicit AVOID / SEEK guardrails from the client, few-shot examples pre-approved with the client, and the attendee's card selections. Names never leave the device — the payload templates a {{NAME}} placeholder the client fills on render. A pre-approved question bank doubles as few-shot style anchor and hard fallback when the API misses its 4-second budget.",
     outcome:
-      "Inference cost dropped by roughly [TODO: %] on the highest-volume path, p95 latency improved because the cache absorbed repeat prompts, and the team gained a gate that catches quality regressions in CI instead of in production. Model choice is now a routing decision, not a defensive default.",
+      "Shipping for a live event with 6 active tables and up to 40 attendees on 10 reusable beacons. Inference budgeted under $1 per event on gpt-5.4-mini, p95 latency target under 2.5s, and zero PII in the payload by construction. Same architecture ports to future AOP events without a rebuild, and the pre-approved bank guarantees a warm-tone fallback even with no network.",
     metrics: [
-      { label: "Cost cut", value: "[TODO: %]" },
-      { label: "Eval gate", value: "In CI" },
-      { label: "Cache hit", value: "[TODO: %]" },
+      { label: "Latency target", value: "p95 < 2.5s" },
+      { label: "Cost / event", value: "< $1" },
+      { label: "PII in payload", value: "Zero" },
     ],
-    stack: ["Eval pipelines", "LLM-as-judge", "Response cache", "Azure OpenAI", "Observability"],
+    stack: [
+      "OpenAI API",
+      "Next.js 16",
+      "NFC (NTAG215)",
+      "Fluid Compute",
+      "Zod",
+      "Few-shot + fallback bank",
+    ],
   },
 ];
 
