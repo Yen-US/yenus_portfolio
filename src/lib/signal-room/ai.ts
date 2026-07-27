@@ -13,7 +13,6 @@ import type {
 
 const model = process.env.OPENAI_RESEARCH_MODEL ?? "gpt-5-mini";
 const searchModel = process.env.OPENAI_SEARCH_MODEL ?? "gpt-4o-mini-search-preview";
-const structureModel = process.env.OPENAI_STRUCTURE_MODEL ?? "gpt-4o-mini";
 
 const discoveredCompaniesEnvelopeSchema = z.object({
   companies: z.array(z.unknown()),
@@ -87,12 +86,24 @@ export async function discoverCompanies(input: {
   const completion = await openai.chat.completions.create(
     {
       model: searchModel,
-      web_search_options: { search_context_size: "medium" },
+      web_search_options: { search_context_size: "low" },
+      max_completion_tokens: 1_300,
       messages: [
         {
           role: "system",
           content:
-            "You are a rigorous B2B startup researcher. Find real companies, not directories or generic lists. Write a concise research report with one heading per company and cite every funding, product, launch, hiring, or customer claim using web search citations. Include the official website when you can verify it. Never invent a funding stage or trigger. Prefer company pages, founder announcements, reputable funding reports, public job listings, and technical blogs. If a stage cannot be verified, say Unknown.",
+            `Use web search to find real B2B AI startups. Every company must have at least one recent funding, product launch, enterprise pilot, customer, or engineering-hiring claim with an inline web citation. Cite the funding stage as well. If you cannot cite a company and its requested stage, omit it. Never infer an official website.
+
+Write no more than the requested number of compact Markdown sections in this exact shape:
+## Company name
+- Website: full official URL or Unknown
+- Stage: Seed, Series A, or Series B
+- Location: location or Unknown
+- Product: one sentence
+- Why fit: one sentence
+- Trigger: one recent claim ending with its inline web citation
+
+No introduction, conclusion, directories, generic startup lists, agencies, consultancies, or consumer-only apps. Prefer official company pages, founder announcements, reputable funding reports, public job listings, and technical blogs.`,
         },
         {
           role: "user",
@@ -100,7 +111,7 @@ export async function discoverCompanies(input: {
         },
       ],
     },
-    { timeout: 45_000, maxRetries: 1 }
+    { timeout: 10_500, maxRetries: 0 }
   );
 
   const message = completion.choices[0]?.message;
@@ -112,79 +123,24 @@ export async function discoverCompanies(input: {
         {
           title: annotation.url_citation.title,
           url: annotation.url_citation.url,
+          startIndex: annotation.url_citation.start_index,
+          endIndex: annotation.url_citation.end_index,
         },
       ])
     ).values()
   );
-  if (citations.length === 0) throw new Error("Web search returned no citable sources.");
-
-  const sourceLedger = citations
-    .map((citation, index) => `[SRC${index + 1}] ${citation.title} | ${citation.url}`)
-    .join("\n");
-  const structured = await openai.chat.completions.create(
-    {
-      model: structureModel,
-      response_format: {
-        type: "json_schema",
-        json_schema: {
-          name: "startup_discovery",
-          strict: true,
-          schema: startupDiscoveryJsonSchema(input.count),
-        },
-      },
-      messages: [
-        {
-          role: "system",
-          content:
-            "Convert a cited startup research report into the requested JSON. Use only facts in the report. sourceUrls may contain only exact URLs from the supplied citation ledger. website must be a full http/https official company URL or an empty string when the official site is not verified. Use Unknown when funding stage is not explicitly supported. Exclude any company that has no relevant cited source.",
-        },
-        {
-          role: "user",
-          content: `SEARCH REPORT\n${message.content}\n\nCITATION LEDGER\n${sourceLedger}`,
-        },
-      ],
-    },
-    { timeout: 30_000, maxRetries: 1 }
-  );
-
-  const structuredContent = structured.choices[0]?.message.content;
-  if (!structuredContent) throw new Error("Search results could not be structured.");
-  const envelope = discoveredCompaniesEnvelopeSchema.parse(
-    JSON.parse(structuredContent)
-  );
-  const citedUrls = citations.map((citation) => citation.url);
-
-  return envelope.companies
-    .flatMap((candidate) => {
-      const parsed = discoveredCompanyCandidateSchema.safeParse(candidate);
-      if (!parsed.success) return [];
-
-      const sourceUrls = Array.from(
-        new Set(
-          parsed.data.sourceUrls.flatMap((url) => {
-            const citation = findMatchingCitation(url, citedUrls);
-            return citation ? [citation] : [];
-          })
-        )
-      );
-      if (sourceUrls.length === 0) return [];
-
-      return [
-        {
-          ...parsed.data,
-          website: normalizeCompanyWebsite(
-            parsed.data.website,
-            parsed.data.name,
-            sourceUrls
-          ),
-          sourceUrls,
-        },
-      ];
-    })
+  const companies = parseDiscoveryBlocks(message.content, citations)
     .filter(
       (company) =>
         company.sourceUrls.length > 0 && input.stages.includes(company.stage)
-    );
+    )
+    .slice(0, input.count);
+
+  if (companies.length === 0) {
+    throw new Error("Search returned no source-backed candidates. Try a narrower query.");
+  }
+
+  return companies;
 }
 
 export async function buildResearchBrief(input: {
@@ -298,15 +254,6 @@ function extractHttpUrls(value: string) {
   return value.match(/https?:\/\/[^\s|)\]}>,]+/g) ?? [];
 }
 
-function findMatchingCitation(value: string, citations: string[]) {
-  const normalized = normalizeUrl(value);
-  if (!normalized) return null;
-  return citations.find((citation) => {
-    const normalizedCitation = normalizeUrl(citation);
-    return normalizedCitation === normalized || normalizedCitation.startsWith(`${normalized}?`);
-  }) ?? null;
-}
-
 function normalizeCompanyWebsite(
   value: string,
   companyName: string,
@@ -340,6 +287,165 @@ function normalizeCompanyWebsite(
   }
 
   return "";
+}
+
+interface SearchCitation {
+  title: string;
+  url: string;
+  startIndex: number;
+  endIndex: number;
+}
+
+function parseDiscoveryBlocks(
+  content: string,
+  citations: SearchCitation[]
+): DiscoveredCompany[] {
+  const candidates: DiscoveredCompany[] = [];
+
+  for (const block of extractDiscoveryBlocks(content)) {
+    const { body, start: blockStart, end: blockEnd } = block;
+    const name = readDiscoveryField(body, "NAME");
+    if (!name) continue;
+
+    const sourceUrls = findBlockCitations(
+      body,
+      name,
+      blockStart,
+      blockEnd,
+      citations
+    );
+    if (sourceUrls.length === 0) continue;
+
+    const candidate = discoveredCompanyCandidateSchema.safeParse({
+      name,
+      website: readDiscoveryField(body, "WEBSITE"),
+      stage: normalizeStartupStage(readDiscoveryField(body, "STAGE")),
+      location: readDiscoveryField(body, "LOCATION"),
+      oneLiner:
+        readDiscoveryField(body, "ONE_LINE") ||
+        readDiscoveryField(body, "PRODUCT"),
+      whyItFits:
+        readDiscoveryField(body, "WHY_FIT") ||
+        readDiscoveryField(body, "WHY FIT"),
+      trigger: readDiscoveryField(body, "TRIGGER"),
+      sourceUrls,
+    });
+    if (!candidate.success) continue;
+
+    candidates.push({
+      ...candidate.data,
+      website: normalizeCompanyWebsite(
+        candidate.data.website,
+        candidate.data.name,
+        sourceUrls
+      ),
+      sourceUrls,
+    });
+  }
+
+  return candidates;
+}
+
+function extractDiscoveryBlocks(content: string) {
+  const tagged = Array.from(
+    content.matchAll(/<COMPANY>([\s\S]*?)<\/COMPANY>/gi)
+  ).map((match) => ({
+    body: match[1],
+    start: match.index ?? 0,
+    end: (match.index ?? 0) + match[0].length,
+  }));
+  if (tagged.length > 0) return tagged;
+
+  const markdownHeadings = Array.from(
+    content.matchAll(/^##\s+([^\n]+)$/gim)
+  );
+  if (markdownHeadings.length > 0) {
+    return markdownHeadings.map((heading, index) => {
+      const start = heading.index ?? 0;
+      const end = markdownHeadings[index + 1]?.index ?? content.length;
+      return {
+        body: `NAME: ${stripSearchMarkup(heading[1])}\n${content.slice(
+          start + heading[0].length,
+          end
+        )}`,
+        start,
+        end,
+      };
+    });
+  }
+
+  const nameMarkers = Array.from(
+    content.matchAll(/(?:^|\n)\s*(?:\*\*)?NAME(?:\*\*)?\s*:/gi)
+  );
+  return nameMarkers.map((marker, index) => {
+    const start = marker.index ?? 0;
+    const end = nameMarkers[index + 1]?.index ?? content.length;
+    return { body: content.slice(start, end), start, end };
+  });
+}
+
+function readDiscoveryField(body: string, label: string) {
+  const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = body.match(
+    new RegExp(`(?:^|\\n)\\s*(?:[-*]\\s*)?(?:\\*\\*)?${escapedLabel}(?:\\*\\*)?\\s*:\\s*([^\\n]+)`, "i")
+  );
+  return stripSearchMarkup(match?.[1] ?? "");
+}
+
+function stripSearchMarkup(value: string) {
+  return value
+    .replace(/\[([^\]]+)]\(https?:\/\/[^)]+\)/g, "$1")
+    .replace(/\(\s*https?:\/\/[^)]+\)/g, "")
+    .replace(/\*\*/g, "")
+    .trim();
+}
+
+function normalizeStartupStage(value: string) {
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (normalized === "seed") return "Seed";
+  if (normalized === "seriesa") return "Series A";
+  if (normalized === "seriesb") return "Series B";
+  return "Unknown";
+}
+
+function findBlockCitations(
+  body: string,
+  companyName: string,
+  blockStart: number,
+  blockEnd: number,
+  citations: SearchCitation[]
+) {
+  const overlapping = citations.filter(
+    (citation) =>
+      citation.startIndex < blockEnd && citation.endIndex > blockStart
+  );
+  if (overlapping.length > 0) {
+    return Array.from(new Set(overlapping.map((citation) => citation.url)));
+  }
+
+  const inlineUrls = extractHttpUrls(body);
+  const inlineMatches = citations.filter((citation) =>
+    inlineUrls.some(
+      (url) => normalizeUrl(url) === normalizeUrl(citation.url)
+    )
+  );
+  if (inlineMatches.length > 0) {
+    return Array.from(new Set(inlineMatches.map((citation) => citation.url)));
+  }
+
+  const validInlineUrls = inlineUrls.flatMap((url) => {
+    const normalized = toHttpUrl(url);
+    return normalized ? [normalized] : [];
+  });
+  if (validInlineUrls.length > 0) {
+    return Array.from(new Set(validInlineUrls));
+  }
+
+  const companyKey = normalizeCompanyKey(companyName);
+  const titleMatches = citations.filter((citation) =>
+    normalizeCompanyKey(citation.title).includes(companyKey)
+  );
+  return Array.from(new Set(titleMatches.map((citation) => citation.url)));
 }
 
 function hostnameMatchesCompany(hostname: string, companyName: string) {
@@ -398,44 +504,6 @@ function isPublisherHostname(hostname: string) {
     "techcrunch.com",
     "venturebeat.com",
   ].some((publisher) => hostname === publisher || hostname.endsWith(`.${publisher}`));
-}
-
-function startupDiscoveryJsonSchema(maxItems: number) {
-  return {
-    type: "object",
-    additionalProperties: false,
-    required: ["companies"],
-    properties: {
-      companies: {
-        type: "array",
-        maxItems,
-        items: {
-          type: "object",
-          additionalProperties: false,
-          required: [
-            "name",
-            "website",
-            "stage",
-            "location",
-            "oneLiner",
-            "whyItFits",
-            "trigger",
-            "sourceUrls",
-          ],
-          properties: {
-            name: { type: "string" },
-            website: { type: "string" },
-            stage: { type: "string", enum: ["Seed", "Series A", "Series B", "Unknown"] },
-            location: { type: "string" },
-            oneLiner: { type: "string" },
-            whyItFits: { type: "string" },
-            trigger: { type: "string" },
-            sourceUrls: { type: "array", items: { type: "string" } },
-          },
-        },
-      },
-    },
-  } as const;
 }
 
 const researchBriefJsonSchema = {

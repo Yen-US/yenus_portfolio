@@ -20,7 +20,6 @@ Optional model overrides:
 
 ```text
 OPENAI_SEARCH_MODEL=gpt-4o-mini-search-preview
-OPENAI_STRUCTURE_MODEL=gpt-4o-mini
 OPENAI_RESEARCH_MODEL=gpt-5-mini
 ```
 
@@ -37,10 +36,10 @@ When Supabase is absent, Signal Room loads fictional demo accounts and a sample 
 - Open every cited source before saving a company.
 - Reject generic matches, agencies, consumer-only products, and companies outside the selected stage.
 
-Discovery uses OpenAI web search in two steps:
-
-1. A search model produces a cited public report.
-2. A structured model converts only that report and its exact citation ledger into candidates.
+Discovery uses one bounded OpenAI web-search call and parses its citation-bearing
+Markdown locally. It returns up to three stage-verified candidates per search so
+the request stays below serverless execution limits. Run separate searches for
+different trigger angles instead of asking one invocation for a broad list.
 
 Sources shown in discovery are citations, not independently verified facts. Confirm the relevant claim before outreach.
 

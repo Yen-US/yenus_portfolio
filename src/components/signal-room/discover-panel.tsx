@@ -41,7 +41,7 @@ export function DiscoverPanel({
       try {
         const result = await apiJson<{ companies: DiscoveredCompany[] }>("/api/signal-room/discover", {
           method: "POST",
-          body: JSON.stringify({ query, region, stages, count: 6 }),
+          body: JSON.stringify({ query, region, stages, count: 3 }),
         });
         setCompanies(result.companies);
       } catch (requestError) {

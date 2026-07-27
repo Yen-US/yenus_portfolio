@@ -7,8 +7,10 @@ const schema = z.object({
   query: z.string().trim().min(3).max(500),
   region: z.string().trim().min(2).max(100),
   stages: z.array(z.enum(["Seed", "Series A", "Series B"])).min(1).max(3),
-  count: z.number().int().min(1).max(12).default(8),
+  count: z.number().int().min(1).max(3).default(3),
 });
+
+export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   if (!isSameOrigin(request)) return NextResponse.json({ error: "Origin not allowed." }, { status: 403 });
@@ -39,9 +41,15 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Signal Room discovery failed", error);
+    const message =
+      error instanceof Error && /timed out|timeout|aborted/i.test(error.message)
+        ? "Public-signal search took too long. Try a narrower query."
+        : error instanceof Error
+          ? error.message
+          : "Discovery failed.";
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Discovery failed." },
-      { status: 502 }
+      { error: message },
+      { status: /too long/i.test(message) ? 504 : 502 }
     );
   }
 }
