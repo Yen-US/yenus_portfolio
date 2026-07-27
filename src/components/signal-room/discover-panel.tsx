@@ -126,7 +126,7 @@ export function DiscoverPanel({
               );
               const saved = savedAccountKeys.has(candidateKey);
               return (
-                <article key={`${company.name}-${company.website}`} className="grid gap-5 py-6 xl:grid-cols-[0.7fr_1.3fr_auto]">
+                <article key={`${company.name}-${company.website}`} className="grid gap-5 py-6 xl:grid-cols-[0.7fr_1.3fr_140px]">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-base font-semibold">{company.name}</h3>
@@ -152,24 +152,62 @@ export function DiscoverPanel({
                         ))}
                       </div>
                     </div>
+                    <details className="sm:col-span-2 border-t border-border pt-3">
+                      <summary className="focus-ring cursor-pointer rounded-sm text-xs font-semibold text-signal">
+                        Score breakdown
+                      </summary>
+                      <div className="mt-3 divide-y divide-border border-y border-border">
+                        {company.fitBreakdown.map((dimension) => (
+                          <div
+                            key={dimension.id}
+                            className="grid gap-1 py-3 sm:grid-cols-[1fr_auto] sm:items-start"
+                          >
+                            <div>
+                              <p className="text-xs font-semibold">
+                                {dimension.label}
+                              </p>
+                              <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+                                {dimension.reason}
+                              </p>
+                            </div>
+                            <p className="font-mono text-xs tabular-nums">
+                              {dimension.score}/{dimension.maxScore}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </details>
                   </div>
-                  <StudioButton
-                    variant={saved ? "secondary" : "primary"}
-                    disabled={saved || savingKey === candidateKey}
-                    loading={savingKey === candidateKey}
-                    onClick={async () => {
-                      setSavingKey(candidateKey);
-                      try {
-                        await onSave(company);
-                      } finally {
-                        setSavingKey("");
-                      }
-                    }}
-                    className="self-start"
-                  >
-                    <Plus className="h-4 w-4" />
-                    {saved ? "Saved" : "Save"}
-                  </StudioButton>
+                  <div className="self-start">
+                    <div className="border border-border bg-card p-4 text-center">
+                      <p className="consulting-kicker text-muted-foreground">
+                        Suggested fit
+                      </p>
+                      <p className={`consulting-display mt-2 text-4xl ${getScoreColor(company.fitScore)}`}>
+                        {company.fitScore}
+                      </p>
+                      <p className="mt-1 text-[10px] capitalize text-muted-foreground">
+                        {company.fitConfidence} evidence
+                      </p>
+                    </div>
+                    <StudioButton
+                      variant={saved ? "secondary" : "primary"}
+                      disabled={saved || savingKey === candidateKey}
+                      loading={savingKey === candidateKey}
+                      onClick={async () => {
+                        setSavingKey(candidateKey);
+                        try {
+                          await onSave(company);
+                        } finally {
+                          setSavingKey("");
+                        }
+                      }}
+                      className="mt-3 w-full"
+                    >
+                      <Plus className="h-4 w-4" />
+                      {saved ? "Saved" : "Save"}
+                    </StudioButton>
+                  </div>
                 </article>
               );
             })}
@@ -187,4 +225,10 @@ function Signal({ label, body }: { label: string; body: string }) {
       <p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p>
     </div>
   );
+}
+
+function getScoreColor(score: number) {
+  if (score >= 80) return "text-signal";
+  if (score >= 65) return "text-brass";
+  return "text-muted-foreground";
 }

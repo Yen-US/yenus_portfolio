@@ -33,11 +33,11 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
       location: company.location,
       oneLiner: company.oneLiner,
       status: "watchlist" as const,
-      fitScore: 70,
-      priority: "medium" as const,
+      fitScore: company.fitScore,
+      priority: getSuggestedPriority(company.fitScore),
       founderNames: [],
       linkedinUrl: "",
-      notes: `${company.website ? "" : "Official website unverified.\n"}Discovery trigger: ${company.trigger}\nWhy it fits: ${company.whyItFits}\nSources:\n${company.sourceUrls.join("\n")}`,
+      notes: `${company.website ? "" : "Official website unverified.\n"}Suggested fit: ${company.fitScore}/100 (${company.fitConfidence} evidence)\n${company.fitBreakdown.map((dimension) => `- ${dimension.label}: ${dimension.score}/${dimension.maxScore} - ${dimension.reason}`).join("\n")}\nDiscovery trigger: ${company.trigger}\nWhy it fits: ${company.whyItFits}\nSources:\n${company.sourceUrls.join("\n")}`,
       brief: null,
     };
 
@@ -145,4 +145,10 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
       </div>
     </div>
   );
+}
+
+function getSuggestedPriority(score: number) {
+  if (score >= 80) return "high" as const;
+  if (score >= 65) return "medium" as const;
+  return "low" as const;
 }

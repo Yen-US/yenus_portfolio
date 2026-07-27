@@ -43,6 +43,23 @@ different trigger angles instead of asking one invocation for a broad list.
 
 Sources shown in discovery are citations, not independently verified facts. Confirm the relevant claim before outreach.
 
+### Suggested Fit Score
+
+Discovery calculates a deterministic `0-100` suggestion after parsing the cited
+result. The model does not choose the number. The rubric is:
+
+- ICP stage: 20
+- B2B AI centrality: 20
+- Prototype-to-production signal: 25
+- Architecture-offer alignment: 20
+- Recent urgency trigger: 15
+
+Each candidate exposes the five-part breakdown. Evidence confidence is shown
+separately and depends on verified website/source coverage; it does not inflate
+the fit score. Saving a candidate preserves the suggested score, derives initial
+priority (`80+` high, `65-79` medium, below `65` low), and leaves the score
+editable in the account workspace.
+
 ### 2. Research
 
 - Add the company website, launch posts, technical writing, jobs page, funding coverage, and public product documentation.

@@ -126,7 +126,21 @@ export interface WorkspaceData {
   posts: PostDraft[];
 }
 
-export interface DiscoveredCompany {
+export interface FitScoreDimension {
+  id: "stage" | "centrality" | "production" | "architecture" | "urgency";
+  label: string;
+  score: number;
+  maxScore: number;
+  reason: string;
+}
+
+export interface DiscoveryFitAssessment {
+  fitScore: number;
+  fitConfidence: "low" | "medium" | "high";
+  fitBreakdown: FitScoreDimension[];
+}
+
+export interface DiscoveredCompany extends DiscoveryFitAssessment {
   name: string;
   website: string;
   stage: StartupStage;

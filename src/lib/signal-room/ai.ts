@@ -10,6 +10,7 @@ import type {
   ResearchBrief,
   ResearchSource,
 } from "@/lib/signal-room/types";
+import { calculateDiscoveryFit } from "@/lib/signal-room/fit-score";
 
 const model = process.env.OPENAI_RESEARCH_MODEL ?? "gpt-5-mini";
 const searchModel = process.env.OPENAI_SEARCH_MODEL ?? "gpt-4o-mini-search-preview";
@@ -134,6 +135,11 @@ No introduction, conclusion, directories, generic startup lists, agencies, consu
       (company) =>
         company.sourceUrls.length > 0 && input.stages.includes(company.stage)
     )
+    .map((company) => ({
+      ...company,
+      ...calculateDiscoveryFit(company),
+    }))
+    .toSorted((left, right) => right.fitScore - left.fitScore)
     .slice(0, input.count);
 
   if (companies.length === 0) {
@@ -299,8 +305,11 @@ interface SearchCitation {
 function parseDiscoveryBlocks(
   content: string,
   citations: SearchCitation[]
-): DiscoveredCompany[] {
-  const candidates: DiscoveredCompany[] = [];
+): Omit<DiscoveredCompany, keyof import("@/lib/signal-room/types").DiscoveryFitAssessment>[] {
+  const candidates: Omit<
+    DiscoveredCompany,
+    keyof import("@/lib/signal-room/types").DiscoveryFitAssessment
+  >[] = [];
 
   for (const block of extractDiscoveryBlocks(content)) {
     const { body, start: blockStart, end: blockEnd } = block;
