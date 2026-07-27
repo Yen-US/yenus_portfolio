@@ -16,15 +16,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Research limit reached. Try again later." }, { status: 429 });
   }
 
+  let input: z.infer<typeof schema>;
   try {
-    const input = schema.parse(await request.json());
+    input = schema.parse(await request.json());
+  } catch {
+    return NextResponse.json(
+      { error: "Review the search query, market, and funding stages." },
+      { status: 400 }
+    );
+  }
+
+  try {
     const companies = await discoverCompanies(input);
     return NextResponse.json({ companies });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.error("Signal Room discovery output could not be normalized", error.issues);
+      return NextResponse.json(
+        { error: "Search results could not be normalized. Run the search again." },
+        { status: 502 }
+      );
+    }
+
     console.error("Signal Room discovery failed", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Discovery failed." },
-      { status: error instanceof z.ZodError ? 400 : 502 }
+      { status: 502 }
     );
   }
 }

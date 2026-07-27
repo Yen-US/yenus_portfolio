@@ -3,7 +3,7 @@
 import { Building2, FilePenLine, LayoutDashboard, Radar, ShieldAlert } from "lucide-react";
 import { useState } from "react";
 import type { Account, DiscoveredCompany, PostDraft, WorkspaceData } from "@/lib/signal-room/types";
-import { apiJson } from "@/lib/signal-room/client";
+import { apiJson, getAccountIdentityKey } from "@/lib/signal-room/client";
 import { cn } from "@/lib/utils";
 import { DiscoverPanel } from "@/components/signal-room/discover-panel";
 import { OverviewPanel } from "@/components/signal-room/overview-panel";
@@ -37,7 +37,7 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
       priority: "medium" as const,
       founderNames: [],
       linkedinUrl: "",
-      notes: `Discovery trigger: ${company.trigger}\nWhy it fits: ${company.whyItFits}\nSources:\n${company.sourceUrls.join("\n")}`,
+      notes: `${company.website ? "" : "Official website unverified.\n"}Discovery trigger: ${company.trigger}\nWhy it fits: ${company.whyItFits}\nSources:\n${company.sourceUrls.join("\n")}`,
       brief: null,
     };
 
@@ -63,9 +63,9 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
     setAccounts((current) => [result.account, ...current]);
   }
 
-  const savedWebsites = new Set(
+  const savedAccountKeys = new Set(
     accounts.map((account) =>
-      account.website.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "").toLowerCase()
+      getAccountIdentityKey(account.name, account.website)
     )
   );
 
@@ -128,7 +128,7 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
 
           <main className="mx-auto w-full max-w-[1500px] p-4 md:p-7 lg:p-9">
             {view === "overview" ? <OverviewPanel accounts={accounts} posts={posts} onNavigate={setView} /> : null}
-            {view === "discover" ? <DiscoverPanel savedWebsites={savedWebsites} onSave={saveDiscoveredCompany} /> : null}
+            {view === "discover" ? <DiscoverPanel savedAccountKeys={savedAccountKeys} onSave={saveDiscoveredCompany} /> : null}
             {view === "accounts" ? (
               <AccountsPanel accounts={accounts} mode={initialData.mode} onAccountsChange={setAccounts} />
             ) : null}

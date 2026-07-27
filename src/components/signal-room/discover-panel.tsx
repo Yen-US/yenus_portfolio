@@ -2,7 +2,7 @@
 
 import { ExternalLink, Plus, Radar, Search } from "lucide-react";
 import { FormEvent, useState, useTransition } from "react";
-import { apiJson } from "@/lib/signal-room/client";
+import { apiJson, getAccountIdentityKey } from "@/lib/signal-room/client";
 import type { DiscoveredCompany } from "@/lib/signal-room/types";
 import {
   Field,
@@ -20,10 +20,10 @@ const searchPresets = [
 ];
 
 export function DiscoverPanel({
-  savedWebsites,
+  savedAccountKeys,
   onSave,
 }: {
-  savedWebsites: Set<string>;
+  savedAccountKeys: Set<string>;
   onSave: (company: DiscoveredCompany) => Promise<void>;
 }) {
   const [query, setQuery] = useState(searchPresets[0]);
@@ -32,7 +32,7 @@ export function DiscoverPanel({
   const [companies, setCompanies] = useState<DiscoveredCompany[]>([]);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
-  const [savingWebsite, setSavingWebsite] = useState("");
+  const [savingKey, setSavingKey] = useState("");
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -120,13 +120,20 @@ export function DiscoverPanel({
         ) : (
           <div className="divide-y divide-border border-b border-border">
             {companies.map((company) => {
-              const saved = savedWebsites.has(normalizeWebsite(company.website));
+              const candidateKey = getAccountIdentityKey(
+                company.name,
+                company.website
+              );
+              const saved = savedAccountKeys.has(candidateKey);
               return (
                 <article key={`${company.name}-${company.website}`} className="grid gap-5 py-6 xl:grid-cols-[0.7fr_1.3fr_auto]">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-base font-semibold">{company.name}</h3>
                       <StatusBadge>{company.stage}</StatusBadge>
+                      {!company.website ? (
+                        <StatusBadge tone="warn">site unverified</StatusBadge>
+                      ) : null}
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">{company.location}</p>
                     <p className="mt-3 text-sm leading-6">{company.oneLiner}</p>
@@ -148,14 +155,14 @@ export function DiscoverPanel({
                   </div>
                   <StudioButton
                     variant={saved ? "secondary" : "primary"}
-                    disabled={saved || savingWebsite === company.website}
-                    loading={savingWebsite === company.website}
+                    disabled={saved || savingKey === candidateKey}
+                    loading={savingKey === candidateKey}
                     onClick={async () => {
-                      setSavingWebsite(company.website);
+                      setSavingKey(candidateKey);
                       try {
                         await onSave(company);
                       } finally {
-                        setSavingWebsite("");
+                        setSavingKey("");
                       }
                     }}
                     className="self-start"
@@ -180,8 +187,4 @@ function Signal({ label, body }: { label: string; body: string }) {
       <p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p>
     </div>
   );
-}
-
-function normalizeWebsite(value: string) {
-  return value.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "").toLowerCase();
 }

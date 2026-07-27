@@ -15,19 +15,19 @@ const model = process.env.OPENAI_RESEARCH_MODEL ?? "gpt-5-mini";
 const searchModel = process.env.OPENAI_SEARCH_MODEL ?? "gpt-4o-mini-search-preview";
 const structureModel = process.env.OPENAI_STRUCTURE_MODEL ?? "gpt-4o-mini";
 
-const discoveredCompanySchema = z.object({
-  companies: z.array(
-    z.object({
-      name: z.string(),
-      website: z.string().url(),
-      stage: z.enum(["Seed", "Series A", "Series B", "Unknown"]),
-      location: z.string(),
-      oneLiner: z.string(),
-      whyItFits: z.string(),
-      trigger: z.string(),
-      sourceUrls: z.array(z.string().url()),
-    })
-  ),
+const discoveredCompaniesEnvelopeSchema = z.object({
+  companies: z.array(z.unknown()),
+});
+
+const discoveredCompanyCandidateSchema = z.object({
+  name: z.string().trim().min(1).max(200),
+  website: z.string().nullish().transform((value) => value?.trim() ?? ""),
+  stage: z.enum(["Seed", "Series A", "Series B", "Unknown"]).catch("Unknown"),
+  location: z.string().nullish().transform((value) => value?.trim() ?? ""),
+  oneLiner: z.string().nullish().transform((value) => value?.trim() ?? ""),
+  whyItFits: z.string().nullish().transform((value) => value?.trim() ?? ""),
+  trigger: z.string().nullish().transform((value) => value?.trim() ?? ""),
+  sourceUrls: z.array(z.string()).catch([]),
 });
 
 const researchBriefSchema = z.object({
@@ -136,7 +136,7 @@ export async function discoverCompanies(input: {
         {
           role: "system",
           content:
-            "Convert a cited startup research report into the requested JSON. Use only facts in the report. sourceUrls may contain only exact URLs from the supplied citation ledger. Use Unknown when funding stage is not explicitly supported. Exclude any company that has no relevant cited source.",
+            "Convert a cited startup research report into the requested JSON. Use only facts in the report. sourceUrls may contain only exact URLs from the supplied citation ledger. website must be a full http/https official company URL or an empty string when the official site is not verified. Use Unknown when funding stage is not explicitly supported. Exclude any company that has no relevant cited source.",
         },
         {
           role: "user",
@@ -149,13 +149,38 @@ export async function discoverCompanies(input: {
 
   const structuredContent = structured.choices[0]?.message.content;
   if (!structuredContent) throw new Error("Search results could not be structured.");
-  const parsed = discoveredCompanySchema.parse(JSON.parse(structuredContent));
-  const citedUrls = new Set(citations.map((citation) => citation.url));
-  return parsed.companies
-    .map((company) => ({
-      ...company,
-      sourceUrls: company.sourceUrls.filter((url) => hasMatchingCitation(url, citedUrls)),
-    }))
+  const envelope = discoveredCompaniesEnvelopeSchema.parse(
+    JSON.parse(structuredContent)
+  );
+  const citedUrls = citations.map((citation) => citation.url);
+
+  return envelope.companies
+    .flatMap((candidate) => {
+      const parsed = discoveredCompanyCandidateSchema.safeParse(candidate);
+      if (!parsed.success) return [];
+
+      const sourceUrls = Array.from(
+        new Set(
+          parsed.data.sourceUrls.flatMap((url) => {
+            const citation = findMatchingCitation(url, citedUrls);
+            return citation ? [citation] : [];
+          })
+        )
+      );
+      if (sourceUrls.length === 0) return [];
+
+      return [
+        {
+          ...parsed.data,
+          website: normalizeCompanyWebsite(
+            parsed.data.website,
+            parsed.data.name,
+            sourceUrls
+          ),
+          sourceUrls,
+        },
+      ];
+    })
     .filter(
       (company) =>
         company.sourceUrls.length > 0 && input.stages.includes(company.stage)
@@ -273,13 +298,106 @@ function extractHttpUrls(value: string) {
   return value.match(/https?:\/\/[^\s|)\]}>,]+/g) ?? [];
 }
 
-function hasMatchingCitation(value: string, citations: Set<string>) {
+function findMatchingCitation(value: string, citations: string[]) {
   const normalized = normalizeUrl(value);
-  if (!normalized) return false;
-  return [...citations].some((citation) => {
+  if (!normalized) return null;
+  return citations.find((citation) => {
     const normalizedCitation = normalizeUrl(citation);
     return normalizedCitation === normalized || normalizedCitation.startsWith(`${normalized}?`);
-  });
+  }) ?? null;
+}
+
+function normalizeCompanyWebsite(
+  value: string,
+  companyName: string,
+  sourceUrls: string[]
+) {
+  const explicit = toHttpUrl(value);
+  if (explicit) {
+    const explicitUrl = new URL(explicit);
+    const explicitHostname = explicitUrl.hostname
+      .replace(/^www\./, "")
+      .toLowerCase();
+    if (
+      !isPublisherHostname(explicitHostname) &&
+      hostnameMatchesCompany(explicitHostname, companyName)
+    ) {
+      return explicitUrl.origin;
+    }
+  }
+
+  const companyKey = normalizeCompanyKey(companyName);
+  if (companyKey.length < 4) return "";
+
+  for (const sourceUrl of sourceUrls) {
+    const source = new URL(sourceUrl);
+    const hostname = source.hostname.replace(/^www\./, "").toLowerCase();
+    if (isPublisherHostname(hostname)) continue;
+
+    if (hostnameMatchesCompany(hostname, companyName)) {
+      return source.origin;
+    }
+  }
+
+  return "";
+}
+
+function hostnameMatchesCompany(hostname: string, companyName: string) {
+  const companyKey = normalizeCompanyKey(companyName);
+  const hostnameKey = normalizeCompanyKey(
+    hostname.replace(/^www\./, "").split(".")[0]
+  );
+  return (
+    companyKey.length >= 4 &&
+    hostnameKey.length >= 4 &&
+    (companyKey.includes(hostnameKey) || hostnameKey.includes(companyKey))
+  );
+}
+
+function toHttpUrl(value: string) {
+  const trimmed = value.trim();
+  if (
+    !trimmed ||
+    /^(unknown|none|null|n\/?a|not available|not found|-)$/i.test(trimmed)
+  ) {
+    return "";
+  }
+
+  const candidate = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : /^(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:\/.*)?$/i.test(trimmed)
+      ? `https://${trimmed}`
+      : "";
+  if (!candidate) return "";
+
+  try {
+    const url = new URL(candidate);
+    return ["http:", "https:"].includes(url.protocol) ? url.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
+function normalizeCompanyKey(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/\b(inc|corp|corporation|company|technologies|technology|labs|ai)\b/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function isPublisherHostname(hostname: string) {
+  return [
+    "businesswire.com",
+    "crunchbase.com",
+    "forbes.com",
+    "globenewswire.com",
+    "linkedin.com",
+    "medium.com",
+    "prnewswire.com",
+    "reuters.com",
+    "techcrunch.com",
+    "venturebeat.com",
+  ].some((publisher) => hostname === publisher || hostname.endsWith(`.${publisher}`));
 }
 
 function startupDiscoveryJsonSchema(maxItems: number) {
