@@ -9,6 +9,7 @@ The previous career portfolio is preserved at `/career` and excluded from search
 - `/` - Consulting homepage
 - `/discovery` - Qualified discovery call request
 - `/career` - Hidden archive of the previous portfolio
+- `/signal-room` - Unlinked startup research and LinkedIn content workspace
 - `/blog` - Reserved blog route
 - `/api/discovery` - Validated Resend delivery endpoint
 
@@ -38,9 +39,25 @@ NEXT_PUBLIC_SITE_URL=https://yenus.dev
 Verify `yenus.dev` in Resend before using the production sender. The discovery form sends one owner brief and one visitor receipt. The requested time remains pending until Yenson confirms it by replying.
 
 `OPENAI_API_KEY` remains optional for the archived portfolio's AI summary feature.
+It is required for Signal Room discovery, research briefs, and Post Lab generation.
+
+## Signal Room
+
+Signal Room is an unlinked, `noindex` operator workspace for:
+
+- Finding cited Seed-Series B B2B AI startup candidates
+- Extracting selected public pages and building source-backed account briefs
+- Keeping facts separate from architecture hypotheses
+- Preparing manual opening lines, outreach drafts, Loom outlines, and discovery questions
+- Drafting substantive LinkedIn posts across technical, strategy, and operator pillars
+
+Run [docs/supabase-signal-room.sql](docs/supabase-signal-room.sql) in Supabase, then add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to the server environment. Without those values, the route runs in labeled demo mode and saves only for the current browser session.
+
+The route is obscured, not authenticated. Do not store sensitive information there. Add real authentication before using it for confidential client or personal data.
 
 ## Content
 
 - `src/lib/consulting-data.ts` - Consulting positioning, offers, proof, approach, and FAQs
 - `src/lib/resume-data.ts` - Archived career and portfolio content
 - `docs/plans/2026-07-27-ai-consulting-site-strategy.md` - Positioning and conversion decisions
+- `docs/signal-room.md` - Research workflow, data-source rules, and setup

@@ -107,7 +107,7 @@ function Hero() {
         <div className="consulting-reveal consulting-delay-2 mt-14 hidden max-w-4xl gap-6 border-t border-border pt-6 sm:grid sm:grid-cols-3">
           <HeroSignal value="Since 2022" label="Building production AI" />
           <HeroSignal value="Global" label="Startup architecture advisory" />
-          <HeroSignal value="3-15" label="Engineer founding teams advised" />
+          <HeroSignal value="60+" label="Engineer founding teams advised" />
         </div>
       </div>
 
