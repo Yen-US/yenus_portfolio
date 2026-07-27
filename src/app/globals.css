@@ -156,4 +156,110 @@
     pointer-events: none;
     mix-blend-mode: overlay;
   }
+
+  .consulting-shell {
+    --background: 48 31% 95%;
+    --foreground: 150 11% 10%;
+    --card: 52 26% 98%;
+    --card-foreground: 150 11% 10%;
+    --secondary: 142 16% 89%;
+    --secondary-foreground: 150 11% 10%;
+    --muted: 46 15% 88%;
+    --muted-foreground: 150 6% 35%;
+    --border: 45 13% 77%;
+    --input: 45 13% 70%;
+    --ring: 160 39% 25%;
+    --signal: 160 39% 25%;
+    --brass: 27 58% 43%;
+    --brass-soft: 38 68% 70%;
+    color-scheme: light;
+  }
+
+  .consulting-container {
+    width: min(100% - 2rem, 76rem);
+    margin-inline: auto;
+  }
+
+  .consulting-section {
+    padding-block: 6rem;
+  }
+
+  .consulting-first-section {
+    padding-top: 2rem;
+  }
+
+  .consulting-display {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-feature-settings: "ss01", "ss02";
+    letter-spacing: 0;
+  }
+
+  .consulting-kicker {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .consulting-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--border) / 0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  .discovery-input {
+    display: flex;
+    min-height: 3rem;
+    width: 100%;
+    border: 1px solid hsl(var(--input));
+    border-radius: 0.125rem;
+    background: hsl(var(--background));
+    padding-inline: 0.875rem;
+    color: hsl(var(--foreground));
+    font-size: 0.875rem;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .discovery-input::placeholder {
+    color: hsl(var(--muted-foreground) / 0.72);
+  }
+
+  .discovery-input:focus-visible {
+    border-color: hsl(var(--signal));
+    box-shadow: 0 0 0 3px hsl(var(--signal) / 0.14);
+  }
+
+  .consulting-reveal {
+    animation: consulting-reveal 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .consulting-delay-2 {
+    animation-delay: 160ms;
+  }
+
+  @media (min-width: 768px) {
+    .consulting-container {
+      width: min(100% - 4rem, 76rem);
+    }
+
+    .consulting-section {
+      padding-block: 8rem;
+    }
+  }
+
+  @keyframes consulting-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

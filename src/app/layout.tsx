@@ -17,17 +17,17 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL("https://yenus.dev"),
   title: {
-    default: "Yenson Umaña — Senior AI Solution Architect",
-    template: "%s — YenUS",
+    default: "Yenson Umaña · AI Architecture for Startups",
+    template: "%s · Yenson Umaña",
   },
   description:
-    "Senior AI Solution Architect at Microsoft. Founder of Presencia Studio. Architecting agentic systems for startups — available for advisory and consulting.",
+    "AI strategy and production-ready architecture for early and growth-stage startups building in the new AI world.",
   openGraph: {
-    title: "Yenson Umaña — Senior AI Solution Architect",
+    title: "Yenson Umaña · AI Architecture for Startups",
     description:
-      "Architecting agentic systems at Microsoft. Founder @ Presencia Studio. Available for advisory engagements.",
+      "From AI ambition to production clarity for founders, CTOs, and lean startup teams.",
     url: "https://yenus.dev",
-    siteName: "YenUS",
+    siteName: "Yenson Umaña",
     type: "website",
   },
 };
