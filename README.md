@@ -34,9 +34,14 @@ RESEND_API_KEY=
 RESEND_FROM_EMAIL=Yenson Umana <discovery@yenus.dev>
 DISCOVERY_NOTIFICATION_EMAIL=yen21000@gmail.com
 NEXT_PUBLIC_SITE_URL=https://yenus.dev
+DISCOVERY_MEETING_URL=https://meet.google.com/your-meeting-room
 ```
 
-Verify `yenus.dev` in Resend before using the production sender. The discovery form sends one owner brief and one visitor receipt. The requested time remains pending until Yenson confirms it by replying.
+Verify `yenus.dev` in Resend before using the production sender. The discovery
+form offers weekday starts every hour from 10:00 AM through 5:00 PM Costa Rica,
+confirms the selected 30-minute call immediately, and sends matching `.ics`
+invitations to the visitor and Yenson. `DISCOVERY_MEETING_URL` is not provided by
+Resend; configure a stable Google Meet or Zoom room separately.
 
 `OPENAI_API_KEY` remains optional for the archived portfolio's AI summary feature.
 It is required for Signal Room discovery, research briefs, and Post Lab generation.

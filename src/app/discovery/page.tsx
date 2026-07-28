@@ -8,9 +8,9 @@ import {
 import { consultant } from "@/lib/consulting-data";
 
 export const metadata: Metadata = {
-  title: "Request a Discovery Call",
+  title: "Book a Discovery Call",
   description:
-    "Request a free 30-minute conversation with Yenson Umaña about your startup's AI product, architecture, or path to production.",
+    "Book a confirmed 30-minute conversation with Yenson Umaña about your startup's AI product, architecture, or path to production.",
 };
 
 const fitSignals = [
@@ -29,7 +29,7 @@ export default function DiscoveryPage() {
             <div>
               <p className="consulting-kicker text-brass-soft">Free · 30 minutes · No deck required</p>
               <h1 className="consulting-display mt-6 max-w-4xl text-5xl leading-[1.02] md:text-7xl">
-                Request a discovery call.
+                Book a discovery call.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-background/70">
                 Bring the AI idea, prototype, or architecture decision your team
@@ -38,9 +38,9 @@ export default function DiscoveryPage() {
               </p>
             </div>
             <p className="border-l border-background/25 pl-6 text-sm leading-6 text-background/55">
+              Choose a time and receive the calendar invitation immediately.
               This is a founder-level fit conversation, not free consulting and
-              not a scripted pitch. You will leave knowing whether the problem is
-              ready for a focused architecture engagement.
+              not a scripted pitch.
             </p>
           </div>
         </section>
@@ -52,7 +52,7 @@ export default function DiscoveryPage() {
             </div>
 
             <aside className="lg:order-1 lg:sticky lg:top-28 lg:self-start">
-              <p className="consulting-kicker text-signal">Before you request</p>
+              <p className="consulting-kicker text-signal">Before you book</p>
               <h2 className="consulting-display mt-5 text-3xl leading-10">
                 The best startup conversations start before the path looks obvious.
               </h2>
@@ -68,7 +68,7 @@ export default function DiscoveryPage() {
 
               <div className="mt-8 space-y-5">
                 <CallDetail icon={Clock3} title="30 minutes" body="Focused on context, stakes, and fit." />
-                <CallDetail icon={MailCheck} title="Confirmed by email" body="You propose times; Yenson confirms within one business day." />
+                <CallDetail icon={MailCheck} title="Instantly confirmed" body="Choose a fixed Costa Rica slot and receive an email invitation immediately." />
                 <CallDetail icon={ShieldCheck} title="Handled privately" body="No newsletter signup and no resale of your information." />
               </div>
 

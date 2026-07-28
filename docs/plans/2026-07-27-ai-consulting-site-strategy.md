@@ -72,8 +72,9 @@ Do not use an unchecked worldwide seniority superlative. Do not imply Microsoft 
 - 30 minutes
 - Confirms the decision, stakes, readiness, and mutual fit
 - Not a free strategy session
-- Visitor proposes two times
-- Meeting remains pending until confirmed by email
+- Visitor selects a weekday start in one-hour intervals from 10:00 AM through 5:00 PM Costa Rica
+- Times are detected and displayed in the visitor's timezone with the Costa Rica equivalent
+- Meeting is instantly confirmed and matching calendar invitations are emailed to both parties
 
 ### AI Direction Sprint
 
@@ -190,7 +191,7 @@ The `/discovery` page collects:
 - Current initiative stage
 - A description of the decision or change
 - Investment readiness
-- Preferred and alternative times in the visitor's timezone
+- Confirmed Costa Rica slot and detected visitor timezone
 - Explicit consent for response
 
 The API:
@@ -200,7 +201,7 @@ The API:
 - Applies a basic per-IP rate limit
 - Uses a hidden honeypot for low-cost bot filtering
 - Sends an owner brief and a visitor receipt through Resend
-- States clearly that the meeting is pending confirmation
+- Sends a confirmed `.ics` calendar invitation with a stable meeting URL
 - Does not add the visitor to a marketing list
 
 Production requires a verified `yenus.dev` sender in Resend. Email-only scheduling cannot prevent calendar conflicts; a calendar availability integration can be added later if request volume warrants it.

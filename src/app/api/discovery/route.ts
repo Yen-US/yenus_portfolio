@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { Resend } from "resend";
 import { z } from "zod";
 import { consultant } from "@/lib/consulting-data";
+import {
+  COSTA_RICA_TIME_ZONE,
+  DISCOVERY_DURATION_MINUTES,
+  DISCOVERY_SLOT_HOURS,
+  createDiscoverySlotStart,
+  formatDiscoveryDateTime,
+  getDiscoverySlotEnd,
+  isDiscoverySlotBookable,
+  isValidTimeZone,
+  type DiscoverySlotHour,
+} from "@/lib/discovery-schedule";
+import {
+  createDiscoveryCalendarInvite,
+  createGoogleCalendarUrl,
+} from "@/lib/discovery-calendar";
 
 const discoverySchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -30,8 +46,13 @@ const discoverySchema = z.object({
     "$50k-$100k",
     "$100k+",
   ]),
-  preferredDateTime: z.string().datetime({ offset: true }),
-  alternateDateTime: z.union([z.string().datetime({ offset: true }), z.literal("")]),
+  slotDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  slotHour: z
+    .number()
+    .int()
+    .refine((value) =>
+      DISCOVERY_SLOT_HOURS.includes(value as DiscoverySlotHour)
+    ),
   timezone: z.string().trim().min(1).max(100),
   consent: z.literal(true),
   website: z.string().max(200).optional().default(""),
@@ -74,14 +95,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true }, { status: 201 });
   }
 
-  const preferredDate = new Date(inquiry.preferredDateTime);
-  const alternateDate = inquiry.alternateDateTime
-    ? new Date(inquiry.alternateDateTime)
-    : null;
-
-  if (preferredDate.getTime() < Date.now() + 60 * 60 * 1000) {
+  const slotStart = createDiscoverySlotStart(
+    inquiry.slotDate,
+    inquiry.slotHour
+  );
+  if (!slotStart || !isDiscoverySlotBookable(slotStart)) {
     return NextResponse.json(
-      { error: "Choose a preferred time at least one hour from now." },
+      {
+        error:
+          "That time is no longer bookable. Choose another weekday slot between 10:00 AM and 5:00 PM Costa Rica.",
+      },
       { status: 400 }
     );
   }
@@ -93,28 +116,56 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM_EMAIL;
   const ownerEmail = process.env.DISCOVERY_NOTIFICATION_EMAIL ?? consultant.email;
+  const meetingUrl = getMeetingUrl();
 
-  if (!apiKey || !from) {
+  if (!apiKey || !from || !meetingUrl) {
     return NextResponse.json(
-      { error: "Discovery email is not configured. Please email Yenson directly." },
+      {
+        error:
+          "Instant booking is not configured yet. Please email Yenson directly.",
+      },
       { status: 503 }
     );
   }
 
   const resend = new Resend(apiKey);
-  const preferredForVisitor = formatDate(preferredDate, inquiry.timezone);
-  const preferredForOwner = formatDate(preferredDate, "America/Costa_Rica");
-  const alternateForVisitor = alternateDate
-    ? formatDate(alternateDate, inquiry.timezone)
-    : "Not provided";
-  const alternateForOwner = alternateDate
-    ? formatDate(alternateDate, "America/Costa_Rica")
-    : "Not provided";
+  const slotEnd = getDiscoverySlotEnd(slotStart);
+  const visitorLabel = formatDiscoveryDateTime(slotStart, inquiry.timezone);
+  const costaRicaLabel = formatDiscoveryDateTime(
+    slotStart,
+    COSTA_RICA_TIME_ZONE
+  );
+  const bookingKey = createHash("sha256")
+    .update(`${inquiry.email.toLowerCase()}|${slotStart.toISOString()}`)
+    .digest("hex")
+    .slice(0, 32);
+  const organizerEmail = extractEmailAddress(from);
+  const calendarInvite = createDiscoveryCalendarInvite({
+    uid: `${bookingKey}@yenus.dev`,
+    start: slotStart,
+    attendeeName: inquiry.name,
+    attendeeEmail: inquiry.email,
+    ownerEmail,
+    organizerEmail,
+    meetingUrl,
+    company: inquiry.company,
+  });
+  const calendarAttachment = {
+    filename: "yenson-umana-discovery-call.ics",
+    content: Buffer.from(calendarInvite, "utf8").toString("base64"),
+    contentType: "text/calendar; charset=utf-8; method=REQUEST",
+  };
+  const googleCalendarUrl = createGoogleCalendarUrl({
+    start: slotStart,
+    meetingUrl,
+    attendeeName: inquiry.name,
+    company: inquiry.company,
+  });
 
   const ownerHtml = emailLayout({
-    eyebrow: "New discovery request",
+    eyebrow: "Discovery call confirmed",
     title: `${escapeHtml(inquiry.name)} from ${escapeHtml(inquiry.company)}`,
-    intro: "A qualified visitor requested a 30-minute discovery call.",
+    intro: "A visitor booked an available 30-minute discovery slot.",
     rows: [
       ["Name", inquiry.name],
       ["Work email", inquiry.email],
@@ -122,60 +173,99 @@ export async function POST(request: NextRequest) {
       ["Company stage", inquiry.companyStage],
       ["Initiative stage", inquiry.initiativeStage],
       ["Investment range", inquiry.investmentRange],
-      ["Preferred (Costa Rica)", preferredForOwner],
-      ["Alternative (Costa Rica)", alternateForOwner],
+      ["Costa Rica time", costaRicaLabel],
+      ["Visitor time", `${visitorLabel} (${inquiry.timezone})`],
+      ["Duration", `${DISCOVERY_DURATION_MINUTES} minutes`],
       ["Visitor timezone", inquiry.timezone],
     ],
     narrativeLabel: "Initiative",
     narrative: inquiry.initiative,
-    footer:
-      "Reply directly to this email to confirm the meeting or propose another time.",
+    footer: "The attached calendar invitation uses the same event UID sent to the visitor.",
+    cta: { label: "Open meeting", url: meetingUrl },
   });
 
   const visitorHtml = emailLayout({
-    eyebrow: "Discovery request received",
-    title: `Thank you, ${escapeHtml(inquiry.name)}.`,
+    eyebrow: "Discovery call confirmed",
+    title: `You are booked, ${escapeHtml(inquiry.name)}.`,
     intro:
-      "Your request is in. This is not a confirmed calendar booking yet; Yenson will review the context and reply within one business day.",
+      "Your time is confirmed. No additional approval is required, and a calendar invitation is attached.",
     rows: [
       ["Company", inquiry.company],
-      ["Preferred time", `${preferredForVisitor} (${inquiry.timezone})`],
-      ["Alternative time", alternateForVisitor],
-      ["Call length", "30 minutes"],
+      ["Your time", `${visitorLabel} (${inquiry.timezone})`],
+      ["Costa Rica time", costaRicaLabel],
+      ["Call length", `${DISCOVERY_DURATION_MINUTES} minutes`],
       ["Investment", "Free discovery conversation"],
     ],
     narrativeLabel: "What you shared",
     narrative: inquiry.initiative,
     footer:
-      "You can reply to this email if anything changes or if there is context you want Yenson to see before the call.",
+      "Reply to this email if anything changes or if there is context Yenson should see before the call.",
+    cta: { label: "Join meeting", url: meetingUrl },
   });
 
-  const { error } = await resend.batch.send([
-    {
+  const [ownerDelivery, visitorDelivery] = await Promise.all([
+    resend.emails.send(
+      {
       from,
       to: [ownerEmail],
       replyTo: inquiry.email,
-      subject: `Discovery request · ${sanitizeSubject(inquiry.company)} · ${sanitizeSubject(inquiry.name)}`,
+      subject: `Confirmed discovery call · ${sanitizeSubject(inquiry.company)} · ${sanitizeSubject(inquiry.name)}`,
       html: ownerHtml,
-    },
-    {
+      text: createPlainTextEmail({
+        title: `Discovery call confirmed with ${inquiry.name}`,
+        time: costaRicaLabel,
+        meetingUrl,
+        narrative: inquiry.initiative,
+      }),
+      attachments: [calendarAttachment],
+      headers: { "X-Entity-Ref-ID": bookingKey },
+      },
+      { idempotencyKey: `discovery-owner-${bookingKey}` }
+    ),
+    resend.emails.send(
+      {
       from,
       to: [inquiry.email],
       replyTo: ownerEmail,
-      subject: "Your discovery call request with Yenson Umaña",
+      subject: "Confirmed: your discovery call with Yenson Umaña",
       html: visitorHtml,
-    },
+      text: createPlainTextEmail({
+        title: "Your discovery call with Yenson Umaña is confirmed",
+        time: `${visitorLabel} (${inquiry.timezone})`,
+        meetingUrl,
+        narrative: inquiry.initiative,
+      }),
+      attachments: [calendarAttachment],
+      headers: { "X-Entity-Ref-ID": bookingKey },
+      },
+      { idempotencyKey: `discovery-visitor-${bookingKey}` }
+    ),
   ]);
 
-  if (error) {
-    console.error("Discovery email delivery failed", error);
+  const deliveryError = ownerDelivery.error ?? visitorDelivery.error;
+  if (deliveryError) {
+    console.error("Discovery email delivery failed", deliveryError);
     return NextResponse.json(
       { error: "The request could not be delivered. Please email Yenson directly." },
       { status: 502 }
     );
   }
 
-  return NextResponse.json({ ok: true }, { status: 201 });
+  return NextResponse.json(
+    {
+      ok: true,
+      booking: {
+        startsAt: slotStart.toISOString(),
+        endsAt: slotEnd.toISOString(),
+        visitorTimeZone: inquiry.timezone,
+        visitorLabel,
+        costaRicaLabel,
+        meetingUrl,
+        googleCalendarUrl,
+      },
+    },
+    { status: 201 }
+  );
 }
 
 function getRateLimitKey(request: NextRequest) {
@@ -218,23 +308,6 @@ function isAllowedOrigin(request: NextRequest) {
   return allowedOrigins.has(origin);
 }
 
-function isValidTimeZone(timeZone: string) {
-  try {
-    new Intl.DateTimeFormat("en-US", { timeZone }).format(new Date());
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function formatDate(date: Date, timeZone: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "full",
-    timeStyle: "short",
-    timeZone,
-  }).format(date);
-}
-
 function sanitizeSubject(value: string) {
   return value.replace(/[\r\n]+/g, " ").trim().slice(0, 100);
 }
@@ -261,6 +334,7 @@ function emailLayout({
   narrativeLabel,
   narrative,
   footer,
+  cta,
 }: {
   eyebrow: string;
   title: string;
@@ -269,6 +343,7 @@ function emailLayout({
   narrativeLabel: string;
   narrative: string;
   footer: string;
+  cta?: { label: string; url: string };
 }) {
   const rowsHtml = rows
     .map(
@@ -291,10 +366,42 @@ function emailLayout({
           <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:28px;border-top:1px solid #171a17;">${rowsHtml}</table>
           <p style="margin:28px 0 8px;color:#245345;font-size:10px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;">${escapeHtml(narrativeLabel)}</p>
           <p style="margin:0;white-space:pre-wrap;color:#333833;font-size:14px;line-height:1.65;">${escapeHtml(narrative)}</p>
+          ${cta ? `<p style="margin:28px 0 0;"><a href="${escapeHtml(cta.url)}" style="display:inline-block;background:#245345;color:#ffffff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;">${escapeHtml(cta.label)}</a></p>` : ""}
           <p style="margin:28px 0 0;padding-top:20px;border-top:1px solid #d8d4c8;color:#5d625d;font-size:12px;line-height:1.6;">${escapeHtml(footer)}</p>
         </div>
         <p style="margin:16px 0 0;text-align:center;color:#777d77;font-size:11px;">Yenson Umaña · AI Architecture for Startups · yenus.dev</p>
       </div>
     </body>
   </html>`;
+}
+
+function getMeetingUrl() {
+  const value = process.env.DISCOVERY_MEETING_URL;
+  if (!value) return null;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function extractEmailAddress(value: string) {
+  const bracketed = value.match(/<([^>]+)>/)?.[1];
+  return (bracketed ?? value).trim().toLowerCase();
+}
+
+function createPlainTextEmail({
+  title,
+  time,
+  meetingUrl,
+  narrative,
+}: {
+  title: string;
+  time: string;
+  meetingUrl: string;
+  narrative: string;
+}) {
+  return `${title}\n\nTime: ${time}\nDuration: ${DISCOVERY_DURATION_MINUTES} minutes\nMeeting: ${meetingUrl}\n\nInitiative:\n${narrative}\n\nA calendar invitation is attached.`;
 }
