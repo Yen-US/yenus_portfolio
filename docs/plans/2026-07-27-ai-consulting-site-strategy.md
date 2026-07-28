@@ -75,6 +75,7 @@ Do not use an unchecked worldwide seniority superlative. Do not imply Microsoft 
 - Visitor selects a weekday start in one-hour intervals from 10:00 AM through 5:00 PM Costa Rica
 - Times are detected and displayed in the visitor's timezone with the Costa Rica equivalent
 - Meeting is instantly confirmed and matching calendar invitations are emailed to both parties
+- Active reservations are stored in Supabase; occupied starts are hidden and a unique database index prevents concurrent double booking
 
 ### AI Direction Sprint
 
@@ -202,6 +203,7 @@ The API:
 - Uses a hidden honeypot for low-cost bot filtering
 - Sends an owner brief and a visitor receipt through Resend
 - Sends a confirmed `.ics` calendar invitation with a stable meeting URL
+- Claims the selected Supabase slot atomically before sending invitations and records confirmed or delivery-failed status
 - Does not add the visitor to a marketing list
 
 Production requires a verified `yenus.dev` sender in Resend. Email-only scheduling cannot prevent calendar conflicts; a calendar availability integration can be added later if request volume warrants it.

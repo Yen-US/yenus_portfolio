@@ -43,6 +43,15 @@ confirms the selected 30-minute call immediately, and sends matching `.ics`
 invitations to the visitor and Yenson. `DISCOVERY_MEETING_URL` is not provided by
 Resend; configure a stable Google Meet or Zoom room separately.
 
+Instant booking also requires the server-only Supabase values shown in
+`.env.example`. The `discovery_bookings` table stores active reservations, hides
+booked starts from the picker, and uses a unique active-slot index to prevent two
+concurrent submissions from confirming the same time. Apply migrations with:
+
+```bash
+supabase db push
+```
+
 `OPENAI_API_KEY` remains optional for the archived portfolio's AI summary feature.
 It is required for Signal Room discovery, research briefs, and Post Lab generation.
 

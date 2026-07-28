@@ -36,6 +36,8 @@ type SubmissionState =
   | { status: "error"; message: string }
   | { status: "success"; booking: BookingConfirmation };
 
+type AvailabilityState = "loading" | "ready" | "error";
+
 export function DiscoveryForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
@@ -44,6 +46,9 @@ export function DiscoveryForm() {
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedHour, setSelectedHour] = useState<DiscoverySlotHour | null>(null);
+  const [bookedStarts, setBookedStarts] = useState<Set<string>>(new Set());
+  const [availabilityState, setAvailabilityState] =
+    useState<AvailabilityState>("loading");
 
   useEffect(() => {
     const detected =
@@ -52,12 +57,65 @@ export function DiscoveryForm() {
     setVisitorTimeZone(detected);
     setAvailableDates(dates);
     setSelectedDate(dates[0] ?? "");
+
+    let cancelled = false;
+    async function loadAvailability() {
+      try {
+        const response = await fetch("/api/discovery/availability", {
+          cache: "no-store",
+        });
+        const result = (await response.json()) as {
+          error?: string;
+          bookedStarts?: string[];
+        };
+        if (!response.ok || !result.bookedStarts) {
+          throw new Error(result.error ?? "Availability could not be loaded.");
+        }
+        if (!cancelled) {
+          setBookedStarts(new Set(result.bookedStarts));
+          setAvailabilityState("ready");
+        }
+      } catch {
+        if (!cancelled) setAvailabilityState("error");
+      }
+    }
+    void loadAvailability();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const availableHours = selectedDate
     ? getAvailableDiscoveryHours(selectedDate)
     : [];
   const timeZoneOptions = getTimeZoneOptions(visitorTimeZone);
+
+  useEffect(() => {
+    if (!selectedDate || selectedHour === null) return;
+    if (isBookedSlot(selectedDate, selectedHour, bookedStarts)) {
+      setSelectedHour(null);
+    }
+  }, [bookedStarts, selectedDate, selectedHour]);
+
+  useEffect(() => {
+    if (availabilityState !== "ready" || !selectedDate) return;
+    const selectedHours = getAvailableDiscoveryHours(selectedDate);
+    if (
+      selectedHours.length > 0 &&
+      selectedHours.every((hour) =>
+        isBookedSlot(selectedDate, hour, bookedStarts)
+      )
+    ) {
+      const nextDate = availableDates.find((dateKey) =>
+        getAvailableDiscoveryHours(dateKey).some(
+          (hour) => !isBookedSlot(dateKey, hour, bookedStarts)
+        )
+      );
+      setSelectedDate(nextDate ?? "");
+      setSelectedHour(null);
+    }
+  }, [availabilityState, availableDates, bookedStarts, selectedDate]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -95,10 +153,19 @@ export function DiscoveryForm() {
         });
         const result = (await response.json()) as {
           error?: string;
+          bookedStart?: string;
           booking?: BookingConfirmation;
         };
 
         if (!response.ok || !result.booking) {
+          if (response.status === 409 && result.bookedStart) {
+            setBookedStarts((current) => {
+              const next = new Set(current);
+              next.add(result.bookedStart!);
+              return next;
+            });
+            setSelectedHour(null);
+          }
           throw new Error(result.error ?? "The request could not be sent.");
         }
 
@@ -182,7 +249,7 @@ export function DiscoveryForm() {
           Monday through Friday, from 10:00 AM to 5:00 PM Costa Rica.
         </p>
 
-        <div className="mt-6 flex items-center gap-3 border border-signal/25 bg-signal/5 p-4">
+        <div className="mt-6 flex min-w-0 items-center gap-3 border border-signal/25 bg-signal/5 p-4">
           <Globe2 className="h-5 w-5 shrink-0 text-signal" />
           <label className="min-w-0 flex-1 text-xs font-semibold" htmlFor="visitorTimeZone">
             Times shown in
@@ -190,7 +257,7 @@ export function DiscoveryForm() {
               id="visitorTimeZone"
               value={visitorTimeZone}
               onChange={(event) => setVisitorTimeZone(event.target.value)}
-              className="ml-2 max-w-full border-0 bg-transparent font-mono text-xs text-signal outline-none"
+              className="mt-1 block w-full min-w-0 max-w-full border-0 bg-transparent font-mono text-xs text-signal outline-none sm:ml-2 sm:mt-0 sm:inline-block sm:w-auto"
             >
               {timeZoneOptions.map((timeZone) => (
                 <option key={timeZone} value={timeZone}>
@@ -199,6 +266,13 @@ export function DiscoveryForm() {
               ))}
             </select>
           </label>
+          <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            {availabilityState === "loading"
+              ? "Checking"
+              : availabilityState === "ready"
+                ? "Live"
+                : "Rechecked on booking"}
+          </span>
         </div>
 
         <div className="mt-7">
@@ -217,6 +291,12 @@ export function DiscoveryForm() {
                 COSTA_RICA_TIME_ZONE
               );
               const selected = selectedDate === dateKey;
+              const dateHours = getAvailableDiscoveryHours(dateKey);
+              const fullyBooked =
+                dateHours.length === 0 ||
+                dateHours.every((hour) =>
+                  isBookedSlot(dateKey, hour, bookedStarts)
+                );
 
               return (
                 <button
@@ -224,12 +304,13 @@ export function DiscoveryForm() {
                   type="button"
                   data-date-key={dateKey}
                   aria-pressed={selected}
+                  disabled={fullyBooked}
                   onClick={() => {
                     setSelectedDate(dateKey);
                     setSelectedHour(null);
                     setSubmission({ status: "idle" });
                   }}
-                  className={`focus-ring min-h-16 rounded-sm border px-3 py-2 text-left transition-colors ${
+                  className={`focus-ring min-h-16 rounded-sm border px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${
                     selected
                       ? "border-signal bg-signal text-white"
                       : "border-border bg-background hover:border-signal"
@@ -243,6 +324,11 @@ export function DiscoveryForm() {
                       }`}
                     >
                       {costaRicaDate} in Costa Rica
+                    </span>
+                  ) : null}
+                  {fullyBooked ? (
+                    <span className="mt-1 block text-[10px] text-muted-foreground">
+                      Fully booked
                     </span>
                   ) : null}
                 </button>
@@ -266,6 +352,11 @@ export function DiscoveryForm() {
                 const start = createDiscoverySlotStart(selectedDate, hour);
                 if (!start) return null;
                 const selected = selectedHour === hour;
+                const booked = isBookedSlot(
+                  selectedDate,
+                  hour,
+                  bookedStarts
+                );
 
                 return (
                   <button
@@ -274,11 +365,12 @@ export function DiscoveryForm() {
                     data-slot-hour={hour}
                     role="radio"
                     aria-checked={selected}
+                    disabled={booked}
                     onClick={() => {
                       setSelectedHour(hour);
                       setSubmission({ status: "idle" });
                     }}
-                    className={`focus-ring min-h-16 rounded-sm border px-3 py-2 text-center transition-colors ${
+                    className={`focus-ring min-h-16 rounded-sm border px-3 py-2 text-center transition-colors disabled:cursor-not-allowed disabled:opacity-45 ${
                       selected
                         ? "border-signal bg-signal text-white"
                         : "border-border bg-background hover:border-signal"
@@ -292,7 +384,9 @@ export function DiscoveryForm() {
                         selected ? "text-white/70" : "text-muted-foreground"
                       }`}
                     >
-                      {formatDiscoveryTime(start, COSTA_RICA_TIME_ZONE)} CR
+                      {booked
+                        ? "Booked"
+                        : `${formatDiscoveryTime(start, COSTA_RICA_TIME_ZONE)} CR`}
                     </span>
                   </button>
                 );
@@ -539,4 +633,13 @@ function getTimeZoneOptions(detected: string) {
 
 function formatTimeZoneLabel(timeZone: string) {
   return timeZone.replace(/_/g, " ");
+}
+
+function isBookedSlot(
+  dateKey: string,
+  hour: DiscoverySlotHour,
+  bookedStarts: Set<string>
+) {
+  const start = createDiscoverySlotStart(dateKey, hour);
+  return start ? bookedStarts.has(start.toISOString()) : true;
 }

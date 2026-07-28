@@ -47,11 +47,11 @@ export default function DiscoveryPage() {
 
         <section className="consulting-section">
           <div className="consulting-container grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
-            <div className="lg:order-2 border border-border bg-card p-6 md:p-10">
+            <div className="min-w-0 border border-border bg-card p-6 md:p-10 lg:order-2">
               <DiscoveryForm />
             </div>
 
-            <aside className="lg:order-1 lg:sticky lg:top-28 lg:self-start">
+            <aside className="min-w-0 lg:order-1 lg:sticky lg:top-28 lg:self-start">
               <p className="consulting-kicker text-signal">Before you book</p>
               <h2 className="consulting-display mt-5 text-3xl leading-10">
                 The best startup conversations start before the path looks obvious.

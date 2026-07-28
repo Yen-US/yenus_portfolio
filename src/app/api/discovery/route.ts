@@ -18,6 +18,12 @@ import {
   createDiscoveryCalendarInvite,
   createGoogleCalendarUrl,
 } from "@/lib/discovery-calendar";
+import {
+  claimDiscoveryBooking,
+  isDiscoveryBookingStoreConfigured,
+  markDiscoveryBookingConfirmed,
+  markDiscoveryBookingDeliveryFailed,
+} from "@/lib/discovery-bookings";
 
 const discoverySchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -118,11 +124,16 @@ export async function POST(request: NextRequest) {
   const ownerEmail = process.env.DISCOVERY_NOTIFICATION_EMAIL ?? consultant.email;
   const meetingUrl = getMeetingUrl();
 
-  if (!apiKey || !from || !meetingUrl) {
+  if (
+    !apiKey ||
+    !from ||
+    !meetingUrl ||
+    !isDiscoveryBookingStoreConfigured()
+  ) {
     return NextResponse.json(
       {
         error:
-          "Instant booking is not configured yet. Please email Yenson directly.",
+          "Instant booking is not fully configured yet. Please email Yenson directly.",
       },
       { status: 503 }
     );
@@ -139,6 +150,66 @@ export async function POST(request: NextRequest) {
     .update(`${inquiry.email.toLowerCase()}|${slotStart.toISOString()}`)
     .digest("hex")
     .slice(0, 32);
+  let claim: Awaited<ReturnType<typeof claimDiscoveryBooking>>;
+  try {
+    claim = await claimDiscoveryBooking({
+      bookingKey,
+      slotStart,
+      slotEnd,
+      attendeeName: inquiry.name,
+      attendeeEmail: inquiry.email,
+      company: inquiry.company,
+      attendeeRole: inquiry.role,
+      companyStage: inquiry.companyStage,
+      initiativeStage: inquiry.initiativeStage,
+      investmentRange: inquiry.investmentRange,
+      initiative: inquiry.initiative,
+      visitorTimezone: inquiry.timezone,
+      meetingUrl,
+    });
+  } catch (error) {
+    console.error("Discovery booking claim failed", error);
+    return NextResponse.json(
+      { error: "Live booking storage is unavailable. Please try again." },
+      { status: 503 }
+    );
+  }
+
+  if (claim.outcome === "unavailable") {
+    return NextResponse.json(
+      {
+        error:
+          "That time was just booked. Choose another available start time.",
+        bookedStart: claim.booking.slotStart,
+      },
+      { status: 409 }
+    );
+  }
+
+  const effectiveMeetingUrl = claim.booking.meetingUrl;
+  const googleCalendarUrl = createGoogleCalendarUrl({
+    start: slotStart,
+    meetingUrl: effectiveMeetingUrl,
+    attendeeName: inquiry.name,
+    company: inquiry.company,
+  });
+
+  if (claim.outcome === "existing" && claim.booking.status === "confirmed") {
+    return NextResponse.json(
+      {
+        ok: true,
+        booking: createBookingResponse({
+          slotStart,
+          slotEnd,
+          inquiryTimeZone: inquiry.timezone,
+          meetingUrl: effectiveMeetingUrl,
+          googleCalendarUrl,
+        }),
+      },
+      { status: 200 }
+    );
+  }
+
   const organizerEmail = extractEmailAddress(from);
   const calendarInvite = createDiscoveryCalendarInvite({
     uid: `${bookingKey}@yenus.dev`,
@@ -147,7 +218,7 @@ export async function POST(request: NextRequest) {
     attendeeEmail: inquiry.email,
     ownerEmail,
     organizerEmail,
-    meetingUrl,
+    meetingUrl: effectiveMeetingUrl,
     company: inquiry.company,
   });
   const calendarAttachment = {
@@ -155,13 +226,6 @@ export async function POST(request: NextRequest) {
     content: Buffer.from(calendarInvite, "utf8").toString("base64"),
     contentType: "text/calendar; charset=utf-8; method=REQUEST",
   };
-  const googleCalendarUrl = createGoogleCalendarUrl({
-    start: slotStart,
-    meetingUrl,
-    attendeeName: inquiry.name,
-    company: inquiry.company,
-  });
-
   const ownerHtml = emailLayout({
     eyebrow: "Discovery call confirmed",
     title: `${escapeHtml(inquiry.name)} from ${escapeHtml(inquiry.company)}`,
@@ -181,7 +245,7 @@ export async function POST(request: NextRequest) {
     narrativeLabel: "Initiative",
     narrative: inquiry.initiative,
     footer: "The attached calendar invitation uses the same event UID sent to the visitor.",
-    cta: { label: "Open meeting", url: meetingUrl },
+    cta: { label: "Open meeting", url: effectiveMeetingUrl },
   });
 
   const visitorHtml = emailLayout({
@@ -200,10 +264,10 @@ export async function POST(request: NextRequest) {
     narrative: inquiry.initiative,
     footer:
       "Reply to this email if anything changes or if there is context Yenson should see before the call.",
-    cta: { label: "Join meeting", url: meetingUrl },
+    cta: { label: "Join meeting", url: effectiveMeetingUrl },
   });
 
-  const [ownerDelivery, visitorDelivery] = await Promise.all([
+  const [ownerResult, visitorResult] = await Promise.allSettled([
     resend.emails.send(
       {
       from,
@@ -214,7 +278,7 @@ export async function POST(request: NextRequest) {
       text: createPlainTextEmail({
         title: `Discovery call confirmed with ${inquiry.name}`,
         time: costaRicaLabel,
-        meetingUrl,
+        meetingUrl: effectiveMeetingUrl,
         narrative: inquiry.initiative,
       }),
       attachments: [calendarAttachment],
@@ -232,7 +296,7 @@ export async function POST(request: NextRequest) {
       text: createPlainTextEmail({
         title: "Your discovery call with Yenson Umaña is confirmed",
         time: `${visitorLabel} (${inquiry.timezone})`,
-        meetingUrl,
+        meetingUrl: effectiveMeetingUrl,
         narrative: inquiry.initiative,
       }),
       attachments: [calendarAttachment],
@@ -242,27 +306,60 @@ export async function POST(request: NextRequest) {
     ),
   ]);
 
-  const deliveryError = ownerDelivery.error ?? visitorDelivery.error;
+  const ownerDelivery =
+    ownerResult.status === "fulfilled" ? ownerResult.value : null;
+  const visitorDelivery =
+    visitorResult.status === "fulfilled" ? visitorResult.value : null;
+  const deliveryError =
+    ownerResult.status === "rejected"
+      ? ownerResult.reason
+      : visitorResult.status === "rejected"
+        ? visitorResult.reason
+        : ownerDelivery?.error ?? visitorDelivery?.error;
+
   if (deliveryError) {
     console.error("Discovery email delivery failed", deliveryError);
+    try {
+      await markDiscoveryBookingDeliveryFailed(
+        claim.booking.id,
+        bookingKey,
+        formatDeliveryError(deliveryError),
+        {
+          ownerEmailId: ownerDelivery?.data?.id ?? null,
+          visitorEmailId: visitorDelivery?.data?.id ?? null,
+        }
+      );
+    } catch (storageError) {
+      console.error("Discovery delivery failure could not be recorded", storageError);
+    }
     return NextResponse.json(
-      { error: "The request could not be delivered. Please email Yenson directly." },
+      {
+        error:
+          "The time is reserved, but the invitation could not be delivered. Submit the same time again or email Yenson directly.",
+      },
       { status: 502 }
     );
+  }
+
+  try {
+    await markDiscoveryBookingConfirmed(claim.booking.id, bookingKey, {
+      ownerEmailId: ownerDelivery?.data?.id ?? null,
+      visitorEmailId: visitorDelivery?.data?.id ?? null,
+    });
+  } catch (storageError) {
+    console.error("Confirmed discovery booking status could not be updated", storageError);
   }
 
   return NextResponse.json(
     {
       ok: true,
-      booking: {
-        startsAt: slotStart.toISOString(),
-        endsAt: slotEnd.toISOString(),
-        visitorTimeZone: inquiry.timezone,
-        visitorLabel,
-        costaRicaLabel,
-        meetingUrl,
+      booking: createBookingResponse({
+        slotStart,
+        slotEnd,
+        inquiryTimeZone: inquiry.timezone,
+        meetingUrl: effectiveMeetingUrl,
         googleCalendarUrl,
-      },
+      }),
     },
     { status: 201 }
   );
@@ -404,4 +501,40 @@ function createPlainTextEmail({
   narrative: string;
 }) {
   return `${title}\n\nTime: ${time}\nDuration: ${DISCOVERY_DURATION_MINUTES} minutes\nMeeting: ${meetingUrl}\n\nInitiative:\n${narrative}\n\nA calendar invitation is attached.`;
+}
+
+function createBookingResponse({
+  slotStart,
+  slotEnd,
+  inquiryTimeZone,
+  meetingUrl,
+  googleCalendarUrl,
+}: {
+  slotStart: Date;
+  slotEnd: Date;
+  inquiryTimeZone: string;
+  meetingUrl: string;
+  googleCalendarUrl: string;
+}) {
+  return {
+    startsAt: slotStart.toISOString(),
+    endsAt: slotEnd.toISOString(),
+    visitorTimeZone: inquiryTimeZone,
+    visitorLabel: formatDiscoveryDateTime(slotStart, inquiryTimeZone),
+    costaRicaLabel: formatDiscoveryDateTime(
+      slotStart,
+      COSTA_RICA_TIME_ZONE
+    ),
+    meetingUrl,
+    googleCalendarUrl,
+  };
+}
+
+function formatDeliveryError(error: unknown) {
+  if (error instanceof Error) return error.message;
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return String(error);
+  }
 }
