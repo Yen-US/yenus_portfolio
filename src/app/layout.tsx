@@ -16,6 +16,10 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yenus.dev"),
+  icons: {
+    icon: [{ url: "/brand/yenson-umana-mark.svg", type: "image/svg+xml" }],
+    shortcut: "/brand/yenson-umana-mark.svg",
+  },
   title: {
     default: "Yenson Umaña · AI Architecture for Startups",
     template: "%s · Yenson Umaña",

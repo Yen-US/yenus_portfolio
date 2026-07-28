@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { consultant } from "@/lib/consulting-data";
 
@@ -18,8 +19,16 @@ export function ConsultingHeader() {
           className="focus-ring flex shrink-0 items-center gap-3 rounded-sm"
           aria-label="Yenson Umaña, home"
         >
-          <span className="grid h-9 w-9 place-items-center rounded-sm bg-foreground font-mono text-[11px] font-semibold text-background">
-            YU
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-border bg-card p-1">
+            <Image
+              src="/brand/yenson-umana-mark.svg"
+              width={32}
+              height={32}
+              priority
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-contain"
+            />
           </span>
           <span className="leading-none">
             <span className="block text-sm font-semibold">Yenson Umaña</span>
