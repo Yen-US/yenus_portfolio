@@ -7,6 +7,7 @@ const navigation = [
   { href: "/#work", label: "Work" },
   { href: "/#services", label: "Services" },
   { href: "/#approach", label: "Approach" },
+  { href: "/#perspective", label: "Perspective" },
   { href: "/#about", label: "About" },
 ];
 
@@ -33,7 +34,7 @@ export function ConsultingHeader() {
           <span className="leading-none">
             <span className="block text-sm font-semibold">Yenson Umaña</span>
             <span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground sm:block">
-              Startup AI strategy & architecture
+              AI architecture &amp; technical strategy
             </span>
           </span>
         </Link>
@@ -73,8 +74,8 @@ export function ConsultingFooter() {
         <div>
           <p className="consulting-display text-3xl">Yenson Umaña</p>
           <p className="mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
-            AI architecture and production clarity for early and growth-stage
-            startups building in the new AI world.
+            AI architecture and technical strategy for startup founders and CTOs
+            making consequential decisions while the path is still open.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 export const consultant = {
   name: "Yenson Umaña",
   firstName: "Yenson",
-  role: "Startup AI Strategy & Architecture Advisor",
+  role: "AI Architecture & Technical Strategy for Startups",
   location: "Costa Rica · Working globally",
   email: "yen21000@gmail.com",
   linkedin: "https://www.linkedin.com/in/yenus/",
@@ -9,103 +9,122 @@ export const consultant = {
   credential:
     "Senior AI Solution Architect supporting Microsoft for Startups globally via Accenture.",
   availability:
-    "One active strategy or architecture sprint at a time, plus a small number of advisory relationships.",
+    "One active architecture or direction sprint at a time, plus a small number of advisory relationships.",
 };
 
 export const decisionAreas = [
   {
     number: "01",
-    title: "Clarity while the path is still open",
+    title: "The decision, before the technology",
     body:
-      "Turn a promising but messy idea into one defined problem, one near-term outcome, and a sequence the team can defend.",
+      "Define the outcome, the constraints, the cost of failure, and what must be true before the initiative deserves engineering investment.",
   },
   {
     number: "02",
-    title: "A production-ready architecture",
+    title: "Tradeoffs made explicit",
     body:
-      "Make the model, data, retrieval, evaluation, security, cost, and human-review decisions before they become expensive rework.",
+      "Model, data, retrieval, evaluation, security, latency, and human review decided deliberately — with the reasoning written down and reversible where it should be.",
   },
   {
     number: "03",
-    title: "A senior partner beside the team",
+    title: "A path the team can execute",
     body:
-      "Work directly with someone who can move between founder priorities and engineering tradeoffs, with no sales layer or junior handoff.",
+      "Architecture decision records, sequencing, and acceptance gates your engineers can act on without translating founder intent through three layers.",
   },
 ];
 
 export const engagements = [
   {
     number: "01",
-    name: "AI Direction Sprint",
-    duration: "1-2 weeks",
-    summary:
-      "Turn a crowded field of AI possibilities into one clear first bet and a path the team can execute.",
-    bestFor:
-      "Founders and CTOs with strong market insight, several plausible AI directions, and no shared way to choose what deserves to ship first.",
-    deliverables: [
-      "Use-case portfolio scored by value, feasibility, and risk",
-      "Startup readiness and capability gap assessment",
-      "90-day roadmap with owners and decision gates",
-      "Founder and technical-team readout",
-    ],
-  },
-  {
-    number: "02",
     name: "AI Architecture Sprint",
     duration: "2-4 weeks",
     summary:
-      "Turn one consequential AI idea or prototype into a production-ready system plan.",
+      "Turn one consequential AI product or system decision into a production-ready architecture and a delivery path the team owns.",
     bestFor:
-      "Startup teams moving an agent, RAG system, or AI-native product capability toward production without a senior AI architect in-house.",
+      "Teams with something important enough that the architecture cannot be improvised: an agent, a retrieval system, or an AI-native capability moving toward production without a senior architect in-house.",
     deliverables: [
       "Target architecture and architecture decision records",
-      "Human-AI boundaries, guardrails, and escalation paths",
+      "System boundaries, guardrails, and human review paths",
       "Evaluation, observability, latency, and cost plan",
-      "Phased delivery roadmap and technical handoff",
+      "Phased delivery sequence and technical handoff",
     ],
     featured: true,
   },
   {
+    number: "02",
+    name: "AI Direction Sprint",
+    duration: "1-2 weeks",
+    summary:
+      "Answer which AI opportunity actually deserves to become a product initiative — and why the others can wait.",
+    bestFor:
+      "Founders and CTOs with strong market insight, several plausible AI directions, and no shared basis for choosing what deserves to ship first.",
+    deliverables: [
+      "Opportunities scored by value, feasibility, uncertainty, and risk",
+      "Readiness and capability gap assessment",
+      "One prioritized bet with a defensible rationale",
+      "90-day sequence with owners and decision gates",
+    ],
+  },
+  {
     number: "03",
-    name: "AI Team Enablement",
+    name: "Fractional AI Architect",
+    duration: "Ongoing, usually after a sprint",
+    summary:
+      "Senior architecture judgment embedded beside the founder and engineering team, before the company needs or can justify the role full time.",
+    bestFor:
+      "Startups making a steady stream of consequential technical decisions — model and vendor choices, production reviews, roadmap tradeoffs — with no one senior enough to hold the architecture.",
+    deliverables: [
+      "Founder and architecture working sessions",
+      "Model, vendor, and platform decisions",
+      "Architecture and production reviews",
+      "Technical risk, evaluation standards, and team unblockers",
+    ],
+  },
+  {
+    number: "04",
+    name: "AI Engineering Enablement",
     duration: "3-6 weeks",
     summary:
-      "Give a growing startup shared AI practices before founder knowledge and one-off experiments become delivery bottlenecks.",
+      "Turn architecture decisions into shared engineering practice, so the same lessons stop being relearned team by team.",
     bestFor:
-      "Scale-ups with pilots or production AI, but inconsistent evaluation, unclear ownership, or teams learning the same lessons separately.",
+      "Scale-ups already running AI in production, but with inconsistent evaluation, unclear ownership, and no shared review standard.",
     deliverables: [
-      "Founder and engineering-lead alignment",
-      "Right-sized governance and production playbook",
-      "Team workflows, evaluation patterns, and review standards",
-      "Office hours, pilot support, and adoption measures",
+      "Shared architecture principles and review standards",
+      "Evaluation and production workflow patterns",
+      "Ownership model and right-sized governance",
+      "Office hours and adoption measures",
     ],
   },
 ];
 
-export const advisory = {
-  name: "Fractional AI Architect",
-  duration: "Ongoing, after an initial sprint",
-  summary:
-    "Senior technical judgment for a startup that needs an experienced AI architecture partner before it is ready to hire that role full time.",
-  items: [
-    "Founder and architecture working sessions",
-    "Model, vendor, and platform decisions",
-    "Technical risk and delivery oversight",
-    "Team unblockers and production reviews",
-  ],
-};
+export const principles = [
+  "Model and vendor independence",
+  "Architecture preserves options while uncertainty is high",
+  "Human review where consequences demand it",
+  "Evaluation before automation confidence",
+  "Ownership transferred to your team",
+];
 
 export const proof = [
   {
     id: "yc-migration",
     eyebrow: "Anonymized startup engagement",
-    title: "A full production migration completed in one week, with no visible downtime.",
-    challenge:
-      "A US-based Y Combinator startup needed to move its production stack from Vercel and Google Cloud to Azure without disrupting customers.",
-    intervention:
-      "I turned an urgent founder objective into the target architecture, acceptance gates, and an agent-assisted execution path the engineering team could follow.",
+    title:
+      "An urgent founder objective, turned into a target architecture the team could execute safely.",
+    context:
+      "A US-based Y Combinator startup needed its production stack off Vercel and Google Cloud and onto Azure, on a timeline set by the business rather than by engineering comfort.",
+    decision:
+      "Whether to move incrementally and carry two platforms for months, or define a single target architecture with acceptance gates and cut over once.",
+    constraints:
+      "No customer-visible downtime, a small team that still had to ship product, and no appetite for a migration that quietly became a quarter-long project.",
+    architecture:
+      "A defined target architecture, explicit acceptance gates per subsystem, and an agent-assisted execution path the engineering team ran themselves.",
+    tradeoffs:
+      "Chose one decisive cutover over a long dual-run: higher preparation cost, far lower carrying cost and ambiguity. Deferred optimization work that would have widened scope without reducing risk.",
     result:
-      "The full stack moved in seven days with zero customer-visible downtime, plus a runbook and operating approach the team could continue using.",
+      "The full stack moved in seven days with zero customer-visible downtime.",
+    ownership:
+      "A runbook and an operating approach the team kept using after the engagement ended.",
     metrics: [
       { value: "7 days", label: "full migration" },
       { value: "0 min", label: "visible downtime" },
@@ -115,13 +134,22 @@ export const proof = [
   {
     id: "aop-beacon",
     eyebrow: "Named client · Amplification Of Potential",
-    title: "A live-event AI system designed around the conversations it must never create.",
-    challenge:
-      "AOP needed personalized prompts in under 2.5 seconds without sending attendee names to the model or allowing sensitive topics into an early event phase.",
-    intervention:
-      "I designed the phased experience, prompt architecture, client-approved few-shot bank, explicit topic guardrails, privacy boundary, and deterministic fallback path.",
+    title:
+      "A live-event AI system designed around the conversations it must never create.",
+    context:
+      "AOP wanted AI-generated conversation prompts at live events, where the audience is present, the moment is unrepeatable, and a bad output is visible to everyone in the room.",
+    decision:
+      "How much to delegate to the model at all — and where a deterministic system had to remain in control of what an attendee could see.",
+    constraints:
+      "Under 2.5 seconds at the table, no attendee names in the model payload, no sensitive topics during the early event phase, and an inference budget that had to stay under a dollar per event.",
+    architecture:
+      "A phased experience model, a client-approved few-shot bank, explicit topic guardrails, a privacy boundary that keeps identity out of the payload by construction, and a deterministic fallback path.",
+    tradeoffs:
+      "Accepted a narrower generative range in exchange for bounded failure. Chose approved examples over open generation, and a deterministic fallback over a retry that could miss the moment.",
     result:
-      "A reusable architecture for six active tables and up to 40 attendees, with a sub-$1 event inference budget and zero PII in the model payload by construction.",
+      "A reusable architecture for six active tables and up to 40 attendees, within the latency and cost envelope.",
+    ownership:
+      "Guardrail policy and prompt bank the client can extend without re-engineering the system.",
     metrics: [
       { value: "< 2.5s", label: "p95 latency target" },
       { value: "< $1", label: "inference budget / event" },
@@ -130,12 +158,22 @@ export const proof = [
   },
 ];
 
+export const caseFields = [
+  { key: "context", label: "Context" },
+  { key: "decision", label: "Decision" },
+  { key: "constraints", label: "Constraints" },
+  { key: "architecture", label: "Architecture" },
+  { key: "tradeoffs", label: "Tradeoffs" },
+  { key: "result", label: "Result" },
+  { key: "ownership", label: "Ownership" },
+] as const;
+
 export const operatorProof = [
   {
     title: "Presencia Loyalty",
     label: "Founder and operator",
     body:
-      "Built and operate a live wallet-based loyalty SaaS, translating product strategy into a system businesses and customers use.",
+      "Built and operate a live wallet-based loyalty SaaS — a product whose architecture decisions I still live with every week.",
   },
   {
     title: "Junior Rodríguez × Presencia",
@@ -145,10 +183,72 @@ export const operatorProof = [
   },
 ];
 
+export const presencia = {
+  eyebrow: "Two practices, one point of view",
+  title: "Advisory is mine. Engineering capacity is Presencia's.",
+  body:
+    "I advise startup teams personally: the decision, the architecture, the sequence. Presencia Studio is the engineering organization I founded to build and operate software and AI systems for businesses.",
+  note:
+    "Running production systems keeps the architecture work grounded in the decisions teams actually live with after launch. When an engagement needs more implementation capacity than advisory provides, Presencia can become relevant — but it is never the default.",
+  split: [
+    {
+      label: "Yenson Umaña",
+      role: "Judgment",
+      question:
+        "What should we build, how should we build it, and what needs to be true before we commit?",
+    },
+    {
+      label: "Presencia Studio",
+      role: "Engineering capability",
+      question:
+        "What is holding the business back, and what system should we build to solve it?",
+    },
+  ],
+};
+
+export const perspective = {
+  eyebrow: "Point of view",
+  title: "Decision-making under technical uncertainty.",
+  body:
+    "The hard part is rarely finding another AI idea. It is deciding which one deserves to become a system. These are the questions I keep returning to with founders and engineering leaders.",
+  themes: [
+    {
+      number: "01",
+      title: "Architecture decisions",
+      body:
+        "When an agent should actually be a deterministic workflow. Choosing between retrieval, tools, and fine-tuning. Which decisions become expensive to reverse.",
+    },
+    {
+      number: "02",
+      title: "Production AI",
+      body:
+        "What separates a demo from a system you can be responsible for: evaluation, latency and cost budgets, observability, and failure modes named before launch.",
+    },
+    {
+      number: "03",
+      title: "Founder and CTO decisions",
+      body:
+        "What not to build. How to prioritize AI opportunities. When to hire an AI engineer versus an architect. What belongs in the first 90 days.",
+    },
+    {
+      number: "04",
+      title: "AI economics",
+      body:
+        "Cost per successful task, model routing, inference economics, build versus buy, and what a tolerable failure actually costs the business.",
+    },
+    {
+      number: "05",
+      title: "Architecture teardowns",
+      body:
+        "Realistic technical situations worked through end to end — the constraints, the options considered, and why one path won.",
+    },
+  ],
+};
+
 export const careerSignals = [
   {
     year: "2022",
-    title: "Production AI before ChatGPT",
+    title: "Production AI before the boom",
     body:
       "Joined OneReach.ai in October 2022 and began building conversational AI and orchestration systems at production scale.",
   },
@@ -162,7 +262,13 @@ export const careerSignals = [
     year: "Today",
     title: "Startup architecture at the decision table",
     body:
-      "Work with founders and lean engineering teams on AI architecture, agent systems, evaluation, productionization, and technical direction through Microsoft for Startups.",
+      "Work with founders and lean engineering teams on AI architecture, agent systems, evaluation, and technical direction through Microsoft for Startups.",
+  },
+  {
+    year: "Also",
+    title: "Founder and operator",
+    body:
+      "Founded Presencia Studio and operate production systems personally, which keeps the advice honest about what happens after launch.",
   },
 ];
 
@@ -171,48 +277,65 @@ export const approach = [
     number: "01",
     title: "Frame the decision",
     body:
-      "Clarify the business outcome, baseline, users, constraints, and what must be true for the initiative to deserve investment.",
+      "Before choosing a model or a platform: define the business outcome, the constraints, the cost of failure, and what must be true for the initiative to deserve investment.",
   },
   {
     number: "02",
     title: "Make tradeoffs explicit",
     body:
-      "Compare viable approaches across quality, latency, cost, security, maintainability, and organizational readiness.",
+      "Compare viable approaches across quality, latency, cost, security, maintainability, and what the team can realistically operate.",
   },
   {
     number: "03",
     title: "De-risk with evidence",
     body:
-      "Use focused prototypes, evaluations, and failure-mode reviews where they resolve an important unknown - not as theater.",
+      "Use focused prototypes, evaluations, and failure-mode reviews where they resolve an important unknown — not as theater.",
   },
   {
     number: "04",
     title: "Transfer the capability",
     body:
-      "Leave decisions, standards, and operating knowledge with your team so the work compounds after the engagement ends.",
+      "Leave the decisions, the reasoning, and the standards with your team, so the work compounds after the engagement ends.",
   },
 ];
+
+export const fitCriteria = {
+  good: [
+    "There is real momentum and a customer or market signal",
+    "AI is strategically relevant, not decorative",
+    "Several plausible technical directions are open",
+    "Architecture decisions are becoming consequential",
+    "The team is capable but has no senior AI architecture leadership",
+    "The company moves too fast for a traditional consulting engagement",
+  ],
+  poor: [
+    "A chatbot or a basic automation with no product ownership behind it",
+    "Generic AI training disconnected from an operating change",
+    "Inexpensive development capacity",
+    "Implementation resources rather than technical judgment",
+  ],
+};
 
 export const faqs = [
   {
     question: "Do you implement the systems you design?",
     answer:
-      "I use prototypes and technical validation when they reduce a material risk, and I can support an internal team through delivery. The core offer is senior strategy, architecture, and adoption - not open-ended outsourced development.",
+      "I use prototypes and technical validation when they reduce a material risk, and I can support an internal team through delivery. The core offer is senior judgment — direction, architecture, and adoption — not open-ended outsourced development.",
   },
   {
     question: "What kind of company is the best fit?",
     answer:
-      "Early and growth-stage startups with a founder or CTO close to the decision, a product or engineering team ready to execute, and an AI initiative important enough to shape the company.",
+      "Startups and scale-ups with real momentum, a founder or CTO close to the decision, a team ready to execute, and an AI initiative consequential enough to shape the next year. If what you need is implementation capacity rather than technical judgment, I will say so early.",
+  },
+  {
+    question: "How is this different from what Presencia Studio does?",
+    answer:
+      "I advise founders and engineering teams personally on decisions and architecture. Presencia Studio is the engineering organization I founded to build and operate systems. They reinforce each other, but an advisory engagement never assumes Presencia does the building.",
   },
   {
     question: "How does this work alongside your current role?",
     answer:
       "I accept a limited number of non-conflicting engagements, each subject to a conflict review. Client work is independent and does not imply endorsement by Microsoft, Accenture, or any current or former employer.",
-  },
-  {
-    question: "Is training available on its own?",
-    answer:
-      "Yes, when it is tied to a defined operating change. I design role-specific executive and team sessions around your systems, governance, and adoption goals rather than generic AI literacy presentations.",
   },
   {
     question: "Can you work with a distributed or international team?",

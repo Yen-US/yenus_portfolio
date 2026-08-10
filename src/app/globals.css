@@ -191,7 +191,14 @@
   .consulting-display {
     font-family: var(--font-display), ui-serif, Georgia, serif;
     font-feature-settings: "ss01", "ss02";
-    letter-spacing: 0;
+    letter-spacing: -0.011em;
+    word-spacing: 0.01em;
+  }
+
+  /* Optical alignment: serif display type sits slightly right of a hard edge */
+  .consulting-display {
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures contextual;
   }
 
   .consulting-kicker {
@@ -242,6 +249,12 @@
     animation-delay: 160ms;
   }
 
+  /* Numerals in metrics and case data should align in columns */
+  .consulting-display,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
   @media (min-width: 768px) {
     .consulting-container {
       width: min(100% - 4rem, 76rem);
@@ -249,6 +262,12 @@
 
     .consulting-section {
       padding-block: 8rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .consulting-section {
+      padding-block: 9rem;
     }
   }
 
