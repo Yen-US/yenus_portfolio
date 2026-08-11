@@ -29,19 +29,37 @@ When Supabase is absent, Signal Room loads fictional demo accounts and a sample 
 
 ## Daily Workflow
 
-### 1. Discover
+Three steps, in order. Everything else lives under **Advanced** and can be
+ignored until the basics are working.
 
-- Search global Seed-Series B B2B AI startups using a production trigger.
-- Prefer recent funding, enterprise pilots, production launches, platform hiring, evaluation/reliability hiring, or movement into regulated buyers.
-- Open every cited source before saving a company.
-- Reject generic matches, agencies, consumer-only products, and companies outside the selected stage.
+**1 · Find targets** — search, open the cited sources, save the ones worth
+pursuing. Works with no setup; targeting defaults to Seed–Series B B2B AI and
+can be tuned later under Advanced → ICP tuning. Up to three per batch.
 
-Discovery uses one bounded OpenAI web-search call and parses its citation-bearing
-Markdown locally. It returns up to three stage-verified candidates per search so
-the request stays below serverless execution limits. Run separate searches for
-different trigger angles instead of asking one invocation for a broad list.
+**2 · Research & write** — per account, four tabs in order:
+1. *Research* — paste public URLs and the contact's name/role (found manually).
+2. *Brief* — source-backed summary, evidence, architecture hypotheses.
+3. *Use their product* — plan a test, then actually sign up and measure one
+   thing. Log it.
+4. *Write & send* — draft the opener, check tone, copy out, paste their reply
+   back for analysis.
 
-Sources shown in discovery are citations, not independently verified facts. Confirm the relevant claim before outreach.
+**3 · Calls** — cost-math questions, capture what they said, draft a 90-day plan.
+
+The load-bearing rule: the opening message earns a reply because it contains **a
+number you measured yourself**, plus a hedged guess at the cause that invites
+correction. Step 3 of the account tabs is where that number comes from, and the
+opener stays locked until it exists.
+
+### Advanced
+
+- **Dashboard** — pipeline counters and next actions.
+- **ICP tuning** — versioned targeting profile. Sharpening narrows a loose
+  statement; locking is confirmed by typing `lock v{n}` and warns that accounts
+  sourced under an earlier version stop being score-comparable. ICP v1 seeds
+  with the original fit-score keyword banks, so historical scores stay
+  interpretable. **This is a default, not a gate — discovery works without it.**
+- **Post Lab** — LinkedIn authority content.
 
 ### Suggested Fit Score
 
@@ -54,70 +72,83 @@ result. The model does not choose the number. The rubric is:
 - Architecture-offer alignment: 20
 - Recent urgency trigger: 15
 
-Each candidate exposes the five-part breakdown. Evidence confidence is shown
-separately and depends on verified website/source coverage; it does not inflate
-the fit score. Saving a candidate preserves the suggested score, derives initial
-priority (`80+` high, `65-79` medium, below `65` low), and leaves the score
-editable in the account workspace.
+Evidence confidence is shown separately and depends on verified website/source
+coverage; it does not inflate the fit score. Saving preserves the score, derives
+priority (`80+` high, `65-79` medium, below `65` low), and stamps the ICP version.
 
-### 2. Research
+When no official website resolves from the citations, the candidate is marked
+`site unverified` — open a source, find the real domain, and paste it in after
+saving.
 
-- Add the company website, launch posts, technical writing, jobs page, funding coverage, and public product documentation.
-- Paste relevant LinkedIn text manually. Automated LinkedIn extraction is intentionally blocked.
-- Add personal observations in manual context rather than presenting them as sourced facts.
-- Generate the brief and review extraction failures.
+### The extractor
 
-The extractor:
+Allows only public HTTP/HTTPS pages on standard ports, blocks local/private
+addresses and checks each redirect, blocks LinkedIn, limits response size and
+duration, and does not disguise itself as a browser or bypass publisher `403`
+responses.
 
-- Allows only public HTTP/HTTPS pages on standard ports
-- Blocks local/private network addresses and checks each redirect
-- Blocks LinkedIn extraction
-- Limits response size and request duration
-- Does not bypass publisher `403` responses or disguise itself as a browser
+### Field test — manual by design
 
-The brief separates:
+Automating signup or scripted product use would violate the operating boundaries
+and produce numbers that cannot be defended when a CTO pushes back. The tool
+plans what to measure and stores what you observed; you run it.
 
-- Verified evidence with source URL
-- Architecture hypotheses with supporting signals
-- Questions needed to validate each hypothesis
-- Explicit uncertainties
+Observations outrank inference in the research brief. With no observation
+recorded, the brief is instructed to describe no performance, latency, or
+reliability weakness at all.
 
-### 3. Prepare Manual Outreach
+### Correction opener — the one hard gate
 
-Review and edit every asset before use:
+With no logged observation the opener cannot be generated: the UI disables it,
+the route returns `422`, and the function throws. Every other check advises
+rather than blocks; this one blocks because the hook collapses without it.
 
-- Personalized opening lines
-- Short LinkedIn/email message
-- Three-to-five-minute Loom outline
-- Discovery questions
+Structure: greeting → two or three genuine strengths from observations or cited
+evidence → **exactly one** weakness with its measured number → the cause stated
+as a guess → the scaling question. Under 900 characters. No links, no ask for a
+call — that comes after they reply.
 
-No messages are sent automatically. Do not use Microsoft program lists, non-public startup information, or any language implying Microsoft endorsement.
+A deterministic tone lint runs live beneath the draft: one jab not a teardown,
+hedge present, invites a reply, no pressure language, no flattery opener, length.
 
-### 4. Build LinkedIn Authority
+### Reply analysis
 
-Rotate between:
+Classifies intent, quotes the correcting sentence verbatim, marks each hypothesis
+confirmed/refuted/open, extracts stated numbers verbatim (never estimates), flags
+ego risk, proposes one next question, and answers whether the reply justifies
+asking for the call — defaulting to `not_yet`.
 
-1. Technical field notes
-2. Startup strategy
-3. Operator stories
+### Calls
 
-Each generated post is instructed to include:
-
-- One non-obvious central claim
-- A concrete startup operating scenario
-- Three to five detailed decisions or a reusable framework
-- A decisive takeaway
-- An evidence ledger for factual claims
-
-The Meat Check flags short takes, missing operating detail, unsupported factual claims, and generic AI phrases. Treat model quality scores as revision prompts, not objective measurements.
+Cost math is computed by `cost-math.ts` — pure arithmetic, no model — and every
+figure is tagged `stated`, `estimated`, or `unknown` based on whether you
+recorded where it came from. Mutual fit must be judged before the money fields
+unlock. **You type the price; the model never picks it.** Internal planning bands
+live in `src/lib/signal-room/offers.ts` and are never rendered publicly.
 
 ## Operating Boundaries
 
 - Public web research only
 - LinkedIn is manual paste/link only
-- No private contact-data harvesting
-- No automated outreach or engagement
+- No private contact-data harvesting or automated person resolution
+- No automated outreach or engagement — every generated asset is copy-out
+- No automated signup, scripted product use, or load generation against a
+  prospect's product
+- No call recording or transcription
 - No evasion of robots, access controls, rate limits, or publisher blocks
+- No Microsoft program lists, non-public startup information, or implied
+  Microsoft endorsement
+
+The methodology is compatible with all of these. What it asks for — that you
+personally use the product and measure one real thing — is *less* automated than
+generating outreach from citations alone, not more.
+
+## Before the Call Stage Goes Live
+
+Prospect revenue and spend figures are confidential client data, and this route
+is obscured rather than authenticated. Either add real auth over `/signal-room`
+and `/api/signal-room/*`, or record coarse bands instead of stated figures.
+Do not paste a client's real financials into an unauthenticated page.
 - No confidential employer, program, client, or prospect information
 - Architecture findings are hypotheses until validated in conversation
 

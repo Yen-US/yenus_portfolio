@@ -5,13 +5,17 @@ import {
   Building2,
   ExternalLink,
   FileSearch,
+  FlaskConical,
   Link2,
   MessageSquareText,
+  MessagesSquare,
   Plus,
   Save,
 } from "lucide-react";
 import { FormEvent, useEffect, useState, useTransition } from "react";
-import { apiJson } from "@/lib/signal-room/client";
+import { apiJson, emptyAccountRelations, NEW_ACCOUNT_DEFAULTS } from "@/lib/signal-room/client";
+import { FieldTestView } from "@/components/signal-room/field-test-view";
+import { ConversationView } from "@/components/signal-room/conversation-view";
 import type {
   Account,
   AccountStatus,
@@ -30,7 +34,7 @@ import {
   StudioTextarea,
 } from "@/components/signal-room/ui";
 
-type DetailView = "brief" | "outreach" | "sources";
+type DetailView = "brief" | "outreach" | "conversation" | "fieldtest" | "sources";
 
 export function AccountsPanel({
   accounts,
@@ -66,8 +70,8 @@ export function AccountsPanel({
   return (
     <div>
       <PanelHeading
-        eyebrow="Research pipeline"
-        title="Account intelligence"
+        eyebrow="Step 2"
+        title="Research & write"
         action={
           <StudioButton onClick={() => setShowNew((current) => !current)}>
             <Plus className="h-4 w-4" />
@@ -151,8 +155,7 @@ function AccountDetail({
   mode: "supabase" | "demo";
   onChange: (account: Account) => void;
 }) {
-  const [detailView, setDetailView] = useState<DetailView>(account.brief ? "brief" : "sources");
-  const [urls, setUrls] = useState(
+  const [detailView, setDetailView] = useState<DetailView>(account.brief ? "brief" : "sources");  const [urls, setUrls] = useState(
     [account.website, ...account.sources.map((source) => source.url)].filter(Boolean).filter((value, index, all) => all.indexOf(value) === index).join("\n")
   );
   const [manualContext, setManualContext] = useState("");
@@ -160,6 +163,8 @@ function AccountDetail({
   const [priority, setPriority] = useState(account.priority);
   const [fitScore, setFitScore] = useState(account.fitScore);
   const [notes, setNotes] = useState(account.notes);
+  const [targetName, setTargetName] = useState(account.targetName);
+  const [targetRole, setTargetRole] = useState(account.targetRole);
   const [error, setError] = useState("");
   const [failures, setFailures] = useState<{ url: string; error: string }[]>([]);
   const [isResearching, startResearch] = useTransition();
@@ -187,6 +192,7 @@ function AccountDetail({
             },
             urls: urls.split("\n").map((url) => url.trim()).filter(Boolean),
             manualContext,
+            observations: account.observations,
             persist: mode === "supabase",
           }),
         });
@@ -203,14 +209,21 @@ function AccountDetail({
   function saveAccount() {
     setError("");
     startSave(async () => {
-      const next = { ...account, status, priority, fitScore, notes, updatedAt: new Date().toISOString() };
+      const next = { ...account, status, priority, fitScore, notes, targetName, targetRole, updatedAt: new Date().toISOString() };
       try {
         if (mode === "supabase") {
           const result = await apiJson<{ account: Account }>("/api/signal-room/accounts", {
             method: "PATCH",
-            body: JSON.stringify({ id: account.id, status, priority, fitScore, notes }),
+            body: JSON.stringify({ id: account.id, status, priority, fitScore, notes, targetName, targetRole }),
           });
-          onChange({ ...result.account, brief: account.brief, sources: account.sources });
+          onChange({
+            ...result.account,
+            brief: account.brief,
+            sources: account.sources,
+            observations: account.observations,
+            messages: account.messages,
+            call: account.call,
+          });
         } else {
           onChange(next);
         }
@@ -255,9 +268,11 @@ function AccountDetail({
 
       <div className="mt-6 flex flex-wrap gap-1 border-b border-border">
         {([
-          ["brief", "Research brief", FileSearch],
-          ["outreach", "Outreach pack", MessageSquareText],
-          ["sources", "Sources & notes", Link2],
+          ["sources", "1 · Research", Link2],
+          ["brief", "2 · Brief", FileSearch],
+          ["fieldtest", "3 · Use their product", FlaskConical],
+          ["conversation", "4 · Write & send", MessagesSquare],
+          ["outreach", "Extras", MessageSquareText],
         ] as const).map(([id, label, Icon]) => (
           <button key={id} onClick={() => setDetailView(id)} className={`focus-ring inline-flex min-h-10 items-center gap-2 border-b-2 px-4 text-xs font-semibold ${detailView === id ? "border-signal text-signal" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
             <Icon className="h-4 w-4" />{label}
@@ -268,6 +283,12 @@ function AccountDetail({
       {error ? <p className="mt-5 border-l-2 border-destructive bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">{error}</p> : null}
 
       {detailView === "brief" ? <BriefView brief={account.brief} /> : null}
+      {detailView === "fieldtest" ? (
+        <FieldTestView account={account} mode={mode} onChange={onChange} />
+      ) : null}
+      {detailView === "conversation" ? (
+        <ConversationView account={account} mode={mode} onChange={onChange} />
+      ) : null}
       {detailView === "outreach" ? <OutreachView brief={account.brief} /> : null}
       {detailView === "sources" ? (
         <div className="mt-6 grid gap-7 lg:grid-cols-[1fr_0.8fr]">
@@ -290,9 +311,27 @@ function AccountDetail({
             ) : null}
           </div>
           <div>
-            <Field label="Pipeline notes">
-              <StudioTextarea value={notes} onChange={(event) => setNotes(event.target.value)} className="min-h-56" />
-            </Field>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Target contact" hint="Found manually on LinkedIn.">
+                <StudioInput
+                  value={targetName}
+                  onChange={(event) => setTargetName(event.target.value)}
+                  placeholder="Full name"
+                />
+              </Field>
+              <Field label="Their role" hint="CTO first; PM or founding engineer as fallback.">
+                <StudioInput
+                  value={targetRole}
+                  onChange={(event) => setTargetRole(event.target.value)}
+                  placeholder="CTO"
+                />
+              </Field>
+            </div>
+            <div className="mt-5">
+              <Field label="Pipeline notes">
+                <StudioTextarea value={notes} onChange={(event) => setNotes(event.target.value)} className="min-h-40" />
+              </Field>
+            </div>
             <StudioButton variant="secondary" onClick={saveAccount} loading={isSaving} className="mt-4">
               <Save className="h-4 w-4" />
               Save account fields
@@ -402,7 +441,14 @@ function NewAccountForm({ mode, onCreated }: { mode: "supabase" | "demo"; onCrea
           onCreated(result.account);
         } else {
           const now = new Date().toISOString();
-          onCreated({ ...input, id: `demo-${crypto.randomUUID()}`, sources: [], createdAt: now, updatedAt: now });
+          onCreated({
+            ...input,
+            ...NEW_ACCOUNT_DEFAULTS,
+            ...emptyAccountRelations(),
+            id: `demo-${crypto.randomUUID()}`,
+            createdAt: now,
+            updatedAt: now,
+          });
         }
       } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Account creation failed."); }
     });

@@ -5,6 +5,8 @@ import { z } from "zod";
 import type {
   Account,
   DiscoveredCompany,
+  HandsOnObservation,
+  IcpProfile,
   PostDraft,
   PostPillar,
   ResearchBrief,
@@ -82,6 +84,8 @@ export async function discoverCompanies(input: {
   region: string;
   stages: string[];
   count: number;
+  disqualifiers?: string[];
+  icp?: IcpProfile | null;
 }): Promise<DiscoveredCompany[]> {
   const openai = getOpenAI();
   const completion = await openai.chat.completions.create(
@@ -108,7 +112,7 @@ No introduction, conclusion, directories, generic startup lists, agencies, consu
         },
         {
           role: "user",
-          content: `Find up to ${input.count} global B2B AI-native or AI-central startups matching this research angle: ${input.query}\nPreferred stages: ${input.stages.join(", ")}\nRegion: ${input.region}.\nPrioritize visible prototype-to-production, platform, evaluation, reliability, enterprise-readiness, or AI-team scaling signals. Exclude agencies, consultancies, consumer-only apps, and companies without a working public website. Today is 2026-07-27.`,
+          content: `Find up to ${input.count} global B2B AI-native or AI-central startups matching this research angle: ${input.query}\nPreferred stages: ${input.stages.join(", ")}\nRegion: ${input.region}.\nPrioritize visible prototype-to-production, platform, evaluation, reliability, enterprise-readiness, or AI-team scaling signals.${input.disqualifiers?.length ? `\nExclude: ${input.disqualifiers.join("; ")}.` : ""} Exclude agencies, consultancies, consumer-only apps, and companies without a working public website. Today is ${new Date().toISOString().slice(0, 10)}.`,
         },
       ],
     },
@@ -137,7 +141,7 @@ No introduction, conclusion, directories, generic startup lists, agencies, consu
     )
     .map((company) => ({
       ...company,
-      ...calculateDiscoveryFit(company),
+      ...calculateDiscoveryFit(company, input.icp),
     }))
     .toSorted((left, right) => right.fitScore - left.fitScore)
     .slice(0, input.count);
@@ -153,6 +157,7 @@ export async function buildResearchBrief(input: {
   account: Pick<Account, "name" | "website" | "stage" | "location" | "oneLiner" | "notes">;
   sources: ResearchSource[];
   manualContext: string;
+  observations?: HandsOnObservation[];
 }): Promise<ResearchBrief> {
   const openai = getOpenAI();
   const sourcePacket = input.sources
@@ -175,8 +180,8 @@ export async function buildResearchBrief(input: {
       },
     },
     instructions:
-      "You are Yenson Umana's research analyst for manual, respectful outreach to Seed-Series B B2B AI startups. Use only supplied sources and manual context. Every factual evidence item must cite an exact supplied source URL and title. Never turn an inference into a fact. Architecture observations must be labeled hypotheses and include a question that would validate them. Outreach must be specific, brief, useful, and free of flattery, fake familiarity, or pressure. The Loom outline should teach something before asking for a call.",
-    input: `ACCOUNT\nName: ${input.account.name}\nWebsite: ${input.account.website}\nStage: ${input.account.stage}\nLocation: ${input.account.location}\nOne-liner: ${input.account.oneLiner}\nExisting notes: ${input.account.notes}\n\nMANUAL CONTEXT\n${input.manualContext || "None supplied."}\n\nPUBLIC SOURCES\n${sourcePacket || "No extractable public pages supplied. Treat all unsupported claims as uncertainty."}`,
+      "You are Yenson Umana's research analyst for manual, respectful outreach to Seed-Series B B2B AI startups. Use only supplied sources, first-hand observations, and manual context. Every factual evidence item must cite an exact supplied source URL and title. Never turn an inference into a fact. Architecture observations must be labeled hypotheses and include a question that would validate them. FIRST-HAND OBSERVATIONS are measurements the operator personally made while using the product; they are the strongest evidence available and outrank inference. When a hypothesis explains an observation, reference that observation by its [On] identifier in its evidence field. If no observations are supplied, do not describe any performance, latency, or reliability weakness at all. Outreach must be specific, brief, and useful. It may name two or three genuine strengths, but only ones drawn from the supplied observations or cited evidence - never unearned praise, fake familiarity, or pressure. The Loom outline should teach something before asking for a call.",
+    input: `ACCOUNT\nName: ${input.account.name}\nWebsite: ${input.account.website}\nStage: ${input.account.stage}\nLocation: ${input.account.location}\nOne-liner: ${input.account.oneLiner}\nExisting notes: ${input.account.notes}\n\nFIRST-HAND OBSERVATIONS\n${formatObservations(input.observations ?? [])}\n\nMANUAL CONTEXT\n${input.manualContext || "None supplied."}\n\nPUBLIC SOURCES\n${sourcePacket || "No extractable public pages supplied. Treat all unsupported claims as uncertainty."}`,
   }, { timeout: 55_000, maxRetries: 1 });
 
   const parsed = researchBriefSchema.parse(JSON.parse(response.output_text));
@@ -243,6 +248,20 @@ function getOpenAI() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
+function formatObservations(observations: HandsOnObservation[]) {
+  if (observations.length === 0) {
+    return "None recorded. Do not describe any measured weakness.";
+  }
+  return observations
+    .map(
+      (observation, index) =>
+        `[O${index + 1}] ${observation.flow} | ${observation.metric}: ${
+          observation.value ?? "not recorded"
+        } ${observation.unit} | tier: ${observation.tier} | ${observation.rawNote}`
+    )
+    .join("\n");
+}
+
 function normalizeUrl(value: string) {
   try {
     const url = new URL(value);
@@ -280,7 +299,7 @@ function normalizeCompanyWebsite(
   }
 
   const companyKey = normalizeCompanyKey(companyName);
-  if (companyKey.length < 4) return "";
+  if (companyKey.length < 3) return "";
 
   for (const sourceUrl of sourceUrls) {
     const source = new URL(sourceUrl);
@@ -463,8 +482,8 @@ function hostnameMatchesCompany(hostname: string, companyName: string) {
     hostname.replace(/^www\./, "").split(".")[0]
   );
   return (
-    companyKey.length >= 4 &&
-    hostnameKey.length >= 4 &&
+    companyKey.length >= 3 &&
+    hostnameKey.length >= 3 &&
     (companyKey.includes(hostnameKey) || hostnameKey.includes(companyKey))
   );
 }

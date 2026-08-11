@@ -1,17 +1,21 @@
 "use client";
 
-import { ArrowRight, CircleDot, FilePenLine, Radar } from "lucide-react";
-import type { Account, PostDraft } from "@/lib/signal-room/types";
+import { ArrowRight, CircleDot, FilePenLine, FlaskConical, PhoneCall, Radar } from "lucide-react";
+import type { Account, IcpProfile, PostDraft } from "@/lib/signal-room/types";
 import { PanelHeading, StatusBadge, StudioButton } from "@/components/signal-room/ui";
+
+type OverviewView = "icp" | "discover" | "accounts" | "calls" | "posts";
 
 export function OverviewPanel({
   accounts,
   posts,
+  icp,
   onNavigate,
 }: {
   accounts: Account[];
   posts: PostDraft[];
-  onNavigate: (view: "discover" | "accounts" | "posts") => void;
+  icp: IcpProfile | null;
+  onNavigate: (view: OverviewView) => void;
 }) {
   const readyAccounts = accounts.filter((account) => account.status === "ready");
   const researchQueue = accounts.filter((account) => ["watchlist", "researching"].includes(account.status));
@@ -21,25 +25,61 @@ export function OverviewPanel({
     .toSorted((a, b) => b.fitScore - a.fitScore)
     .slice(0, 5);
 
+  // Methodology-specific counters.
+  const active = accounts.filter((account) => account.status !== "archived");
+  const withFieldTest = active.filter((account) => account.observations.length > 0);
+  const needFieldTest = active.filter(
+    (account) =>
+      account.observations.length === 0 &&
+      ["ready", "researching", "contacted"].includes(account.status)
+  );
+  const awaitingReply = active.filter((account) => account.status === "contacted");
+  const inConversation = active.filter((account) => account.status === "replied");
+
   return (
     <div>
       <PanelHeading
         eyebrow="Operator dashboard"
         title="Signal Room"
         action={
-          <StudioButton onClick={() => onNavigate("discover")}>
+          <StudioButton onClick={() => onNavigate(icp ? "discover" : "icp")}>
             <Radar className="h-4 w-4" />
-            Find targets
+            {icp ? "Find targets" : "Lock an ICP"}
           </StudioButton>
         }
       />
 
+      {!icp ? (
+        <button
+          onClick={() => onNavigate("icp")}
+          className="focus-ring mt-6 block w-full border-l-2 border-brass bg-brass/5 px-4 py-3 text-left text-xs leading-5 text-brass"
+        >
+          No ICP is locked. Discovery stays closed until you commit to who you are targeting.
+        </button>
+      ) : null}
+
       <dl className="mt-7 grid border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-        <Metric label="Active accounts" value={accounts.filter((account) => account.status !== "archived").length} />
-        <Metric label="Ready for outreach" value={readyAccounts.length} />
-        <Metric label="Needs research" value={researchQueue.length} />
-        <Metric label="Posts ready" value={readyPosts.length} />
+        <Metric label="Active accounts" value={active.length} />
+        <Metric label="Field tested" value={withFieldTest.length} />
+        <Metric label="Awaiting reply" value={awaitingReply.length} />
+        <Metric label="In conversation" value={inConversation.length} />
       </dl>
+
+      {needFieldTest.length > 0 ? (
+        <button
+          onClick={() => onNavigate("accounts")}
+          className="focus-ring mt-5 block w-full border border-brass/30 bg-brass/5 px-4 py-4 text-left"
+        >
+          <p className="text-xs font-semibold text-brass">
+            {needFieldTest.length} account{needFieldTest.length === 1 ? "" : "s"} researched but never used
+          </p>
+          <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+            The opener needs a number you measured yourself. Sign up, run the flow, log one
+            observation — {needFieldTest.slice(0, 3).map((account) => account.name).join(", ")}
+            {needFieldTest.length > 3 ? ` and ${needFieldTest.length - 3} more` : ""}.
+          </p>
+        </button>
+      ) : null}
 
       <div className="mt-8 grid gap-8 xl:grid-cols-[1.3fr_0.7fr]">
         <section>
@@ -83,10 +123,22 @@ export function OverviewPanel({
               onClick={() => onNavigate("discover")}
             />
             <ActionLine
+              icon={FlaskConical}
+              label="Use the product"
+              detail={`${needFieldTest.length} researched but never measured`}
+              onClick={() => onNavigate("accounts")}
+            />
+            <ActionLine
               icon={CircleDot}
               label="Prepare outreach"
               detail={`${readyAccounts.length} briefs ready to review`}
               onClick={() => onNavigate("accounts")}
+            />
+            <ActionLine
+              icon={PhoneCall}
+              label="Run the cost math"
+              detail={`${inConversation.length} in conversation`}
+              onClick={() => onNavigate("calls")}
             />
             <ActionLine
               icon={FilePenLine}

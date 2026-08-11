@@ -3,9 +3,14 @@ import { z } from "zod";
 import {
   createAccount,
   deleteAccount,
+  getActiveIcp,
   updateAccount,
 } from "@/lib/signal-room/store";
 import { isSameOrigin, takeRateLimit } from "@/lib/signal-room/request-guard";
+import {
+  ACCOUNT_STATUSES,
+  MUTUAL_FIT_VALUES,
+} from "@/lib/signal-room/types";
 
 const accountFields = {
   name: z.string().trim().min(1).max(150),
@@ -13,15 +18,7 @@ const accountFields = {
   stage: z.enum(["Seed", "Series A", "Series B", "Unknown"]),
   location: z.string().trim().max(150),
   oneLiner: z.string().trim().max(500),
-  status: z.enum([
-    "watchlist",
-    "researching",
-    "ready",
-    "contacted",
-    "replied",
-    "discovery",
-    "archived",
-  ]),
+  status: z.enum(ACCOUNT_STATUSES),
   fitScore: z.number().int().min(0).max(100),
   priority: z.enum(["high", "medium", "low"]),
   founderNames: z.array(z.string().trim().min(1).max(100)).max(12),
@@ -29,14 +26,39 @@ const accountFields = {
   notes: z.string().trim().max(5000),
 };
 
+/** Fields editable after creation but not required to create an account. */
+const extendedFields = {
+  disqualifiedReason: z.string().trim().max(500),
+  targetRole: z.string().trim().max(120),
+  targetName: z.string().trim().max(120),
+  approxUsers: z.string().trim().max(200),
+  mutualFit: z.enum(MUTUAL_FIT_VALUES),
+  askSentAt: z.string().datetime().nullable(),
+};
+
 const createSchema = z.object(accountFields);
-const updateSchema = z.object({ id: z.string().uuid(), ...accountFields }).partial().required({ id: true });
+const updateSchema = z
+  .object({ id: z.string().uuid(), ...accountFields, ...extendedFields })
+  .partial()
+  .required({ id: true });
 const deleteSchema = z.object({ id: z.string().uuid() });
 
 export async function POST(request: NextRequest) {
   return handleMutation(request, async () => {
     const input = createSchema.parse(await request.json());
-    const account = await createAccount({ ...input, brief: null });
+    // Stamp the ICP the account was sourced under so scores stay comparable.
+    const icp = await getActiveIcp();
+    const account = await createAccount({
+      ...input,
+      brief: null,
+      icpProfileId: icp?.id ?? null,
+      disqualifiedReason: "",
+      targetRole: "",
+      targetName: "",
+      approxUsers: "",
+      mutualFit: "unknown",
+      askSentAt: null,
+    });
     return NextResponse.json({ account }, { status: 201 });
   });
 }

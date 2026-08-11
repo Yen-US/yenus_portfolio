@@ -2,6 +2,8 @@ import type {
   DiscoveredCompany,
   DiscoveryFitAssessment,
   FitScoreDimension,
+  IcpProfile,
+  StartupStage,
 } from "@/lib/signal-room/types";
 
 type FitInput = Pick<
@@ -14,84 +16,103 @@ type FitInput = Pick<
   | "sourceUrls"
 >;
 
-const AI_SIGNALS = [
-  "ai",
-  "artificial intelligence",
-  "agent",
-  "agentic",
-  "llm",
-  "language model",
-  "rag",
-  "inference",
-  "machine learning",
-];
+/**
+ * Fallback banks, used only when no ICP is locked. These reproduce the original
+ * hardcoded behaviour so scores stay comparable with rows saved before ICP v1.
+ */
+const DEFAULT_BANKS = {
+  ai: [
+    "ai",
+    "artificial intelligence",
+    "agent",
+    "agentic",
+    "llm",
+    "language model",
+    "rag",
+    "inference",
+    "machine learning",
+  ],
+  b2b: [
+    "b2b",
+    "business",
+    "companies",
+    "enterprise",
+    "operations",
+    "platform",
+    "saas",
+    "teams",
+    "workflow",
+  ],
+  production: [
+    "beta",
+    "customer",
+    "deploy",
+    "enterprise pilot",
+    "go live",
+    "integration",
+    "launch",
+    "production",
+    "rollout",
+    "scale",
+  ],
+  architecture: [
+    "agent",
+    "audit",
+    "data",
+    "evaluation",
+    "governance",
+    "infrastructure",
+    "integration",
+    "latency",
+    "platform",
+    "rag",
+    "reliability",
+    "security",
+    "scale",
+  ],
+  urgency: [
+    "announced",
+    "funding",
+    "hiring",
+    "launch",
+    "pilot",
+    "raised",
+    "recent",
+    "series",
+    "seed",
+  ],
+} as const;
 
-const B2B_SIGNALS = [
-  "b2b",
-  "business",
-  "companies",
-  "enterprise",
-  "operations",
-  "platform",
-  "saas",
-  "teams",
-  "workflow",
-];
+const DEFAULT_STAGES: StartupStage[] = ["Seed", "Series A", "Series B"];
 
-const PRODUCTION_SIGNALS = [
-  "beta",
-  "customer",
-  "deploy",
-  "enterprise pilot",
-  "go live",
-  "integration",
-  "launch",
-  "production",
-  "rollout",
-  "scale",
-];
+/**
+ * Scores a candidate against the locked ICP. Passing no ICP falls back to the
+ * original constants, so an unconfigured workspace behaves exactly as before.
+ */
+export function calculateDiscoveryFit(
+  input: FitInput,
+  icp?: IcpProfile | null
+): DiscoveryFitAssessment {
+  const banks = {
+    ai: pickBank(icp?.keywordBanks.ai, DEFAULT_BANKS.ai),
+    b2b: pickBank(icp?.keywordBanks.b2b, DEFAULT_BANKS.b2b),
+    production: pickBank(icp?.keywordBanks.production, DEFAULT_BANKS.production),
+    architecture: pickBank(icp?.keywordBanks.architecture, DEFAULT_BANKS.architecture),
+    urgency: pickBank(icp?.keywordBanks.urgency, DEFAULT_BANKS.urgency),
+  };
+  const targetStages =
+    icp?.stages && icp.stages.length > 0 ? icp.stages : DEFAULT_STAGES;
 
-const ARCHITECTURE_SIGNALS = [
-  "agent",
-  "audit",
-  "data",
-  "evaluation",
-  "governance",
-  "infrastructure",
-  "integration",
-  "latency",
-  "platform",
-  "rag",
-  "reliability",
-  "security",
-  "scale",
-];
-
-const URGENCY_SIGNALS = [
-  "announced",
-  "funding",
-  "hiring",
-  "launch",
-  "pilot",
-  "raised",
-  "recent",
-  "series",
-  "seed",
-];
-
-export function calculateDiscoveryFit(input: FitInput): DiscoveryFitAssessment {
   const productText = `${input.oneLiner} ${input.whyItFits}`.toLowerCase();
   const signalText = `${productText} ${input.trigger}`.toLowerCase();
 
-  const aiMatches = matchSignals(productText, AI_SIGNALS);
-  const b2bMatches = matchSignals(productText, B2B_SIGNALS);
-  const productionMatches = matchSignals(signalText, PRODUCTION_SIGNALS);
-  const architectureMatches = matchSignals(signalText, ARCHITECTURE_SIGNALS);
-  const urgencyMatches = matchSignals(input.trigger.toLowerCase(), URGENCY_SIGNALS);
+  const aiMatches = matchSignals(productText, banks.ai);
+  const b2bMatches = matchSignals(productText, banks.b2b);
+  const productionMatches = matchSignals(signalText, banks.production);
+  const architectureMatches = matchSignals(signalText, banks.architecture);
+  const urgencyMatches = matchSignals(input.trigger.toLowerCase(), banks.urgency);
 
-  const stageScore = ["Seed", "Series A", "Series B"].includes(input.stage)
-    ? 20
-    : 0;
+  const stageScore = targetStages.includes(input.stage) ? 20 : 0;
   const centralityScore =
     aiMatches.length > 0 && b2bMatches.length > 0
       ? 20
@@ -112,7 +133,7 @@ export function calculateDiscoveryFit(input: FitInput): DiscoveryFitAssessment {
       maxScore: 20,
       reason:
         stageScore > 0
-          ? `${input.stage} is inside the Seed-Series B target.`
+          ? `${input.stage} is inside the ${targetStages.join(", ")} target.`
           : "Funding stage is outside the target or unverified.",
     },
     {
@@ -157,9 +178,45 @@ export function calculateDiscoveryFit(input: FitInput): DiscoveryFitAssessment {
   };
 }
 
+function pickBank(candidate: string[] | undefined, fallback: readonly string[]) {
+  return candidate && candidate.length > 0 ? candidate : [...fallback];
+}
+
 function tieredScore(count: number, scores: [number, number, number, number]) {
   if (count >= 3) return scores[3];
   return scores[count];
+}
+
+/**
+ * Detects ICP drift: accounts scored under a superseded ICP version are no
+ * longer score-comparable with the active one.
+ */
+export function findIcpDrift<T extends { icpProfileId: string | null; stage: StartupStage }>(
+  accounts: T[],
+  icp: IcpProfile | null
+) {
+  if (!icp) return [] as { account: T; reason: string }[];
+  return accounts.flatMap((account) => {
+    if (account.icpProfileId !== icp.id) {
+      return [
+        {
+          account,
+          reason: account.icpProfileId
+            ? `Sourced under an earlier ICP version, not v${icp.version}.`
+            : `Sourced before ICP versioning; not comparable with v${icp.version}.`,
+        },
+      ];
+    }
+    if (icp.stages.length > 0 && !icp.stages.includes(account.stage)) {
+      return [
+        {
+          account,
+          reason: `Stage ${account.stage} is outside the locked ICP (${icp.stages.join(", ")}).`,
+        },
+      ];
+    }
+    return [];
+  });
 }
 
 function matchSignals(text: string, signals: string[]) {

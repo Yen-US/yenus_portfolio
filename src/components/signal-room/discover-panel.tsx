@@ -3,14 +3,13 @@
 import { ExternalLink, Plus, Radar, Search } from "lucide-react";
 import { FormEvent, useState, useTransition } from "react";
 import { apiJson, getAccountIdentityKey } from "@/lib/signal-room/client";
-import type { DiscoveredCompany } from "@/lib/signal-room/types";
+import type { DiscoveredCompany, IcpProfile } from "@/lib/signal-room/types";
 import {
   Field,
   PanelHeading,
   StatusBadge,
   StudioButton,
   StudioInput,
-  StudioSelect,
 } from "@/components/signal-room/ui";
 
 const searchPresets = [
@@ -19,16 +18,19 @@ const searchPresets = [
   "B2B RAG or vertical AI startups announcing production launches or enterprise pilots",
 ];
 
+/** The methodology works a small batch at a time: about three targets. */
+const TARGETS_PER_BATCH = 3;
+
 export function DiscoverPanel({
+  icp,
   savedAccountKeys,
   onSave,
 }: {
+  icp: IcpProfile | null;
   savedAccountKeys: Set<string>;
   onSave: (company: DiscoveredCompany) => Promise<void>;
 }) {
   const [query, setQuery] = useState(searchPresets[0]);
-  const [region, setRegion] = useState("Global, English-speaking markets");
-  const [stages, setStages] = useState(["Seed", "Series A", "Series B"]);
   const [companies, setCompanies] = useState<DiscoveredCompany[]>([]);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -41,7 +43,7 @@ export function DiscoverPanel({
       try {
         const result = await apiJson<{ companies: DiscoveredCompany[] }>("/api/signal-room/discover", {
           method: "POST",
-          body: JSON.stringify({ query, region, stages, count: 3 }),
+          body: JSON.stringify({ query, count: TARGETS_PER_BATCH }),
         });
         setCompanies(result.companies);
       } catch (requestError) {
@@ -52,41 +54,29 @@ export function DiscoverPanel({
 
   return (
     <div>
-      <PanelHeading eyebrow="Account discovery" title="Find the next right startup" />
+      <PanelHeading
+        eyebrow="Step 1"
+        title="Find targets"
+        action={icp ? <StatusBadge tone="good">ICP v{icp.version}</StatusBadge> : null}
+      />
 
       <form onSubmit={submit} className="mt-7 border border-border bg-card p-5 md:p-7">
-        <div className="grid gap-5 lg:grid-cols-[1fr_220px]">
-          <Field label="Research angle">
-            <StudioInput value={query} onChange={(event) => setQuery(event.target.value)} required minLength={3} />
-          </Field>
-          <Field label="Market">
-            <StudioSelect value={region} onChange={(event) => setRegion(event.target.value)}>
-              <option>Global, English-speaking markets</option>
-              <option>United States</option>
-              <option>United States + LATAM</option>
-              <option>Europe + United States</option>
-            </StudioSelect>
-          </Field>
-        </div>
+        <Field
+          label="What kind of company are you looking for?"
+          hint={
+            icp
+              ? `Defaults from ICP v${icp.version}: ${icp.stages.join(", ")}`
+              : "Seed to Series B B2B AI startups, global. Tune this later under Advanced."
+          }
+        >
+          <StudioInput value={query} onChange={(event) => setQuery(event.target.value)} required minLength={3} />
+        </Field>
 
-        <div className="mt-5 flex flex-col gap-5 border-t border-border pt-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold">Funding stage</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {["Seed", "Series A", "Series B"].map((stage) => (
-                <label key={stage} className="inline-flex min-h-9 items-center gap-2 border border-border bg-background px-3 text-xs">
-                  <input
-                    type="checkbox"
-                    checked={stages.includes(stage)}
-                    onChange={() => setStages((current) => current.includes(stage) ? current.filter((item) => item !== stage) : [...current, stage])}
-                    className="accent-[hsl(var(--signal))]"
-                  />
-                  {stage}
-                </label>
-              ))}
-            </div>
-          </div>
-          <StudioButton type="submit" loading={isPending} disabled={stages.length === 0}>
+        <div className="mt-5 flex flex-col gap-4 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[11px] leading-5 text-muted-foreground">
+            Returns up to {TARGETS_PER_BATCH} targets. Work one batch at a time.
+          </p>
+          <StudioButton type="submit" loading={isPending}>
             <Search className="h-4 w-4" />
             Search public signals
           </StudioButton>
@@ -137,6 +127,12 @@ export function DiscoverPanel({
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">{company.location}</p>
                     <p className="mt-3 text-sm leading-6">{company.oneLiner}</p>
+                    {!company.website ? (
+                      <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
+                        No official site resolved from the citations. Open a source to find it,
+                        then paste it in after saving.
+                      </p>
+                    ) : null}
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Signal label="Fit" body={company.whyItFits} />

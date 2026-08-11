@@ -1,29 +1,40 @@
 "use client";
 
-import { Building2, FilePenLine, LayoutDashboard, Radar, ShieldAlert } from "lucide-react";
+import { Building2, ChevronRight, Crosshair, FilePenLine, LayoutDashboard, PhoneCall, Radar, ShieldAlert } from "lucide-react";
 import { useState } from "react";
-import type { Account, DiscoveredCompany, PostDraft, WorkspaceData } from "@/lib/signal-room/types";
-import { apiJson, getAccountIdentityKey } from "@/lib/signal-room/client";
+import type { Account, DiscoveredCompany, IcpProfile, PostDraft, WorkspaceData } from "@/lib/signal-room/types";
+import { apiJson, getAccountIdentityKey, emptyAccountRelations, NEW_ACCOUNT_DEFAULTS } from "@/lib/signal-room/client";
 import { cn } from "@/lib/utils";
 import { DiscoverPanel } from "@/components/signal-room/discover-panel";
 import { OverviewPanel } from "@/components/signal-room/overview-panel";
 import { AccountsPanel } from "@/components/signal-room/accounts-panel";
+import { CallPanel } from "@/components/signal-room/call-panel";
+import { IcpPanel } from "@/components/signal-room/icp-panel";
 import { PostLabPanel } from "@/components/signal-room/post-lab-panel";
 import { StatusBadge } from "@/components/signal-room/ui";
 
-type View = "overview" | "discover" | "accounts" | "posts";
+type View = "discover" | "accounts" | "calls" | "icp" | "posts" | "overview";
 
-const navigation: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "discover", label: "Discover", icon: Radar },
-  { id: "accounts", label: "Accounts", icon: Building2 },
+/** The three steps that actually move a target toward a client. */
+const primaryNav: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: "discover", label: "Find targets", icon: Radar },
+  { id: "accounts", label: "Research & write", icon: Building2 },
+  { id: "calls", label: "Calls", icon: PhoneCall },
+];
+
+/** Everything that is useful later but must not compete for attention now. */
+const advancedNav: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: "overview", label: "Dashboard", icon: LayoutDashboard },
+  { id: "icp", label: "ICP tuning", icon: Crosshair },
   { id: "posts", label: "Post Lab", icon: FilePenLine },
 ];
 
 export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
-  const [view, setView] = useState<View>("overview");
+  const [view, setView] = useState<View>("discover");
   const [accounts, setAccounts] = useState(initialData.accounts);
   const [posts, setPosts] = useState(initialData.posts);
+  const [icp, setIcp] = useState<IcpProfile | null>(initialData.icp);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   async function saveDiscoveredCompany(company: DiscoveredCompany) {
     const accountInput = {
@@ -46,8 +57,10 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
       setAccounts((current) => [
         {
           ...accountInput,
+          ...NEW_ACCOUNT_DEFAULTS,
+          ...emptyAccountRelations(),
+          icpProfileId: initialData.icp?.id ?? null,
           id: `demo-${crypto.randomUUID()}`,
-          sources: [],
           createdAt: now,
           updatedAt: now,
         },
@@ -83,7 +96,7 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
             </div>
 
             <nav aria-label="Signal Room" className="flex w-full max-w-full gap-1 overflow-x-auto p-3 lg:flex-col lg:p-4">
-              {navigation.map((item) => (
+              {primaryNav.map((item, index) => (
                 <button
                   key={item.id}
                   onClick={() => setView(item.id)}
@@ -94,10 +107,38 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
                       : "text-background/60 hover:bg-background/10 hover:text-background"
                   )}
                 >
+                  <span className="font-mono text-[9px] text-signal">{index + 1}</span>
                   <item.icon className="h-4 w-4" />
                   {item.label}
                 </button>
               ))}
+
+              <button
+                onClick={() => setShowAdvanced((current) => !current)}
+                className="focus-ring mt-1 flex min-h-9 shrink-0 items-center gap-2 rounded-sm px-3 text-[11px] text-background/40 transition-colors hover:text-background/70 lg:mt-4 lg:border-t lg:border-background/15 lg:pt-4"
+                aria-expanded={showAdvanced}
+              >
+                <ChevronRight className={cn("h-3 w-3 transition-transform", showAdvanced && "rotate-90")} />
+                Advanced
+              </button>
+
+              {showAdvanced
+                ? advancedNav.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setView(item.id)}
+                      className={cn(
+                        "focus-ring flex min-h-9 shrink-0 items-center gap-3 rounded-sm px-3 text-xs transition-colors lg:pl-8",
+                        view === item.id
+                          ? "bg-background text-foreground"
+                          : "text-background/50 hover:bg-background/10 hover:text-background"
+                      )}
+                    >
+                      <item.icon className="h-3.5 w-3.5" />
+                      {item.label}
+                    </button>
+                  ))
+                : null}
             </nav>
 
             <div className="mt-auto hidden border-t border-background/15 p-4 lg:block">
@@ -127,10 +168,25 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
           ) : null}
 
           <main className="mx-auto w-full max-w-[1500px] p-4 md:p-7 lg:p-9">
-            {view === "overview" ? <OverviewPanel accounts={accounts} posts={posts} onNavigate={setView} /> : null}
-            {view === "discover" ? <DiscoverPanel savedAccountKeys={savedAccountKeys} onSave={saveDiscoveredCompany} /> : null}
+            {view === "overview" ? (
+              <OverviewPanel accounts={accounts} posts={posts} icp={icp} onNavigate={setView} />
+            ) : null}
+            {view === "icp" ? (
+              <IcpPanel
+                icp={icp}
+                accounts={accounts}
+                mode={initialData.mode}
+                onIcpChange={setIcp}
+              />
+            ) : null}
+            {view === "discover" ? (
+              <DiscoverPanel icp={icp} savedAccountKeys={savedAccountKeys} onSave={saveDiscoveredCompany} />
+            ) : null}
             {view === "accounts" ? (
               <AccountsPanel accounts={accounts} mode={initialData.mode} onAccountsChange={setAccounts} />
+            ) : null}
+            {view === "calls" ? (
+              <CallPanel accounts={accounts} mode={initialData.mode} onAccountsChange={setAccounts} />
             ) : null}
             {view === "posts" ? (
               <PostLabPanel

@@ -18,6 +18,7 @@ const schema = z.object({
   }),
   urls: z.array(z.string().trim().url()).max(8),
   manualContext: z.string().trim().max(12_000),
+  observations: z.array(z.unknown()).default([]),
   persist: z.boolean().default(false),
 });
 
@@ -65,6 +66,7 @@ export async function POST(request: NextRequest) {
       account: input.account,
       sources,
       manualContext: input.manualContext,
+      observations: input.observations as never,
     });
 
     let persistedSources = sources;

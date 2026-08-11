@@ -1,6 +1,96 @@
-import type { Account, PostDraft, WorkspaceData } from "@/lib/signal-room/types";
+import type {
+  Account,
+  IcpProfile,
+  PostDraft,
+  WorkspaceData,
+} from "@/lib/signal-room/types";
 
 const capturedAt = "2026-07-27T12:00:00.000Z";
+
+/** Seed ICP v1: reproduces the original hardcoded fit-score keyword banks. */
+export const demoIcp: IcpProfile = {
+  id: "demo-icp-v1",
+  version: 1,
+  label: "Seed-Series B B2B AI, prototype to production",
+  statement:
+    "Seed to Series B B2B AI-native startups where a founder or CTO owns the architecture and one consequential AI decision is blocking the move from prototype to production.",
+  isActive: true,
+  stages: ["Seed", "Series A", "Series B"],
+  regions: ["Global, English-speaking markets"],
+  buyerRoles: ["CTO", "Founding engineer", "VP Engineering", "Head of AI"],
+  disqualifiers: [
+    "Agencies and consultancies",
+    "Consumer-only products",
+    "No technical owner close to the work",
+    "Lowest-price no-code automation buyers",
+  ],
+  keywordBanks: {
+    ai: [
+      "ai",
+      "artificial intelligence",
+      "agent",
+      "agentic",
+      "llm",
+      "language model",
+      "rag",
+      "inference",
+      "machine learning",
+    ],
+    b2b: [
+      "b2b",
+      "business",
+      "companies",
+      "enterprise",
+      "operations",
+      "platform",
+      "saas",
+      "teams",
+      "workflow",
+    ],
+    production: [
+      "beta",
+      "customer",
+      "deploy",
+      "enterprise pilot",
+      "go live",
+      "integration",
+      "launch",
+      "production",
+      "rollout",
+      "scale",
+    ],
+    architecture: [
+      "agent",
+      "audit",
+      "data",
+      "evaluation",
+      "governance",
+      "infrastructure",
+      "integration",
+      "latency",
+      "platform",
+      "rag",
+      "reliability",
+      "security",
+      "scale",
+    ],
+    urgency: [
+      "announced",
+      "funding",
+      "hiring",
+      "launch",
+      "pilot",
+      "raised",
+      "recent",
+      "series",
+      "seed",
+    ],
+  },
+  measurableWeakness:
+    "End-to-end latency or reliability of the product's core AI workflow, measured on the free tier.",
+  lockedAt: capturedAt,
+  createdAt: capturedAt,
+};
 
 export const demoAccounts: Account[] = [
   {
@@ -80,6 +170,31 @@ export const demoAccounts: Account[] = [
     ],
     createdAt: capturedAt,
     updatedAt: capturedAt,
+    icpProfileId: "demo-icp-v1",
+    disqualifiedReason: "",
+    targetRole: "CTO",
+    targetName: "",
+    approxUsers: "~1,200 per their launch post (unverified)",
+    mutualFit: "unknown",
+    askSentAt: null,
+    observations: [
+      {
+        id: "demo-obs-orbit-1",
+        accountId: "demo-orbit",
+        flow: "Signed up free tier, ran the demo workflow twice on a 12-step form.",
+        metric: "time to first completed workflow",
+        value: 41,
+        unit: "seconds",
+        tier: "free",
+        costUsd: 0,
+        rawNote:
+          "Fictional demo observation. Second run was slower than the first, which suggests no warm cache.",
+        isWeakness: true,
+        observedAt: capturedAt,
+      },
+    ],
+    messages: [],
+    call: null,
   },
   {
     id: "demo-canvas",
@@ -98,6 +213,16 @@ export const demoAccounts: Account[] = [
     sources: [],
     createdAt: capturedAt,
     updatedAt: capturedAt,
+    icpProfileId: "demo-icp-v1",
+    disqualifiedReason: "",
+    targetRole: "",
+    targetName: "",
+    approxUsers: "",
+    mutualFit: "unknown",
+    askSentAt: null,
+    observations: [],
+    messages: [],
+    call: null,
   },
 ];
 
@@ -130,4 +255,5 @@ export const demoWorkspace: WorkspaceData = {
   mode: "demo",
   accounts: demoAccounts,
   posts: demoPosts,
+  icp: demoIcp,
 };
