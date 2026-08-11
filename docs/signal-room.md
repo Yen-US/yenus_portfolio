@@ -32,9 +32,50 @@ When Supabase is absent, Signal Room loads fictional demo accounts and a sample 
 Three steps, in order. Everything else lives under **Advanced** and can be
 ignored until the basics are working.
 
-**1 · Find targets** — search, open the cited sources, save the ones worth
-pursuing. Works with no setup; targeting defaults to Seed–Series B B2B AI and
-can be tuned later under Advanced → ICP tuning. Up to three per batch.
+**1 · Find targets** — pick a client profile, run several search angles at once,
+open the cited sources, save what is worth pursuing. Works with no setup.
+
+Five profiles ship in `src/lib/signal-room/icp-presets.ts`, each mapped to one of
+the engagements in the offer ladder:
+
+| Profile | Converts into |
+|---|---|
+| Prototype stuck before production | AI Architecture Sprint |
+| Agents that break at scale | AI Architecture Sprint |
+| Vertical AI in regulated buyers | AI Architecture Sprint |
+| Just raised, team outgrowing founder context | AI Engineering Enablement |
+| Inference cost or latency pressure | AI Direction Sprint |
+
+Each carries its own keyword banks, disqualifiers, three search angles, and the
+weakness you could measure yourself on a free tier.
+
+**Multi-angle search.** Angles run in parallel (up to four) and results are
+merged by company identity: sources are unioned, the most specific trigger wins,
+and a company found by more than one angle ranks higher. One angle timing out
+does not lose the others — failures are reported, not fatal. Typical run:
+8 candidates from 3 angles in about 12 seconds, versus 3 from a single search.
+
+**Website resolution.** Citations are usually press or aggregator pages, and
+those hosts are blocklisted as candidate domains, so many candidates arrive with
+no website. A resolver then guesses domains from the company name, fetches each
+one, and accepts a result only when the guessed label survives redirects *and*
+the page's own `<title>` / `og:site_name` names the company.
+
+It refuses to guess for generic single-word names. This is deliberate and was
+learned from real failures: `people.ai` redirects to a rebrand, while `dust.ai`
+and `people.dev` are *different companies* that legitimately own those names. A
+wrong domain is worse than an empty field, because it sends you to research the
+wrong business and write to the wrong CTO.
+
+Results are labelled accordingly:
+
+- **`cited`** — the domain came from a search citation. Strongest.
+- **`site auto-found`** — guessed and verified. **Still check it is the right
+  company** — a same-name business in another market can pass every check.
+- **`no site`** — nothing confirmed. Open a source and paste the domain in.
+
+Well-known large companies (OpenAI, Anthropic, Databricks…) are filtered out;
+the search model occasionally mislabels their stage.
 
 **2 · Research & write** — per account, four tabs in order:
 1. *Research* — paste public URLs and the contact's name/role (found manually).

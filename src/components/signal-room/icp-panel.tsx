@@ -3,6 +3,7 @@
 import { Crosshair, Lock, Sparkles } from "lucide-react";
 import { useState, useTransition } from "react";
 import { apiJson } from "@/lib/signal-room/client";
+import { ICP_PRESETS } from "@/lib/signal-room/icp-presets";
 import type { Account, IcpProfile, StartupStage } from "@/lib/signal-room/types";
 import { findIcpDrift } from "@/lib/signal-room/fit-score";
 import {
@@ -114,6 +115,45 @@ export function IcpPanel({
 
       <div className="mt-7 grid gap-8 xl:grid-cols-[1fr_0.85fr]">
         <div className="space-y-6">
+          <div>
+            <p className="consulting-kicker text-signal">Start from a profile</p>
+            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+              Each maps to one of your engagements. Pick one to fill the statement below,
+              then sharpen or lock it.
+            </p>
+            <div className="mt-3 grid gap-2">
+              {ICP_PRESETS.map((preset) => (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => {
+                    setStatement(preset.statement);
+                    setDraft({
+                      label: preset.label,
+                      statement: preset.statement,
+                      stages: preset.stages,
+                      regions: preset.regions,
+                      buyerRoles: preset.buyerRoles,
+                      disqualifiers: preset.disqualifiers,
+                      keywordBanks: preset.keywordBanks,
+                      measurableWeakness: preset.measurableWeakness,
+                      ambiguities: [],
+                    });
+                  }}
+                  className="focus-ring rounded-sm border border-border p-4 text-left transition-colors hover:border-signal"
+                >
+                  <p className="text-xs font-semibold">{preset.label}</p>
+                  <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+                    {preset.summary}
+                  </p>
+                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-signal">
+                    {preset.offer}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {icp ? (
             <div className="border border-border bg-card p-5">
               <p className="consulting-kicker text-signal">Active definition</p>

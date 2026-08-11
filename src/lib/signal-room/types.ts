@@ -344,4 +344,13 @@ export interface DiscoveredCompany extends DiscoveryFitAssessment {
   whyItFits: string;
   trigger: string;
   sourceUrls: string[];
+  /**
+   * How the website was determined:
+   * - `cited`: the domain appeared in a search citation (strongest)
+   * - `resolved`: guessed from the name, fetched, and the page named the company
+   * - `none`: not determined
+   */
+  websiteConfidence?: "cited" | "resolved" | "none";
+  /** Which search angles surfaced this company. More angles = stronger signal. */
+  matchedAngles?: string[];
 }

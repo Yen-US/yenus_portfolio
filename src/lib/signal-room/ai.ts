@@ -137,10 +137,16 @@ No introduction, conclusion, directories, generic startup lists, agencies, consu
   const companies = parseDiscoveryBlocks(message.content, citations)
     .filter(
       (company) =>
-        company.sourceUrls.length > 0 && input.stages.includes(company.stage)
+        company.sourceUrls.length > 0 &&
+        input.stages.includes(company.stage) &&
+        !isOutOfIcpScale(company.name)
     )
     .map((company) => ({
       ...company,
+      websiteConfidence: (company.website ? "cited" : "none") as
+        | "cited"
+        | "resolved"
+        | "none",
       ...calculateDiscoveryFit(company, input.icp),
     }))
     .toSorted((left, right) => right.fitScore - left.fitScore)
@@ -151,6 +157,97 @@ No introduction, conclusion, directories, generic startup lists, agencies, consu
   }
 
   return companies;
+}
+
+/**
+ * Runs several search angles concurrently and merges the results.
+ *
+ * One search sees one slice of the web. Three angles hitting different signal
+ * surfaces (funding, hiring, launches) surface companies a single query misses,
+ * and a company appearing under multiple angles is a genuinely stronger signal -
+ * so `matchedAngles` is tracked and used to break ties.
+ *
+ * Angle failures are tolerated: a timeout on one angle must not lose the others.
+ */
+export async function discoverAcrossAngles(input: {
+  angles: string[];
+  region: string;
+  stages: string[];
+  perAngle: number;
+  limit: number;
+  disqualifiers?: string[];
+  icp?: IcpProfile | null;
+}): Promise<{ companies: DiscoveredCompany[]; failedAngles: string[] }> {
+  const settled = await Promise.allSettled(
+    input.angles.map((angle) =>
+      discoverCompanies({
+        query: angle,
+        region: input.region,
+        stages: input.stages,
+        count: input.perAngle,
+        disqualifiers: input.disqualifiers,
+        icp: input.icp,
+      }).then((companies) => ({ angle, companies }))
+    )
+  );
+
+  const failedAngles = input.angles.filter(
+    (_, index) => settled[index].status === "rejected"
+  );
+
+  // Merge by identity, preferring the richest record and unioning sources.
+  const merged = new Map<string, DiscoveredCompany>();
+  for (const result of settled) {
+    if (result.status !== "fulfilled") continue;
+    const { angle, companies } = result.value;
+
+    for (const company of companies) {
+      const key = normalizeCompanyKey(company.name) || company.name.toLowerCase();
+      const existing = merged.get(key);
+
+      if (!existing) {
+        merged.set(key, { ...company, matchedAngles: [angle] });
+        continue;
+      }
+
+      merged.set(key, {
+        ...existing,
+        website: existing.website || company.website,
+        websiteConfidence:
+          existing.websiteConfidence === "cited"
+            ? existing.websiteConfidence
+            : company.websiteConfidence ?? existing.websiteConfidence,
+        location: existing.location || company.location,
+        oneLiner: existing.oneLiner || company.oneLiner,
+        // Keep the longer trigger; it usually carries more specific detail.
+        trigger:
+          company.trigger.length > existing.trigger.length
+            ? company.trigger
+            : existing.trigger,
+        sourceUrls: Array.from(
+          new Set([...existing.sourceUrls, ...company.sourceUrls])
+        ),
+        matchedAngles: Array.from(
+          new Set([...(existing.matchedAngles ?? []), angle])
+        ),
+      });
+    }
+  }
+
+  const companies = Array.from(merged.values())
+    // Recompute fit on merged text, then rank by score with cross-angle
+    // corroboration and evidence breadth as tiebreakers.
+    .map((company) => ({ ...company, ...calculateDiscoveryFit(company, input.icp) }))
+    .toSorted((left, right) => {
+      if (right.fitScore !== left.fitScore) return right.fitScore - left.fitScore;
+      const angleDelta =
+        (right.matchedAngles?.length ?? 0) - (left.matchedAngles?.length ?? 0);
+      if (angleDelta !== 0) return angleDelta;
+      return right.sourceUrls.length - left.sourceUrls.length;
+    })
+    .slice(0, input.limit);
+
+  return { companies, failedAngles };
 }
 
 export async function buildResearchBrief(input: {
@@ -519,8 +616,24 @@ function normalizeCompanyKey(value: string) {
     .replace(/[^a-z0-9]/g, "");
 }
 
-function isPublisherHostname(hostname: string) {
-  return [
+/**
+ * Companies far past Seed-Series B that the search model occasionally returns
+ * with a wrong stage label. They are never the ICP, and one of them appearing
+ * in a batch wastes a slot and erodes trust in the list.
+ */
+const OUT_OF_SCALE_COMPANIES = new Set([
+  "openai", "anthropic", "googledeepmind", "deepmind", "google", "microsoft",
+  "meta", "amazon", "aws", "nvidia", "databricks", "snowflake", "salesforce",
+  "oracle", "ibm", "adobe", "servicenow", "palantir", "stripe", "figma",
+  "canva", "notion", "atlassian", "datadog", "mongodb", "scaleai", "hugging",
+  "huggingface", "cohere", "mistral", "perplexity", "xai", "midjourney",
+]);
+
+function isOutOfIcpScale(companyName: string) {
+  return OUT_OF_SCALE_COMPANIES.has(normalizeCompanyKey(companyName));
+}
+
+function isPublisherHostname(hostname: string) {  return [
     "businesswire.com",
     "crunchbase.com",
     "forbes.com",
