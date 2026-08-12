@@ -31,6 +31,8 @@ export const REPLY_INTENTS = [
 ] as const;
 
 export const OFFER_NAMES = [
+  "Inference Readiness Review",
+  "Inference Risk Snapshot",
   "AI Direction Sprint",
   "AI Architecture Sprint",
   "AI Team Enablement",

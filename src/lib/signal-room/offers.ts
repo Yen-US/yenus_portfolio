@@ -28,6 +28,37 @@ export interface OfferDefinition {
 
 export const OFFERS: OfferDefinition[] = [
   {
+    name: "Inference Readiness Review",
+    durationLabel: "1 week",
+    typicalDays: 5,
+    bestWhen:
+      "A production inference path exists and a quota, cost, latency, or model-deprecation decision is live in the next 90 days.",
+    produces: [
+      "Quota and provider risk map",
+      "Model-substitution matrix",
+      "Latency budget decomposition",
+      "Cold-start and fallback strategy",
+      "Provider portfolio recommendation",
+      "90-day sequence with named owners",
+    ],
+    priceBand: { low: 8_000, high: 12_000 },
+    upfrontShare: 0.5,
+  },
+  {
+    name: "Inference Risk Snapshot",
+    durationLabel: "2 days",
+    typicalDays: 2,
+    bestWhen:
+      "The team believes the problem is real but cannot get a full review approved this quarter. The downgrade that keeps the door open.",
+    produces: [
+      "Quota and provider risk map",
+      "Top three substitution candidates",
+      "One-page recommendation memo",
+    ],
+    priceBand: { low: 2_500, high: 3_500 },
+    upfrontShare: 1,
+  },
+  {
     name: "AI Direction Sprint",
     durationLabel: "1 to 2 weeks",
     typicalDays: 10,

@@ -39,6 +39,38 @@ const COMMON_DISQUALIFIERS = [
 
 export const ICP_PRESETS: IcpPreset[] = [
   {
+    id: "inference-readiness",
+    label: "Inference readiness (quota, cost, latency)",
+    offer: "Inference Readiness Review",
+    summary:
+      "Series B AI-native teams with a live production inference path, facing a quota, provider-concentration, cost, or latency decision in the next 90 days.",
+    statement:
+      "Series A to Series B AI-native startups running production inference at real volume, where GPU quota limits, single-provider concentration, inference cost per request, or tail latency is forcing a model, vendor, or architecture decision, and a CTO or Head of AI owns that decision.",
+    stages: ["Series A", "Series B"],
+    regions: ["Global, English-speaking markets"],
+    buyerRoles: ["CTO", "Head of AI", "VP Engineering", "Head of Platform"],
+    disqualifiers: [
+      ...COMMON_DISQUALIFIERS,
+      "Pre-PMF with no live production workload",
+      "Still choosing a first model",
+      "Inference fully abstracted by a vendor with no own infrastructure decisions",
+    ],
+    keywordBanks: {
+      ai: ["inference", "gpu", "llm", "model", "serving", "vllm", "tokens", "throughput"],
+      b2b: ["b2b", "enterprise", "platform", "api", "saas", "usage", "customers"],
+      production: ["production", "scale", "volume", "traffic", "uptime", "sla", "rollout", "ga"],
+      architecture: ["latency", "ttft", "cost", "quota", "fallback", "caching", "routing", "capacity"],
+      urgency: ["series b", "series a", "raised", "funding", "scaling", "hiring", "growth", "announced"],
+    },
+    measurableWeakness:
+      "Time to first token and end-to-end latency on the core AI action, measured across several runs on the free tier, plus whether repeated identical requests get faster.",
+    angles: [
+      "Series B AI startups publicly discussing GPU quota, inference cost, or model serving infrastructure",
+      "AI startups hiring inference, model serving, vLLM, or GPU infrastructure engineers",
+      "AI companies that published engineering posts or talks about latency, TTFT, or model routing in the last 90 days",
+    ],
+  },
+  {
     id: "prototype-to-production",
     label: "Prototype stuck before production",
     offer: "AI Architecture Sprint",
