@@ -257,11 +257,16 @@ export async function buildResearchBrief(input: {
   observations?: HandsOnObservation[];
 }): Promise<ResearchBrief> {
   const openai = getOpenAI();
+  // Cap per-source text. A marketing page can be tens of thousands of
+  // characters, and packing several of them whole is what pushes this call past
+  // a minute. The signal a brief needs sits near the top of the page.
+  const PER_SOURCE_CHARS = 6_000;
   const sourcePacket = input.sources
-    .map(
-      (source, index) =>
-        `[S${index + 1}] ${source.title}\nURL: ${source.url}\nCaptured: ${source.capturedAt}\nContent: ${source.content}`
-    )
+    .map((source, index) => {
+      const content = source.content.slice(0, PER_SOURCE_CHARS);
+      const truncated = source.content.length > PER_SOURCE_CHARS ? "\n[truncated]" : "";
+      return `[S${index + 1}] ${source.title}\nURL: ${source.url}\nCaptured: ${source.capturedAt}\nContent: ${content}${truncated}`;
+    })
     .join("\n\n");
 
   const response = await openai.responses.create({

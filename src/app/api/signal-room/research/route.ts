@@ -6,6 +6,10 @@ import { isSameOrigin, takeRateLimit } from "@/lib/signal-room/request-guard";
 import { replaceAccountSources, updateAccount } from "@/lib/signal-room/store";
 import type { ResearchSource } from "@/lib/signal-room/types";
 
+// These routes make bounded model calls that can legitimately run ~60s.
+// Without this they are killed at the platform default and surface as a timeout.
+export const maxDuration = 120;
+
 const schema = z.object({
   accountId: z.string().min(1),
   account: z.object({

@@ -9,6 +9,10 @@ import {
   lockIcpProfile,
 } from "@/lib/signal-room/store";
 
+// These routes make bounded model calls that can legitimately run ~60s.
+// Without this they are killed at the platform default and surface as a timeout.
+export const maxDuration = 120;
+
 const sharpenSchema = z.object({
   statement: z.string().trim().min(10).max(2000),
 });

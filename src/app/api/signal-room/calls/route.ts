@@ -5,6 +5,10 @@ import { upsertCall } from "@/lib/signal-room/store";
 import { isSameOrigin, takeRateLimit } from "@/lib/signal-room/request-guard";
 import { CALL_OUTCOMES, OFFER_NAMES } from "@/lib/signal-room/types";
 
+// These routes make bounded model calls that can legitimately run ~60s.
+// Without this they are killed at the platform default and surface as a timeout.
+export const maxDuration = 120;
+
 const accountSchema = z.object({
   name: z.string().trim().min(1).max(150),
   oneLiner: z.string().trim().max(500),

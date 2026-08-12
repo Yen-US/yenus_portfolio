@@ -19,7 +19,7 @@ export async function apiJson<T>(url: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     const fallback =
       response.status === 504
-        ? "The search reached its time limit. Try a narrower query."
+        ? "This step ran past its time limit. Try again with fewer source URLs, or shorter pasted context."
         : `The request failed (${response.status}).`;
     throw new Error(data?.error ?? fallback);
   }
