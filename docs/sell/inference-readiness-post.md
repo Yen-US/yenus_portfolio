@@ -106,3 +106,38 @@ Writing it down takes about a week. Finding out the hard way takes a quarter.
 **Why the CTA is conditional.** "If two or more sounded familiar" filters. A reader who recognized one pattern is a bad call. A reader who recognized four is a close.
 
 **The firewall.** Nothing here is sourced from any specific team. If asked directly on a call — and you will be — the honest answer is the strong one: *"I see the pattern across a portfolio. I never carry specifics between teams, which is exactly why you can talk to me freely."* The constraint is the credential. Say it early rather than defensively.
+
+---
+
+## The image
+
+**Recommendation: one diagram, not a photo, and not an infographic.**
+
+Three reasons, in order of weight:
+
+1. **Stock photography actively costs you here.** A server rack or a glowing-brain render signals *content marketing* to exactly the audience you want — CTOs who have seen ten thousand of them. The post's whole credibility rests on sounding like an operator rather than a funnel. A generic photo undoes that above the fold, before a word is read.
+2. **A full infographic competes with the post.** Six patterns rendered as six icons gives the reader permission to skim the image and skip the text. But the *text* is the mechanism — the "what they believed" reversal is what produces the DM. Never let the image summarize what the words need to do.
+3. **One diagram earns the scroll.** A single visual that makes *one* idea concrete — and leaves the other five unexplained — pulls the reader down rather than satisfying them.
+
+So: illustrate **pattern #4 only** (the latency budget being spent somewhere other than the model). It's the most visual, the most immediately surprising, and the one that most reliably makes a reader think *wait, is that us?*
+
+### Prompt — primary (latency decomposition bar)
+
+Paste into Midjourney, DALL·E, Ideogram, or your generator of choice:
+
+> A minimal technical diagram on a warm off-white background, in the style of a precise engineering notebook illustration. A single horizontal bar spanning the width, divided into five labeled segments of clearly unequal width, reading left to right: "retrieval" (wide), "guardrail" (wide), "model" (narrow), "post-process" (medium), "serialize" (thin). Each segment a different flat muted color — slate blue, warm grey, a single accent of burnt orange on the narrow "model" segment. Thin sans-serif labels beneath each segment. Thin vertical tick marks along the bar like a measuring rule. Generous white space above and below. No people, no photorealism, no 3D, no gradients, no glow, no drop shadows, no circuit-board or brain imagery. Flat vector, editorial, restrained. 16:9.
+
+**Why this composition:** the burnt-orange accent on the *narrowest* segment is the entire argument in one glance — the thing everyone optimizes is the thing taking the least time. Colour draws the eye exactly where the surprise is.
+
+### Prompt — alternate (quota ceiling)
+
+If the bar reads too dry, illustrate pattern #1 instead:
+
+> A minimal editorial line chart on a warm off-white background, engineering-notebook style. A single dark ascending curve labeled "volume" rising steeply from left to right. A flat horizontal dashed line near the top labeled "quota ceiling" in burnt orange. The curve intersects the dashed line near the right edge, and that intersection is marked with a small open circle. Thin sans-serif labels, thin axis rules, generous white space. Flat vector, no people, no photorealism, no 3D, no gradients, no glow. 16:9.
+
+### Rules for whatever comes back
+
+- **Read every word in the image.** Generators mangle text constantly. Mislabeled segments in a post about measurement rigor is the worst possible failure, and it's the most likely one.
+- **If the labels won't render cleanly after three tries, rebuild it by hand.** This diagram is five rectangles and five words — twenty minutes in Figma, or an SVG in your own site's palette, which will look better than any generation anyway.
+- **Match your site, not the generator's defaults.** The warm off-white and single accent are chosen to sit inside your existing palette. A visual that clashes with yenus.dev reads as borrowed.
+- **One image total.** Do not add a second for LinkedIn. Scarcity of visuals is part of the senior register.

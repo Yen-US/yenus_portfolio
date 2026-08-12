@@ -12,6 +12,23 @@ export const consultant = {
     "One active architecture or direction sprint at a time, plus a small number of advisory relationships.",
 };
 
+/**
+ * The "what I'm seeing right now" line under the hero headline.
+ *
+ * Deliberately separate from the timeless positioning above it: the headline
+ * says what the practice is, this says what the quarter looks like. Rotate it
+ * when the pattern shifts — roughly quarterly. Keep it to one sentence, keep it
+ * observational, and never let it narrow the practice to a single offer.
+ *
+ * `reviewAfter` is a reminder to yourself, not a rendered date.
+ */
+export const currentFocus = {
+  label: "Currently",
+  line:
+    "Helping Series B teams close the gap between AI ambition and GPU reality.",
+  reviewAfter: "2026-11-01",
+};
+
 export const decisionAreas = [
   {
     number: "01",
@@ -36,6 +53,22 @@ export const decisionAreas = [
 export const engagements = [
   {
     number: "01",
+    name: "Inference Readiness Review",
+    duration: "1 week",
+    summary:
+      "Find out where your production inference path breaks before it breaks — quota, provider concentration, cost per request, and where the latency budget is actually spent.",
+    bestFor:
+      "AI-native teams running production inference at real volume, with a model, provider, or capacity decision arriving in the next 90 days and no written record of what was chosen or why.",
+    deliverables: [
+      "Quota and provider risk map with named single points of failure",
+      "Model-substitution matrix and the eval evidence each swap needs",
+      "Latency budget decomposed by hop, and fallback strategy",
+      "90-day sequence with named owners and decision gates",
+    ],
+    featured: true,
+  },
+  {
+    number: "02",
     name: "AI Architecture Sprint",
     duration: "2-4 weeks",
     summary:
@@ -48,10 +81,9 @@ export const engagements = [
       "Evaluation, observability, latency, and cost plan",
       "Phased delivery sequence and technical handoff",
     ],
-    featured: true,
   },
   {
-    number: "02",
+    number: "03",
     name: "AI Direction Sprint",
     duration: "1-2 weeks",
     summary:
@@ -66,7 +98,7 @@ export const engagements = [
     ],
   },
   {
-    number: "03",
+    number: "04",
     name: "Fractional AI Architect",
     duration: "Ongoing, usually after a sprint",
     summary:
@@ -81,7 +113,7 @@ export const engagements = [
     ],
   },
   {
-    number: "04",
+    number: "05",
     name: "AI Engineering Enablement",
     duration: "3-6 weeks",
     summary:

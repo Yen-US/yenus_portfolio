@@ -16,6 +16,7 @@ import {
   careerSignals,
   caseFields,
   consultant,
+  currentFocus,
   decisionAreas,
   engagements,
   faqs,
@@ -90,6 +91,13 @@ function Hero() {
             I help founders and CTOs decide what deserves to be built, design the
             production architecture behind it, and give their team a path they
             can execute.
+          </p>
+
+          <p className="mt-6 flex max-w-2xl flex-col gap-2 border-l-2 border-signal pl-4 text-sm leading-6 text-muted-foreground sm:flex-row sm:items-baseline sm:gap-3 md:text-base md:leading-7">
+            <span className="consulting-kicker shrink-0 text-signal">
+              {currentFocus.label}
+            </span>
+            <span>{currentFocus.line}</span>
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -261,7 +269,7 @@ function ServicesSection() {
                 </p>
                 {engagement.featured ? (
                   <p className="consulting-kicker mt-4 text-brass-soft">
-                    Signature
+                    Signature · {engagement.duration}
                   </p>
                 ) : null}
               </div>
