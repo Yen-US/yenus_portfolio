@@ -6,6 +6,7 @@ import { apiJson } from "@/lib/signal-room/client";
 import { getToneChecks } from "@/lib/signal-room/tone-checks";
 import type {
   Account,
+  ConnectionNote,
   ConversationMessage,
   CorrectionOpener,
   ReplyAnalysis,
@@ -34,6 +35,10 @@ export function ConversationView({
   onChange: (account: Account) => void;
 }) {
   const [opener, setOpener] = useState<CorrectionOpener | null>(null);
+  const [note, setNote] = useState<ConnectionNote | null>(null);
+  const [skipFieldTest, setSkipFieldTest] = useState(false);
+  const [patternLine, setPatternLine] = useState("");
+  const [isNoting, startNote] = useTransition();
   const [draft, setDraft] = useState("");
   const [reply, setReply] = useState("");
   const [analysis, setAnalysis] = useState<ReplyAnalysis | null>(null);
@@ -45,8 +50,40 @@ export function ConversationView({
   const [isLogging, startLog] = useTransition();
 
   const hasFieldTest = account.observations.length > 0;
+  const canDraft = hasFieldTest || skipFieldTest;
   const toneChecks = getToneChecks(draft);
   const failedChecks = toneChecks.filter((check) => !check.passed);
+
+  function generateConnectionNote() {
+    setError("");
+    startNote(async () => {
+      try {
+        const result = await apiJson<{ note: ConnectionNote }>(
+          "/api/signal-room/outreach-message",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              format: "connection",
+              account: {
+                name: account.name,
+                oneLiner: account.oneLiner,
+                approxUsers: account.approxUsers,
+                targetName: account.targetName,
+                targetRole: account.targetRole,
+              },
+              brief: account.brief,
+              observations: account.observations,
+              skipFieldTest,
+              patternLine,
+            }),
+          }
+        );
+        setNote(result.note);
+      } catch (requestError) {
+        setError(requestError instanceof Error ? requestError.message : "Draft failed.");
+      }
+    });
+  }
 
   function generateOpener() {
     setError("");
@@ -66,6 +103,7 @@ export function ConversationView({
               },
               brief: account.brief,
               observations: account.observations,
+              skipFieldTest,
             }),
           }
         );
@@ -155,7 +193,7 @@ export function ConversationView({
           <section>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-sm font-semibold">Correction opener</h3>
-              <StudioButton onClick={generateOpener} loading={isDrafting} disabled={!hasFieldTest}>
+              <StudioButton onClick={generateOpener} loading={isDrafting} disabled={!canDraft}>
                 <Sparkles className="h-4 w-4" />
                 Draft opener
               </StudioButton>
@@ -163,20 +201,51 @@ export function ConversationView({
 
             {!hasFieldTest ? (
               <div className="mt-4 border border-brass/30 bg-brass/5 p-5">
-                <p className="text-xs font-semibold text-brass">Field test required</p>
+                <p className="text-xs font-semibold text-brass">No field test logged</p>
                 <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-                  The opener needs one weakness you measured yourself. Log an observation in the
-                  Field test tab first. This is the one place the system blocks instead of
-                  advising — the message has no hook without it.
+                  A weakness you measured yourself is the strongest hook this system has — it
+                  proves you showed up. Log one in the Field test tab if the product allows it.
                 </p>
+                <label className="mt-4 flex cursor-pointer items-start gap-3 border-t border-brass/20 pt-4">
+                  <input
+                    type="checkbox"
+                    checked={skipFieldTest}
+                    onChange={(event) => setSkipFieldTest(event.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-brass"
+                  />
+                  <span className="text-[11px] leading-5 text-muted-foreground">
+                    <span className="font-semibold text-foreground">
+                      I can&apos;t use this product
+                    </span>{" "}
+                    — sales-gated, waitlisted, or priced out of a quick test. Draft from public
+                    signal instead: the message will open on something they published rather than
+                    something you measured, and will never imply you used the product.
+                  </span>
+                </label>
               </div>
             ) : null}
 
             {opener ? (
               <div className="mt-4 space-y-3 border border-border bg-card p-5 text-xs leading-6">
+                {opener.hookType === "pattern" ? (
+                  <p className="border-l-2 border-brass pl-3 text-[11px] leading-5 text-muted-foreground">
+                    Pattern hook — built from public signal, not measurement. Check before sending
+                    that it never claims you used the product.
+                  </p>
+                ) : null}
                 <Part label="Strengths" value={opener.strengths.join(" · ")} />
-                <Part label="The one weakness" value={opener.weakness} />
-                <Part label="Hypothesis (their cue to correct you)" value={opener.hypothesis} />
+                <Part
+                  label={opener.hookType === "pattern" ? "Public signal" : "The one weakness"}
+                  value={opener.weakness}
+                />
+                <Part
+                  label={
+                    opener.hookType === "pattern"
+                      ? "Pattern tension (their cue to correct you)"
+                      : "Hypothesis (their cue to correct you)"
+                  }
+                  value={opener.hypothesis}
+                />
                 <Part label="Scaling question" value={opener.scalingQuestion} />
                 {opener.selfCheck.notes.length > 0 ? (
                   <div className="border-t border-border pt-3">
@@ -188,6 +257,65 @@ export function ConversationView({
                 ) : null}
               </div>
             ) : null}
+
+            <div className="mt-8 border-t border-border pt-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-sm font-semibold">Connection note</h4>
+                  <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+                    Under 300 characters — LinkedIn&apos;s hard cap on a request note. Send this
+                    first; the opener above is what you send once they accept.
+                  </p>
+                </div>
+                <StudioButton
+                  variant="secondary"
+                  onClick={generateConnectionNote}
+                  loading={isNoting}
+                  disabled={!canDraft}
+                >
+                  <Sparkles className="h-4 w-4" />
+                  Draft note
+                </StudioButton>
+              </div>
+
+              <div className="mt-4">
+                <Field
+                  label="Pattern to reference (optional)"
+                  hint="Your own framing, e.g. quota + substitution + latency decisions made implicitly. Left blank, it derives one from the brief."
+                >
+                  <StudioTextarea
+                    value={patternLine}
+                    onChange={(event) => setPatternLine(event.target.value)}
+                    className="min-h-16"
+                  />
+                </Field>
+              </div>
+
+              {note ? (
+                <div className="mt-4 border border-border bg-card">
+                  <div className="flex items-center justify-between border-b border-border px-4 py-2">
+                    <p className="consulting-kicker text-muted-foreground">Note</p>
+                    <div className="flex items-center gap-3">
+                      <StatusBadge tone={note.charCount <= 300 ? "good" : "warn"}>
+                        {note.charCount}/300
+                      </StatusBadge>
+                      <CopyButton text={note.note} label="Copy note" />
+                    </div>
+                  </div>
+                  <p className="px-4 py-4 text-sm leading-6">{note.note}</p>
+                  {note.charCount > 300 ? (
+                    <p className="border-t border-brass/30 bg-brass/5 px-4 py-3 text-[11px] leading-5 text-brass">
+                      Over the limit by {note.charCount - 300}. LinkedIn will truncate it — trim
+                      before sending or draft again.
+                    </p>
+                  ) : null}
+                  <div className="space-y-2 border-t border-border px-4 py-3">
+                    <Part label="Signal it opens on" value={note.signalUsed} />
+                    <Part label="Deliberately withheld" value={note.withheld} />
+                  </div>
+                </div>
+              ) : null}
+            </div>
 
             <div className="mt-5">
               <Field label="Message to send" hint="Edit freely. Copy out and paste into LinkedIn yourself.">

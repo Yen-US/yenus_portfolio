@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { buildCorrectionOpener } from "@/lib/signal-room/setting-ai";
+import { buildConnectionNote, buildCorrectionOpener } from "@/lib/signal-room/setting-ai";
 import { isSameOrigin, takeRateLimit } from "@/lib/signal-room/request-guard";
 
 // These routes make bounded model calls that can legitimately run ~60s.
@@ -22,6 +22,7 @@ const observationSchema = z.object({
 });
 
 const schema = z.object({
+  format: z.enum(["opener", "connection"]).default("opener"),
   account: z.object({
     name: z.string().trim().min(1).max(150),
     oneLiner: z.string().trim().max(500),
@@ -31,6 +32,13 @@ const schema = z.object({
   }),
   brief: z.unknown().nullable().default(null),
   observations: z.array(observationSchema),
+  /**
+   * Explicit operator acknowledgment that no field test happened. Required to
+   * draft without observations, so "I couldn't use the product" is always a
+   * deliberate choice rather than a step silently skipped.
+   */
+  skipFieldTest: z.boolean().default(false),
+  patternLine: z.string().trim().max(600).default(""),
 });
 
 export async function POST(request: NextRequest) {
@@ -44,17 +52,28 @@ export async function POST(request: NextRequest) {
   try {
     const input = schema.parse(await request.json());
 
-    // The one hard gate in the system. The methodology's hook is a weakness you
-    // personally measured; without one this message would be generic outreach
-    // dressed up as research. Advisory checks get skipped, so this one blocks.
-    if (input.observations.length === 0) {
+    // Still a gate, now a softer one. A measured weakness is the strongest hook
+    // the methodology has, so it stays the default — but many products are
+    // sales-gated or waitlisted, and refusing to draft at all just pushes the
+    // work into an untracked text editor. The operator must opt out on purpose.
+    if (input.observations.length === 0 && !input.skipFieldTest) {
       return NextResponse.json(
         {
           error:
-            "No field test recorded. Use the product, measure one thing, and log it before drafting the opener.",
+            "No field test recorded. Log one observation, or turn on \"I can't use this product\" to draft from public signal instead.",
         },
         { status: 422 }
       );
+    }
+
+    if (input.format === "connection") {
+      const note = await buildConnectionNote({
+        account: input.account,
+        brief: (input.brief as never) ?? null,
+        observations: input.observations,
+        patternLine: input.patternLine,
+      });
+      return NextResponse.json({ note });
     }
 
     const opener = await buildCorrectionOpener({

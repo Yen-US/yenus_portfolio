@@ -150,6 +150,8 @@ export interface CorrectionOpener {
   hypothesis: string;
   scalingQuestion: string;
   fullMessage: string;
+  /** Which hook the message is built on. Pattern mode has no measured number. */
+  hookType?: "measured" | "pattern";
   selfCheck: {
     hasStrengths: boolean;
     singleWeakness: boolean;
@@ -157,6 +159,16 @@ export interface CorrectionOpener {
     usesOnlyFieldTestNumbers: boolean;
     notes: string[];
   };
+}
+
+/** A LinkedIn connection request note. Hard-capped by the platform at 300. */
+export interface ConnectionNote {
+  note: string;
+  charCount: number;
+  /** The specific public signal the note opens on, quoted for verification. */
+  signalUsed: string;
+  /** What the note deliberately leaves out so the reply has somewhere to go. */
+  withheld: string;
 }
 
 export interface HypothesisVerdict {

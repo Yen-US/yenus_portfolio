@@ -5,6 +5,7 @@ import { z } from "zod";
 import type {
   Account,
   CallRecord,
+  ConnectionNote,
   ConversationMessage,
   CorrectionOpener,
   CostMathQuestion,
@@ -34,6 +35,18 @@ async function structuredCall<T>(options: {
   instructions: string;
   input: string;
   parser: z.ZodType<T>;
+  /**
+   * Generation time tracks verbosity far more than input size. Short outputs
+   * (a 300-character note, a message draft) must not pay for long-form prose.
+   */
+  verbosity?: "low" | "medium" | "high";
+  /**
+   * Reasoning effort. This is a reasoning model, so it thinks at default depth
+   * even for a 300-character note — which is where most of the wall clock goes
+   * on the short formats. Lower it where the task is compositional rather than
+   * analytical; leave it default where judgment actually matters.
+   */
+  reasoningEffort?: "minimal" | "low" | "medium" | "high";
 }): Promise<T> {
   const openai = getOpenAI();
   const response = await openai.responses.create(
@@ -41,7 +54,7 @@ async function structuredCall<T>(options: {
       model,
       store: false,
       text: {
-        verbosity: "high",
+        verbosity: options.verbosity ?? "medium",
         format: {
           type: "json_schema",
           name: options.schemaName,
@@ -51,6 +64,9 @@ async function structuredCall<T>(options: {
       },
       instructions: options.instructions,
       input: options.input,
+      ...(options.reasoningEffort
+        ? { reasoning: { effort: options.reasoningEffort } }
+        : {}),
     },
     // maxRetries stays 0: a retry on a slow (not failed) call doubles the wall
     // clock and turns one late response into a hard timeout. Fail once, fast.
@@ -184,24 +200,77 @@ export async function buildCorrectionOpener(input: {
   brief: ResearchBrief | null;
   observations: HandsOnObservation[];
 }): Promise<CorrectionOpener> {
-  if (input.observations.length === 0) {
-    // Guarded at the route too; this keeps the function honest on its own.
-    throw new Error(
-      "A correction opener requires at least one first-hand observation."
-    );
-  }
+  // Two legitimate hooks. A measured weakness is stronger, but it requires a
+  // usable free tier — many products are sales-gated, waitlisted, or priced out
+  // of a drive-by test. Pattern mode is the honest fallback: it trades the
+  // measurement for a named public signal plus cross-portfolio pattern, and it
+  // must never imply the product was used.
+  const mode: "measured" | "pattern" =
+    input.observations.length > 0 ? "measured" : "pattern";
 
-  return structuredCall({
+  const measuredInstructions =
+    "Draft one short outbound LinkedIn message from Yenson Umana to a named technical leader. Structure it in this order: a plain human greeting; a sentence saying he has been using their product; two or three genuine strengths, drawn only from the first-hand observations or cited evidence supplied - specific and earned, never generic praise; then exactly ONE weakness, the measured one, quoted with its number; then one sentence giving his technical hypothesis for the cause, stated explicitly as a guess using wording such as 'my guess is' or 'I'd assume', and phrased so that a CTO who knows the real reason will want to correct it; then the scaling question, anchored to the user-count estimate when one is supplied, asking what happens to that process at a materially larger scale. Hard rules: never more than one weakness. Never state the hypothesis as fact. Never use a number that is not in the first-hand observations. No flattery, no fake familiarity, no pressure, no links, and no request for a call - the ask comes only after they reply. Keep the full message under 900 characters and write it in plain sentences a person would actually type. Fill selfCheck honestly, including notes for anything you could not satisfy.";
+
+  const patternInstructions =
+    "Draft one short outbound LinkedIn message from Yenson Umana to a named technical leader. He has NOT used their product - no signup, no trial, no measurement. This is the single most important constraint: never write or imply that he tried it, tested it, timed it, or is a user. Structure the message in this order: a plain human greeting; one sentence naming a SPECIFIC public signal about their company drawn only from the cited evidence supplied - a post they published, a role they are hiring, a talk, a launch - referenced concretely enough that they know he actually read it; then one sentence saying that signal matches a recurring pattern he sees across AI startups, described as a shape rather than any named company's situation; then exactly ONE architectural tension that pattern usually produces, stated as an open observation about the pattern and never as a diagnosis of their product; then one genuine question inviting them to say how it actually works on their side, phrased so a CTO who has already solved it will enjoy explaining. Hard rules: no measured numbers of any kind - none exist. No metrics, latencies, or performance claims about their product. Never name or describe another client, employer program, or specific team. No flattery, no fake familiarity, no pressure, no links, no request for a call. Under 900 characters, plain sentences a person would actually type. In selfCheck, set usesOnlyFieldTestNumbers true only if the message contains no product measurements at all, and note anything you could not satisfy. Put the public signal in the weakness field and the pattern tension in the hypothesis field.";
+
+  const opener = await structuredCall({
     schemaName: "correction_bait_message",
     jsonSchema: correctionOpenerJsonSchema,
     parser: correctionOpenerSchema,
-    instructions:
-      "Draft one short outbound LinkedIn message from Yenson Umana to a named technical leader. Structure it in this order: a plain human greeting; a sentence saying he has been using their product; two or three genuine strengths, drawn only from the first-hand observations or cited evidence supplied - specific and earned, never generic praise; then exactly ONE weakness, the measured one, quoted with its number; then one sentence giving his technical hypothesis for the cause, stated explicitly as a guess using wording such as 'my guess is' or 'I'd assume', and phrased so that a CTO who knows the real reason will want to correct it; then the scaling question, anchored to the user-count estimate when one is supplied, asking what happens to that process at a materially larger scale. Hard rules: never more than one weakness. Never state the hypothesis as fact. Never use a number that is not in the first-hand observations. No flattery, no fake familiarity, no pressure, no links, and no request for a call - the ask comes only after they reply. Keep the full message under 900 characters and write it in plain sentences a person would actually type. Fill selfCheck honestly, including notes for anything you could not satisfy.",
-    input: `RECIPIENT\nName: ${input.account.targetName || "unknown"}\nRole: ${input.account.targetRole || "technical leader"}\n\nCOMPANY\n${input.account.name} - ${input.account.oneLiner}\nApproximate users: ${input.account.approxUsers || "unknown, do not invent one"}\n\nFIRST-HAND OBSERVATIONS (the only numbers you may use)\n${describeObservations(input.observations)}\n\nARCHITECTURE HYPOTHESES FROM RESEARCH\n${describeHypotheses(input.brief)}\n\nCITED EVIDENCE\n${
+    instructions: mode === "measured" ? measuredInstructions : patternInstructions,
+    input: `RECIPIENT\nName: ${input.account.targetName || "unknown"}\nRole: ${input.account.targetRole || "technical leader"}\n\nCOMPANY\n${input.account.name} - ${input.account.oneLiner}\nApproximate users: ${input.account.approxUsers || "unknown, do not invent one"}\n\n${
+      mode === "measured"
+        ? `FIRST-HAND OBSERVATIONS (the only numbers you may use)\n${describeObservations(input.observations)}`
+        : "PRODUCT USAGE\nNone. Yenson has not signed up for or used this product. Do not imply otherwise, and do not state any measurement about it."
+    }\n\nARCHITECTURE HYPOTHESES FROM RESEARCH\n${describeHypotheses(input.brief)}\n\nCITED EVIDENCE\n${
       input.brief?.evidence.map((item) => `- ${item.claim} (${item.sourceTitle})`).join("\n") ||
       "None."
     }`,
   });
+
+  return { ...opener, hookType: mode };
+}
+
+// --- 3b. LinkedIn connection note (300 characters) ------------------------
+
+const connectionNoteSchema = z.object({
+  note: z.string(),
+  signalUsed: z.string(),
+  withheld: z.string(),
+});
+
+export async function buildConnectionNote(input: {
+  account: Pick<Account, "name" | "oneLiner" | "targetName" | "targetRole">;
+  brief: ResearchBrief | null;
+  observations: HandsOnObservation[];
+  /** The pattern or write-up being referenced, in the operator's own words. */
+  patternLine: string;
+}): Promise<ConnectionNote> {
+  const result = await structuredCall({
+    schemaName: "linkedin_connection_note",
+    jsonSchema: connectionNoteJsonSchema,
+    parser: connectionNoteSchema,
+    // The output is one sentence-length note plus two short labels. Long-form
+    // generation here buys nothing and costs ~25s.
+    verbosity: "low",
+    // Composition, not analysis: the judgment already happened in the brief.
+    reasoningEffort: "low",
+    instructions:
+      "Write ONE LinkedIn connection-request note from Yenson Umana. LinkedIn hard-caps these at 300 characters including spaces and the sign-off, so the note MUST be 300 characters or fewer - count carefully and rewrite if over. Target 260 to 300 so it reads full rather than thin. Structure, in order: 'Hey {first name},' then one clause naming a SPECIFIC public signal about their company taken only from the supplied evidence - a post, a launch, a role they are hiring - concrete enough that they know it was actually read; then one clause saying it matches a pattern seen across AI startups, stated as a shape and never as a named team's situation; then a compressed three-or-four-word naming of the tension, ideally as a list such as 'quota + substitution + latency'; then a short line saying he wrote it up; then 'worth connecting?' or an equivalent low-pressure ask; then 'Yenson'. Hard rules: no links - LinkedIn strips them and they trip filters. No measured numbers about their product unless a first-hand observation was supplied. Never name an employer program, another client, or a specific team. No flattery beyond one honest short compliment. No pressure, no pitch, no price, no call request. Plain sentences a person would type. In signalUsed, quote the exact evidence claim the note opens on. In withheld, name the one thing deliberately left out so the conversation has somewhere to go.",
+    input: `RECIPIENT\nName: ${input.account.targetName || "unknown - use a neutral greeting without a name"}\nRole: ${input.account.targetRole || "technical leader"}\n\nCOMPANY\n${input.account.name} - ${input.account.oneLiner}\n\nPATTERN TO REFERENCE (the operator's own framing)\n${input.patternLine || "Not supplied - derive a shape from the hypotheses below."}\n\n${
+      input.observations.length > 0
+        ? `FIRST-HAND OBSERVATIONS (the only numbers you may use)\n${describeObservations(input.observations)}`
+        : "PRODUCT USAGE\nNone. Do not imply the product was used and do not state any measurement about it."
+    }\n\nARCHITECTURE HYPOTHESES\n${describeHypotheses(input.brief)}\n\nCITED EVIDENCE (the signal must come from here)\n${
+      input.brief?.evidence.map((item) => `- ${item.claim} (${item.sourceTitle})`).join("\n") ||
+      "None supplied. Say so in signalUsed rather than inventing one."
+    }`,
+  });
+
+  // The model is unreliable at counting its own characters, so the count that
+  // reaches the UI is measured here, not claimed by the model.
+  return { ...result, charCount: result.note.length };
 }
 
 // --- 4. Reply analysis ----------------------------------------------------
@@ -390,6 +459,17 @@ const testPlanJsonSchema = {
     doNotDo: { type: "array", items: { type: "string" } },
   },
 } as const;
+
+const connectionNoteJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["note", "signalUsed", "withheld"],
+  properties: {
+    note: { type: "string" },
+    signalUsed: { type: "string" },
+    withheld: { type: "string" },
+  },
+};
 
 const correctionOpenerJsonSchema = {
   type: "object",
