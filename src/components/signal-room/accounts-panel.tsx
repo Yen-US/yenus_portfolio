@@ -23,6 +23,7 @@ import type {
   ResearchSource,
   StartupStage,
 } from "@/lib/signal-room/types";
+import { ACCOUNT_STATUSES } from "@/lib/signal-room/types";
 import {
   CopyButton,
   Field,
@@ -206,6 +207,50 @@ function AccountDetail({
     });
   }
 
+  /**
+   * Status saves on change rather than waiting for "Save account fields".
+   * That button lives inside the Research tab, so changing status from any
+   * other tab used to look saved and silently revert on reselect.
+   */
+  function saveStatus(nextStatus: AccountStatus) {
+    const previous = status;
+    setStatus(nextStatus);
+    setError("");
+    startSave(async () => {
+      const next = { ...account, status: nextStatus, updatedAt: new Date().toISOString() };
+      if (mode !== "supabase") {
+        onChange(next);
+        return;
+      }
+      try {
+        const result = await apiJson<{ account: Account }>("/api/signal-room/accounts", {
+          method: "PATCH",
+          body: JSON.stringify({
+            id: account.id,
+            status: nextStatus,
+            priority,
+            fitScore,
+            notes,
+            targetName,
+            targetRole,
+          }),
+        });
+        onChange({
+          ...result.account,
+          brief: account.brief,
+          sources: account.sources,
+          observations: account.observations,
+          messages: account.messages,
+          call: account.call,
+        });
+      } catch (requestError) {
+        // Roll back so the control never shows a state the server rejected.
+        setStatus(previous);
+        setError(requestError instanceof Error ? requestError.message : "Status save failed.");
+      }
+    });
+  }
+
   function saveAccount() {
     setError("");
     startSave(async () => {
@@ -251,8 +296,8 @@ function AccountDetail({
         </div>
         <div className="grid grid-cols-3 gap-3 md:w-[360px]">
           <Field label="Status">
-            <StudioSelect value={status} onChange={(event) => setStatus(event.target.value as AccountStatus)}>
-              {['watchlist', 'researching', 'ready', 'contacted', 'replied', 'discovery', 'archived'].map((value) => <option key={value}>{value}</option>)}
+            <StudioSelect value={status} onChange={(event) => saveStatus(event.target.value as AccountStatus)}>
+              {ACCOUNT_STATUSES.map((value) => <option key={value} value={value}>{value}</option>)}
             </StudioSelect>
           </Field>
           <Field label="Priority">
