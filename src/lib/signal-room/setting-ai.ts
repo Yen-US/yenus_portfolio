@@ -52,7 +52,9 @@ async function structuredCall<T>(options: {
       instructions: options.instructions,
       input: options.input,
     },
-    { timeout: 55_000, maxRetries: 1 }
+    // maxRetries stays 0: a retry on a slow (not failed) call doubles the wall
+    // clock and turns one late response into a hard timeout. Fail once, fast.
+    { timeout: 90_000, maxRetries: 0 }
   );
   return options.parser.parse(JSON.parse(response.output_text));
 }

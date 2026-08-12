@@ -273,7 +273,12 @@ export async function buildResearchBrief(input: {
     model,
     store: false,
     text: {
-      verbosity: "high",
+      // Deliberately not "high". This schema is large (evidence, hypotheses,
+      // uncertainties, outreach angles), and high verbosity spends ~40s in
+      // generation regardless of how much source text is supplied — which is
+      // what pushed this call into the SDK timeout. Medium keeps the same
+      // structure with tighter prose.
+      verbosity: "medium",
       format: {
         type: "json_schema",
         name: "account_research_brief",
@@ -284,7 +289,7 @@ export async function buildResearchBrief(input: {
     instructions:
       "You are Yenson Umana's research analyst for manual, respectful outreach to Seed-Series B B2B AI startups. Use only supplied sources, first-hand observations, and manual context. Every factual evidence item must cite an exact supplied source URL and title. Never turn an inference into a fact. Architecture observations must be labeled hypotheses and include a question that would validate them. FIRST-HAND OBSERVATIONS are measurements the operator personally made while using the product; they are the strongest evidence available and outrank inference. When a hypothesis explains an observation, reference that observation by its [On] identifier in its evidence field. If no observations are supplied, do not describe any performance, latency, or reliability weakness at all. Outreach must be specific, brief, and useful. It may name two or three genuine strengths, but only ones drawn from the supplied observations or cited evidence - never unearned praise, fake familiarity, or pressure. The Loom outline should teach something before asking for a call.",
     input: `ACCOUNT\nName: ${input.account.name}\nWebsite: ${input.account.website}\nStage: ${input.account.stage}\nLocation: ${input.account.location}\nOne-liner: ${input.account.oneLiner}\nExisting notes: ${input.account.notes}\n\nFIRST-HAND OBSERVATIONS\n${formatObservations(input.observations ?? [])}\n\nMANUAL CONTEXT\n${input.manualContext || "None supplied."}\n\nPUBLIC SOURCES\n${sourcePacket || "No extractable public pages supplied. Treat all unsupported claims as uncertainty."}`,
-  }, { timeout: 55_000, maxRetries: 1 });
+  }, { timeout: 90_000, maxRetries: 0 });
 
   const parsed = researchBriefSchema.parse(JSON.parse(response.output_text));
   const sourcesByUrl = new Map(
@@ -331,7 +336,7 @@ export async function generateLinkedInPost(input: {
     instructions:
       "Write in Yenson Umana's voice: direct, implementation-grounded, calm, technically precise, and useful to startup founders and CTOs. The post must have one non-obvious central claim, a concrete startup scenario, 3-5 detailed decisions or a reusable framework, and a decisive takeaway. Aim for 1,400-2,400 characters. Use short paragraphs but do not write empty one-line engagement bait. No emojis, fake dialogue, invented metrics, vague inspiration, excessive rhetorical questions, or generic 'AI is changing everything' claims. Do not mention confidential employers or clients. Include only evidence present in the source material; otherwise mark the idea as experience-based and leave the evidence array empty. Score the draft honestly and add revision notes for any score below 80.",
     input: `PILLAR: ${input.pillar}\nTOPIC: ${input.topic}\nPOINT OF VIEW TO DEFEND: ${input.pointOfView}\nSOURCE MATERIAL AND FIELD NOTES:\n${input.sourceMaterial || "No external source material. Write as an experience-based framework without factual client claims."}`,
-  }, { timeout: 55_000, maxRetries: 1 });
+  }, { timeout: 90_000, maxRetries: 0 });
 
   const parsed = postDraftSchema.parse(JSON.parse(response.output_text));
   const allowedUrls = new Set(
