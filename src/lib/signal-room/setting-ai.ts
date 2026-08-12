@@ -257,7 +257,7 @@ export async function buildConnectionNote(input: {
     // Composition, not analysis: the judgment already happened in the brief.
     reasoningEffort: "low",
     instructions:
-      "Write ONE LinkedIn connection-request note from Yenson Umana. LinkedIn hard-caps these at 300 characters including spaces and the sign-off, so the note MUST be 300 characters or fewer - count carefully and rewrite if over. Target 260 to 300 so it reads full rather than thin. Structure, in order: 'Hey {first name},' then one clause naming a SPECIFIC public signal about their company taken only from the supplied evidence - a post, a launch, a role they are hiring - concrete enough that they know it was actually read; then one clause saying it matches a pattern seen across AI startups, stated as a shape and never as a named team's situation; then a compressed three-or-four-word naming of the tension, ideally as a list such as 'quota + substitution + latency'; then a short line saying he wrote it up; then 'worth connecting?' or an equivalent low-pressure ask; then 'Yenson'. Hard rules: no links - LinkedIn strips them and they trip filters. No measured numbers about their product unless a first-hand observation was supplied. Never name an employer program, another client, or a specific team. No flattery beyond one honest short compliment. No pressure, no pitch, no price, no call request. Plain sentences a person would type. In signalUsed, quote the exact evidence claim the note opens on. In withheld, name the one thing deliberately left out so the conversation has somewhere to go.",
+      "Write ONE LinkedIn connection-request note from Yenson Umana to a technical founder or CTO he has never spoken to. LinkedIn hard-caps these at 300 characters including spaces and the sign-off, so the note MUST be 300 or fewer - count carefully and rewrite if over. Aim for 240 to 280. Models routinely undercount, so apply this safety rule instead of trusting a character count: the whole note must be at most FIVE short sentences and at most 45 words including the greeting and the sign-off. If it exceeds 45 words, cut the weakest clause and count again. Do NOT try to fill the limit: a natural note at 240 beats a padded one at 299.\n\nTONE IS THE HARDEST REQUIREMENT. This must read like a senior engineer typing a message to a peer he respects, not like notes from an architecture review. Write complete, natural sentences with ordinary connective words. NEVER compress a technical point into a telegraphic list such as 'latency + auth + drift' or 'quota + substitution + latency' - that reads as clipped and robotic, and is the single most common failure. Say the same thing as a phrase a person would speak aloud, for example 'some of the challenges around auth, latency, and keeping context fresh'.\n\nCURIOSITY, NOT DIAGNOSIS. He has not been hired, has not seen their code, and is asking to connect. Never state or imply that their architecture has a problem, and never name a tension as something their system 'produces' or 'suffers from'. Frame every technical observation as his own thinking about this class of architecture generally - 'I've been thinking about', 'some of the challenges around', 'the interesting part is'. A note that diagnoses before connecting reads as arrogant and gets declined.\n\nStructure, in order:\n1. 'Hey {first name} -' using their first name only.\n2. One sentence naming a SPECIFIC thing about their company, taken only from the supplied evidence, described concretely enough that they know it was actually read rather than skimmed.\n3. One short, genuine reaction to it - 'really interesting framing', 'clean approach'. One only, and never gushing.\n4. One sentence placing it in the architectural territory he thinks about, naming two or three real challenges of that TERRITORY in a natural phrase, explicitly as his own interest rather than their defect.\n5. A closing line giving a concrete reason to accept. If he has written something relevant, refer to it with enough substance that they know what they would get - 'wrote up a few thoughts on how teams are handling it' - never a bare 'I wrote it up', which gives them no reason to care. Then a low-pressure ask such as 'would love to connect'.\n6. 'Yenson' on the end.\n\nHard rules: never expand an acronym the reader obviously knows - write MCP, not 'MCP Model Context Protocol'; an expanded acronym insults a CTO and wastes characters. No links, LinkedIn strips them. No measured numbers about their product unless a first-hand observation was supplied. Never name an employer program, another client, or a specific team. No pitch, no price, no call request, no 'quick chat'. No em dashes inside sentences; a hyphen after the greeting is fine.\n\nIn signalUsed, quote the exact evidence claim the note opens on. In withheld, name the one thing deliberately left out so the conversation has somewhere to go.",
     input: `RECIPIENT\nName: ${input.account.targetName || "unknown - use a neutral greeting without a name"}\nRole: ${input.account.targetRole || "technical leader"}\n\nCOMPANY\n${input.account.name} - ${input.account.oneLiner}\n\nPATTERN TO REFERENCE (the operator's own framing)\n${input.patternLine || "Not supplied - derive a shape from the hypotheses below."}\n\n${
       input.observations.length > 0
         ? `FIRST-HAND OBSERVATIONS (the only numbers you may use)\n${describeObservations(input.observations)}`
@@ -269,7 +269,25 @@ export async function buildConnectionNote(input: {
   });
 
   // The model is unreliable at counting its own characters, so the count that
-  // reaches the UI is measured here, not claimed by the model.
+  // reaches the UI is measured here, not claimed by the model. One bounded
+  // retry when it overruns the platform cap — a truncated note loses its
+  // signoff, which is worse than a slightly slower draft.
+  if (result.note.length > 300) {
+    const retry = await structuredCall({
+      schemaName: "linkedin_connection_note",
+      jsonSchema: connectionNoteJsonSchema,
+      parser: connectionNoteSchema,
+      verbosity: "low",
+      reasoningEffort: "low",
+      instructions:
+        "Shorten this LinkedIn connection note to 300 characters or fewer without changing its voice. Keep the specific detail about their company, the genuine reaction, and the reason to connect. Cut adjectives and any clause that adds no information. Keep complete natural sentences - never compress a point into a telegraphic list such as 'auth + latency + drift'. Never expand an acronym. Keep the greeting and the 'Yenson' sign-off. Return the same signalUsed and withheld values unchanged.",
+      input: `NOTE TO SHORTEN (${result.note.length} characters, limit is 300)\n${result.note}\n\nsignalUsed: ${result.signalUsed}\nwithheld: ${result.withheld}`,
+    });
+    if (retry.note.length <= 300) {
+      return { ...retry, charCount: retry.note.length };
+    }
+  }
+
   return { ...result, charCount: result.note.length };
 }
 

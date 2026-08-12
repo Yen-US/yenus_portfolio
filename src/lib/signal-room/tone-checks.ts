@@ -159,3 +159,118 @@ export function toneCheckSummary(checks: ToneCheck[]) {
     failed,
   };
 }
+
+/** LinkedIn truncates a connection note past this. Hard platform limit. */
+export const CONNECTION_NOTE_LIMIT = 300;
+
+/** Acronyms a technical founder already knows. Expanding them reads as talking down. */
+const REDUNDANT_EXPANSIONS = [
+  /\bMCP\b[\s,(-]*model context protocol/i,
+  /\bLLM\b[\s,(-]*large language model/i,
+  /\bRAG\b[\s,(-]*retrieval[- ]augmented generation/i,
+  /\bAPI\b[\s,(-]*application programming interface/i,
+  /\bSLO\b[\s,(-]*service level objective/i,
+  /\bTTFT\b[\s,(-]*time to first token/i,
+];
+
+/** Phrases that diagnose the reader's system before any conversation exists. */
+const DIAGNOSIS_MARKERS = [
+  "your architecture",
+  "that pattern usually produces",
+  "the tension that produces",
+  "you're likely",
+  "you are likely",
+  "you probably have",
+  "this usually breaks",
+  "which means you",
+];
+
+/**
+ * Checks specific to a connection request. Separate from getToneChecks because
+ * the constraints genuinely differ: 300 hard characters, no measured weakness
+ * to lean on, and the reader has not agreed to hear from you yet — so anything
+ * that reads as diagnosing their system before they accepted is a real risk,
+ * not a style preference.
+ */
+export function getConnectionNoteChecks(note: string): ToneCheck[] {
+  const trimmed = note.trim();
+
+  // Telegraphic lists like "latency + auth + drift" read as review notes rather
+  // than a human introduction. Two or more joined fragments is the tell.
+  const plusList = /\b[\w-]+\s\+\s[\w-]+\s\+\s[\w-]+\b/.test(trimmed);
+
+  const expansions = REDUNDANT_EXPANSIONS.filter((pattern) => pattern.test(trimmed));
+  const diagnoses = DIAGNOSIS_MARKERS.filter((marker) =>
+    trimmed.toLowerCase().includes(marker)
+  );
+
+  // "I wrote it up" with nothing after it gives the reader no reason to accept.
+  const vagueWriteUp =
+    /\bwrote (it|this) up\b/i.test(trimmed) &&
+    !/\bwrote (it|this) up (on|about|covering)\b/i.test(trimmed);
+
+  const sentences = trimmed.split(/[.!?]+/).map((s) => s.trim()).filter(Boolean);
+  const longestWords = Math.max(
+    0,
+    ...sentences.map((sentence) => sentence.split(/\s+/).length)
+  );
+
+  return [
+    {
+      id: "within-limit",
+      label: "Fits LinkedIn's 300-character cap",
+      passed: trimmed.length > 0 && trimmed.length <= CONNECTION_NOTE_LIMIT,
+      detail:
+        trimmed.length === 0
+          ? "Empty note."
+          : trimmed.length <= CONNECTION_NOTE_LIMIT
+            ? `${trimmed.length}/${CONNECTION_NOTE_LIMIT} characters.`
+            : `${trimmed.length} characters. LinkedIn will cut the last ${trimmed.length - CONNECTION_NOTE_LIMIT}, usually mid-signoff.`,
+    },
+    {
+      id: "no-telegraphic-list",
+      label: "Reads as a sentence, not review notes",
+      passed: !plusList,
+      detail: plusList
+        ? "Contains a compressed list like 'latency + auth + drift'. Say it as a phrase a person would speak: 'the challenges around auth, latency, and keeping context fresh'."
+        : "No telegraphic lists.",
+    },
+    {
+      id: "no-redundant-expansion",
+      label: "Does not explain acronyms they know",
+      passed: expansions.length === 0,
+      detail:
+        expansions.length === 0
+          ? "No acronyms expanded unnecessarily."
+          : "Expands an acronym the reader already knows. Write MCP, not 'MCP Model Context Protocol'.",
+    },
+    {
+      id: "curiosity-not-diagnosis",
+      label: "Curious, not diagnosing",
+      passed: diagnoses.length === 0,
+      detail:
+        diagnoses.length === 0
+          ? "Frames the topic as your own interest."
+          : `Diagnoses their system before connecting: ${diagnoses.join(", ")}. Reframe as what you have been thinking about.`,
+    },
+    {
+      id: "concrete-reason",
+      label: "Gives a reason to accept",
+      passed: !vagueWriteUp,
+      detail: vagueWriteUp
+        ? "'I wrote it up' alone gives them nothing. Say what it covers."
+        : "The ask carries something specific.",
+    },
+    {
+      id: "natural-sentences",
+      label: "Sentences a person would speak",
+      passed: longestWords > 0 && longestWords <= 34,
+      detail:
+        longestWords === 0
+          ? "Empty note."
+          : longestWords <= 34
+            ? "Sentence length reads naturally."
+            : `Longest sentence runs ${longestWords} words. Split it — long sentences in a 300-character note read as compressed.`,
+    },
+  ];
+}

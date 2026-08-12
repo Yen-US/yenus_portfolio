@@ -3,7 +3,7 @@
 import { MessageSquareText, Send, Sparkles, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { apiJson } from "@/lib/signal-room/client";
-import { getToneChecks } from "@/lib/signal-room/tone-checks";
+import { getConnectionNoteChecks, getToneChecks } from "@/lib/signal-room/tone-checks";
 import type {
   Account,
   ConnectionNote,
@@ -36,6 +36,7 @@ export function ConversationView({
 }) {
   const [opener, setOpener] = useState<CorrectionOpener | null>(null);
   const [note, setNote] = useState<ConnectionNote | null>(null);
+  const [noteText, setNoteText] = useState("");
   const [skipFieldTest, setSkipFieldTest] = useState(false);
   const [patternLine, setPatternLine] = useState("");
   const [isNoting, startNote] = useTransition();
@@ -52,6 +53,7 @@ export function ConversationView({
   const hasFieldTest = account.observations.length > 0;
   const canDraft = hasFieldTest || skipFieldTest;
   const toneChecks = getToneChecks(draft);
+  const noteChecks = getConnectionNoteChecks(noteText);
   const failedChecks = toneChecks.filter((check) => !check.passed);
 
   function generateConnectionNote() {
@@ -79,6 +81,7 @@ export function ConversationView({
           }
         );
         setNote(result.note);
+        setNoteText(result.note.note);
       } catch (requestError) {
         setError(requestError instanceof Error ? requestError.message : "Draft failed.");
       }
@@ -296,19 +299,36 @@ export function ConversationView({
                   <div className="flex items-center justify-between border-b border-border px-4 py-2">
                     <p className="consulting-kicker text-muted-foreground">Note</p>
                     <div className="flex items-center gap-3">
-                      <StatusBadge tone={note.charCount <= 300 ? "good" : "warn"}>
-                        {note.charCount}/300
+                      <StatusBadge tone={noteText.trim().length <= 300 ? "good" : "warn"}>
+                        {noteText.trim().length}/300
                       </StatusBadge>
-                      <CopyButton text={note.note} label="Copy note" />
+                      <CopyButton text={noteText} label="Copy note" />
                     </div>
                   </div>
-                  <p className="px-4 py-4 text-sm leading-6">{note.note}</p>
-                  {note.charCount > 300 ? (
-                    <p className="border-t border-brass/30 bg-brass/5 px-4 py-3 text-[11px] leading-5 text-brass">
-                      Over the limit by {note.charCount - 300}. LinkedIn will truncate it — trim
-                      before sending or draft again.
-                    </p>
-                  ) : null}
+                  <div className="px-4 py-4">
+                    <StudioTextarea
+                      value={noteText}
+                      onChange={(event) => setNoteText(event.target.value)}
+                      className="min-h-28 text-sm leading-6"
+                    />
+                  </div>
+                  <div className="divide-y divide-border border-t border-border">
+                    {noteChecks.map((check) => (
+                      <div key={check.id} className="flex gap-3 px-4 py-3">
+                        <span
+                          className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
+                            check.passed ? "bg-signal" : "bg-brass"
+                          }`}
+                        />
+                        <div>
+                          <p className="text-[11px] font-semibold">{check.label}</p>
+                          <p className="mt-0.5 text-[11px] leading-5 text-muted-foreground">
+                            {check.detail}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   <div className="space-y-2 border-t border-border px-4 py-3">
                     <Part label="Signal it opens on" value={note.signalUsed} />
                     <Part label="Deliberately withheld" value={note.withheld} />
