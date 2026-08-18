@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { planPost, type AutopilotBrief } from "@/lib/signal-room/post-autopilot";
+import { generatePostImage, type GeneratedImage } from "@/lib/signal-room/post-image";
 import { generatePostPackage } from "@/lib/signal-room/post-pipeline";
 import { isSameOrigin, takeRateLimit } from "@/lib/signal-room/request-guard";
 import { createPost, getWorkspaceData } from "@/lib/signal-room/store";
@@ -100,9 +101,28 @@ export async function POST(request: NextRequest) {
       accountIds: brief ? brief.accountIds : input.autopilot ? [] : input.accountIds,
     };
 
-    if (!input.persist) return NextResponse.json({ post, brief });
+    // Magic mode draws the diagram too, using the prompt pass 4 designed for
+    // this specific post. Deliberately non-fatal: an image failure must not
+    // discard a finished draft that cost four model passes, so the error is
+    // returned alongside the post rather than thrown.
+    let image: GeneratedImage | null = null;
+    let imageError: string | null = null;
+    if (input.autopilot && generated.artifacts?.image?.prompt) {
+      try {
+        image = await generatePostImage(generated.artifacts.image.prompt);
+      } catch (error) {
+        imageError = error instanceof Error ? error.message : "Image generation failed.";
+        console.error("Signal Room post image failed", error);
+      }
+    }
+
+    // The image is NOT persisted: it is a ~1MB data URL and signal_posts is not
+    // a blob store. It reaches the operator in this response only.
+    if (!input.persist) {
+      return NextResponse.json({ post, brief, image, imageError });
+    }
     return NextResponse.json(
-      { post: await createPost(post), brief },
+      { post: await createPost(post), brief, image, imageError },
       { status: 201 }
     );
   } catch (error) {

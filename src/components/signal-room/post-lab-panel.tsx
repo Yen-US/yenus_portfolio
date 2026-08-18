@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   ClipboardCopy,
+  Download,
   FilePenLine,
   Image as ImageIcon,
   RefreshCw,
@@ -31,6 +32,13 @@ import {
   StudioSelect,
   StudioTextarea,
 } from "@/components/signal-room/ui";
+
+interface GeneratedImage {
+  dataUrl: string;
+  prompt: string;
+  model: string;
+  bytes: number;
+}
 
 interface AutopilotBrief {
   topic: string;
@@ -174,6 +182,8 @@ function PostGenerator({
   const [accountId, setAccountId] = useState("");
   const [error, setError] = useState("");
   const [brief, setBrief] = useState<AutopilotBrief | null>(null);
+  const [image, setImage] = useState<GeneratedImage | null>(null);
+  const [imageNote, setImageNote] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isAutopilot, startAutopilot] = useTransition();
 
@@ -214,15 +224,23 @@ function PostGenerator({
   function runAutopilot() {
     setError("");
     setBrief(null);
+    setImage(null);
+    setImageNote("");
     startAutopilot(async () => {
       try {
-        const result = await apiJson<{ post: PostDraft; brief: AutopilotBrief | null }>(
-          "/api/signal-room/generate-post",
-          {
-            method: "POST",
-            body: JSON.stringify({ autopilot: true, persist: mode === "supabase" }),
-          }
-        );
+        const result = await apiJson<{
+          post: PostDraft;
+          brief: AutopilotBrief | null;
+          image: GeneratedImage | null;
+          imageError: string | null;
+        }>("/api/signal-room/generate-post", {
+          method: "POST",
+          body: JSON.stringify({ autopilot: true, persist: mode === "supabase" }),
+        });
+        setImage(result.image);
+        // The draft still succeeded; the diagram is a bonus, so this is a note
+        // rather than an error banner.
+        if (result.imageError) setImageNote(result.imageError);
         if (result.brief) {
           setBrief(result.brief);
           setPillar(result.brief.pillar);
@@ -308,6 +326,40 @@ function PostGenerator({
               Its choices are loaded below. Edit and regenerate if you disagree.
             </p>
           </div>
+        ) : null}
+
+        {image ? (
+          <div className="mt-4 border-t border-signal/20 pt-3">
+            <p className="consulting-kicker text-signal">Diagram</p>
+            {/* eslint-disable-next-line @next/next/no-img-element -- data URL, never optimised */}
+            <img
+              src={image.dataUrl}
+              alt="Generated diagram for this post"
+              className="mt-2 w-full border border-border"
+            />
+            <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+              {image.model} · {Math.round(image.bytes / 1024).toLocaleString()} KB
+            </p>
+            <a
+              href={image.dataUrl}
+              download="post-diagram.png"
+              className="focus-ring mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-sm border border-border bg-background px-4 text-sm font-semibold transition-colors hover:border-foreground"
+            >
+              <Download className="h-4 w-4" />
+              Download PNG
+            </a>
+            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+              Read every word in the image before posting. Generators mangle text, and a
+              mislabelled diagram in a post about measurement rigour is the worst failure.
+            </p>
+          </div>
+        ) : null}
+
+        {imageNote ? (
+          <p className="mt-3 text-[11px] leading-5 text-brass">
+            Draft succeeded, diagram did not: {imageNote} The prompt is in the publishing
+            package, so you can run it by hand.
+          </p>
         ) : null}
       </div>
 

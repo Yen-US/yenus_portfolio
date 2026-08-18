@@ -13,6 +13,17 @@
 
 import type { PostDraft, PostFormat } from "@/lib/signal-room/types";
 
+/**
+ * LinkedIn truncates the composer at 3,000 characters. This is a platform
+ * limit, not a style preference: a draft over it cannot be posted as written,
+ * so every band below MUST stay under it and the rubric treats a breach as
+ * blocking rather than advisory.
+ *
+ * The bands stop short of the ceiling on purpose. A draft that lands at 2,995
+ * leaves no room to fix a sentence in the composer without going over.
+ */
+export const LINKEDIN_MAX_CHARS = 3000;
+
 export interface FormatSpec {
   id: PostFormat;
   label: string;
@@ -38,7 +49,7 @@ export const POST_FORMATS: FormatSpec[] = [
     summary:
       "Numbered patterns the reader recognises in their own team. The proven shape.",
     minChars: 2200,
-    maxChars: 4800,
+    maxChars: 2900,
     numbered: true,
     patternCount: [4, 6],
     beats: [
@@ -59,7 +70,7 @@ export const POST_FORMATS: FormatSpec[] = [
     summary:
       "One non-obvious claim, defended properly. For a position, not a checklist.",
     minChars: 1800,
-    maxChars: 3800,
+    maxChars: 2800,
     numbered: false,
     patternCount: [0, 0],
     beats: [
@@ -99,7 +110,7 @@ export const POST_FORMATS: FormatSpec[] = [
     summary:
       "A piece of common advice that quietly stopped being true. High risk, high reach.",
     minChars: 1600,
-    maxChars: 3400,
+    maxChars: 2800,
     numbered: false,
     patternCount: [0, 0],
     beats: [
@@ -131,6 +142,67 @@ export interface RubricCheck {
   /** Blocking checks are the ones that reliably ruin a post in public. */
   severity: "block" | "warn";
 }
+
+/**
+ * Concrete-example markers.
+ *
+ * From CTO review of the model-selection post: "Right now everything is
+ * abstract. A concrete example would carry half the post." An abstract post can
+ * be technically correct and still unmemorable, so a draft with no worked
+ * example is a draft that will be understood and forgotten.
+ */
+const CONCRETE_MARKERS = [
+  "for example",
+  "for instance",
+  "consider a",
+  "imagine a",
+  "say a",
+  "in one case",
+  "picture a",
+  "a team i",
+  "might need",
+  "typically runs",
+  "looks like this",
+];
+
+/**
+ * Abstraction nouns. Each is legitimate on its own; the failure mode is
+ * density. The same review: "You have a lot of concepts arriving quickly.
+ * LinkedIn readers have limited working memory."
+ */
+const ABSTRACTION_NOUNS = [
+  "release criteria",
+  "selection class",
+  "control surface",
+  "promotion path",
+  "error taxonomy",
+  "operational readiness",
+  "policy approval",
+  "failure domain",
+  "release gate",
+  "operating layer",
+  "integration layer",
+  "surface area",
+  "evaluation coverage",
+  "release contract",
+  "workload economics",
+];
+
+/**
+ * Convergence claims. "The stable pattern is X" asserts the industry has
+ * settled on X, which invites a comment war you cannot win. "A robust pattern"
+ * is the same idea, defensible.
+ */
+const CONVERGENCE_CLAIMS = [
+  "the stable pattern is",
+  "the standard pattern is",
+  "the industry has settled",
+  "everyone is moving to",
+  "the consensus is",
+  "the accepted pattern is",
+  "the established pattern is",
+  "best practice is now",
+];
 
 const HYPE_PHRASES = [
   "ai is changing everything",
@@ -246,7 +318,41 @@ export function getRubricChecks(
     0
   );
 
+  const concreteHits = CONCRETE_MARKERS.filter((marker) => text.includes(marker));
+  const abstractionHits = ABSTRACTION_NOUNS.filter((noun) => text.includes(noun));
+  const convergenceHits = CONVERGENCE_CLAIMS.filter((claim) => text.includes(claim));
+
+  // Densest single paragraph, not the whole-post total: five abstractions spread
+  // over a long post is fine, five stacked in one paragraph is where a reader
+  // loses the thread.
+  const densestParagraph = paragraphs.reduce((max, paragraph) => {
+    const lower = paragraph.toLowerCase();
+    return Math.max(
+      max,
+      ABSTRACTION_NOUNS.filter((noun) => lower.includes(noun)).length
+    );
+  }, 0);
+
+  // A CTA that names an offer should also say what the offer DOES, or it reads
+  // as branding that arrived from nowhere.
+  const offerMentioned = /inference readiness review/i.test(draft);
+  const offerExplained =
+    offerMentioned &&
+    /\b(map|maps|define|defines|identif|decide|decides|produce|produces|scoped to|walk through|review)\b/i.test(
+      draft.slice(draft.toLowerCase().indexOf("inference readiness review"))
+    );
+
   const checks: RubricCheck[] = [
+    {
+      id: "platform-ceiling",
+      label: "Fits the LinkedIn composer",
+      severity: "block",
+      passed: chars <= LINKEDIN_MAX_CHARS,
+      detail:
+        chars <= LINKEDIN_MAX_CHARS
+          ? `${chars.toLocaleString()} of ${LINKEDIN_MAX_CHARS.toLocaleString()} characters. ${(LINKEDIN_MAX_CHARS - chars).toLocaleString()} to spare.`
+          : `${chars.toLocaleString()} characters, ${(chars - LINKEDIN_MAX_CHARS).toLocaleString()} over the ${LINKEDIN_MAX_CHARS.toLocaleString()} limit. This cannot be posted as written. Cut a whole section rather than shaving every sentence — trimming words evenly is what turns a written post into a compressed one.`,
+    },
     {
       id: "length-band",
       label: "Length earns the scroll",
@@ -369,15 +475,58 @@ export function getRubricChecks(
     );
   }
 
-  checks.push({
-    id: "conditional-cta",
+  checks.push(
+    {
+      id: "concrete-example",
+      label: "At least one worked example",
+      severity: "warn",
+      passed: concreteHits.length > 0,
+      detail:
+        concreteHits.length > 0
+          ? `Grounded with "${concreteHits[0]}". A reader can picture it.`
+          : "No worked example. The argument may be correct and still forgettable — one concrete case, with real constraints attached, carries more than another paragraph of framework.",
+    },
+    {
+      id: "taxonomy-density",
+      label: "Abstraction density",
+      severity: "warn",
+      passed: densestParagraph <= 3,
+      detail:
+        densestParagraph <= 3
+          ? `Densest paragraph introduces ${densestParagraph} abstraction${densestParagraph === 1 ? "" : "s"}. Readable.`
+          : `One paragraph stacks ${densestParagraph} abstractions (${abstractionHits.slice(0, 5).join(", ")}). Compress it to the one distinction that matters and elaborate only where the reader would otherwise get it wrong.`,
+    },
+    {
+      id: "convergence-claim",
+      label: "Claims are defensible, not consensus",
+      severity: "warn",
+      passed: convergenceHits.length === 0,
+      detail:
+        convergenceHits.length === 0
+          ? "No claims of industry convergence."
+          : `"${convergenceHits[0]}" asserts the field has settled. Say "a robust pattern" instead — same idea, and you are defending your architecture rather than everyone else's.`,
+    },
+    {
+      id: "offer-explained",
+      label: "The offer says what it does",
+      severity: "warn",
+      passed: !offerMentioned || offerExplained,
+      detail: !offerMentioned
+        ? "No offer named."
+        : offerExplained
+          ? "The offer is named and its actual work is described."
+          : "The offer is named but never explained. Say what it produces — map the workloads, define the gates, identify shared failure domains — or it reads as branding that arrived from nowhere.",
+    },
+    {
+      id: "conditional-cta",
     label: "CTA qualifies rather than invites",
     severity: "warn",
     passed: hasConditionalCta,
     detail: hasConditionalCta
       ? "Conditional CTA present. A reader who recognised one pattern is a bad call; four is a close."
-      : "No conditional close. 'If two or more sounded familiar' filters the inbound and does your qualifying before the call.",
-  });
+        : "No conditional close. 'If two or more sounded familiar' filters the inbound and does your qualifying before the call.",
+    }
+  );
 
   return checks;
 }

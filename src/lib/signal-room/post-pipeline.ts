@@ -10,6 +10,7 @@ import type {
   PostPillar,
 } from "@/lib/signal-room/types";
 import {
+  LINKEDIN_MAX_CHARS,
   getFormatSpec,
   getRubricChecks,
   summariseRubric,
@@ -48,7 +49,14 @@ Voice rules, absolute:
 - No content-marketing register of any kind. If a sentence could open an agency blog post, it is wrong.
 - Patterns, not advice. Advice invites disagreement. Patterns invite recognition, and a reader who recognises themselves has already qualified himself.
 - Never name, describe, or numerically fingerprint any specific company, employer, or client. The value is the shape, never the source.
-- Never invent a figure. If you do not have a number from the source material, describe the shape instead. One wrong public number costs more than the post earns.`;
+- Never invent a figure. If you do not have a number from the source material, describe the shape instead. One wrong public number costs more than the post earns.
+
+Rules learned from CTO review of published posts:
+- ONE WORKED EXAMPLE IS MANDATORY. An abstract post can be technically correct and still forgettable. Give one concrete case with real constraints attached, e.g. a customer-facing copilot needing sub-2s latency and strict tool-schema adherence versus nightly analysis tolerating 30s but needing 200k context. A single example like that carries half a post.
+- Watch abstraction density. Never stack more than three new abstract terms in one paragraph. Compress to the distinction that matters and elaborate only where a reader would otherwise get it wrong.
+- Never claim industry convergence. Write "a robust pattern" and not "the stable pattern", so you are defending your own architecture rather than everyone else's.
+- If you name the offer, say what it actually does in the same breath: what it maps, defines, identifies, and decides. An offer that appears without its work reads as branding.
+- Lead with the tension, not the taxonomy. The interesting question is rarely "X or Y" — it is the threshold where X stops working. Put that threshold near the top.`;
 
 /**
  * Bounded list that TRUNCATES rather than rejects.
@@ -147,6 +155,7 @@ export async function generatePostPackage(input: {
     `TOPIC: ${input.topic}`,
     `POINT OF VIEW TO DEFEND: ${input.pointOfView}`,
     `TARGET LENGTH: ${spec.minChars}-${spec.maxChars} characters.`,
+    `HARD LIMIT: ${LINKEDIN_MAX_CHARS} characters. LinkedIn will not accept a longer post. Count as you write and land inside the target band, which already leaves headroom below the limit. If the material does not fit, cut a whole section rather than compressing every sentence — an evenly-trimmed post reads as compressed, not written.`,
     `REQUIRED STRUCTURAL BEATS:\n${spec.beats.map((beat, i) => `${i + 1}. ${beat}`).join("\n")}`,
     `FORMAT DIRECTIVE: ${spec.directive}`,
     `SOURCE MATERIAL AND FIELD NOTES:\n${source}`,
