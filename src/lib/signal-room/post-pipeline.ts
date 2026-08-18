@@ -50,13 +50,34 @@ Voice rules, absolute:
 - Never name, describe, or numerically fingerprint any specific company, employer, or client. The value is the shape, never the source.
 - Never invent a figure. If you do not have a number from the source material, describe the shape instead. One wrong public number costs more than the post earns.`;
 
+/**
+ * Bounded list that TRUNCATES rather than rejects.
+ *
+ * OpenAI strict json_schema enforces shape and required fields, but NOT
+ * maxItems/minItems. A plain z.array(...).max(n) therefore throws at runtime
+ * the moment the model is one item generous, discarding every pass completed
+ * so far. These bounds are all cosmetic, so trim to fit instead.
+ */
+const cappedList = (limit: number) =>
+  z
+    .array(z.string())
+    .catch([])
+    .transform((items) => items.filter((item) => item.trim().length > 0).slice(0, limit));
+
+/** Scores are advisory; clamp a stray value rather than losing the draft. */
+const score = () =>
+  z
+    .number()
+    .catch(0)
+    .transform((value) => Math.max(0, Math.min(100, Math.round(value))));
+
 const outlineSchema = z.object({
   title: z.string(),
   claim: z.string(),
   hook: z.string(),
-  outline: z.array(z.string()).min(3).max(12),
+  outline: cappedList(12),
   riskiestClaim: z.string(),
-  rejectedAngles: z.array(z.string()).max(4),
+  rejectedAngles: cappedList(4),
 });
 
 const draftSchema = z.object({
@@ -66,31 +87,31 @@ const draftSchema = z.object({
   takeaway: z.string(),
   evidence: z
     .array(z.object({ claim: z.string(), sourceUrl: z.string(), sourceTitle: z.string() }))
-    .default([]),
+    .catch([]),
 });
 
 const critiqueSchema = z.object({
   weakestSection: z.string(),
-  cutCandidates: z.array(z.string()).max(6),
-  unsupportedClaims: z.array(z.string()).max(6),
-  toneViolations: z.array(z.string()).max(6),
-  revisionInstructions: z.array(z.string()).min(1).max(8),
+  cutCandidates: cappedList(6),
+  unsupportedClaims: cappedList(6),
+  toneViolations: cappedList(6),
+  revisionInstructions: cappedList(8),
 });
 
 const revisionSchema = draftSchema.extend({
-  revisionsApplied: z.array(z.string()).max(10),
+  revisionsApplied: cappedList(10),
   quality: z.object({
-    specificity: z.number().int().min(0).max(100),
-    practicalValue: z.number().int().min(0).max(100),
-    credibility: z.number().int().min(0).max(100),
-    readability: z.number().int().min(0).max(100),
-    notes: z.array(z.string()),
+    specificity: score(),
+    practicalValue: score(),
+    credibility: score(),
+    readability: score(),
+    notes: cappedList(10),
   }),
   artifacts: z.object({
-    rationale: z.array(z.string()).max(8),
-    shipChecklist: z.array(z.string()).max(10),
-    ctaVariants: z.array(z.string()).max(4),
-    defenceNotes: z.array(z.string()).max(6),
+    rationale: cappedList(8),
+    shipChecklist: cappedList(10),
+    ctaVariants: cappedList(4),
+    defenceNotes: cappedList(6),
     image: z.object({
       concept: z.string(),
       whyThisOne: z.string(),

@@ -43,17 +43,28 @@ export interface AutopilotBrief {
   rejected: string[];
 }
 
+/**
+ * Truncate rather than reject. OpenAI strict json_schema enforces shape and
+ * required fields but NOT maxItems, so a hard z.array(...).max(n) throws the
+ * moment the model returns one extra item — discarding a completed pass over a
+ * cosmetic bound. Same reasoning as cappedList in post-pipeline.ts.
+ */
 const briefSchema = z.object({
   topic: z.string().min(10),
   pointOfView: z.string().min(20),
-  format: z.enum([
-    "Recognition patterns",
-    "Single argument",
-    "Field note",
-    "Contrarian correction",
-  ]),
-  reasoning: z.string(),
-  rejected: z.array(z.string()).max(4),
+  format: z
+    .enum([
+      "Recognition patterns",
+      "Single argument",
+      "Field note",
+      "Contrarian correction",
+    ])
+    .catch("Recognition patterns"),
+  reasoning: z.string().catch(""),
+  rejected: z
+    .array(z.string())
+    .catch([])
+    .transform((items) => items.filter((item) => item.trim().length > 0).slice(0, 4)),
 });
 
 export async function planPost(input: {
