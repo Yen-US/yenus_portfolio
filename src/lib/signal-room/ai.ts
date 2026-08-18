@@ -13,7 +13,16 @@ import type {
 import { calculateDiscoveryFit } from "@/lib/signal-room/fit-score";
 
 const model = process.env.OPENAI_RESEARCH_MODEL ?? "gpt-5-mini";
-const searchModel = process.env.OPENAI_SEARCH_MODEL ?? "gpt-4o-mini-search-preview";
+// Upgraded from gpt-4o-mini-search-preview (2025-03). Verified against a live
+// discovery-shaped call: it honours the chat-completions `web_search_options`
+// shape below and returns url_citation annotations, which findBlockCitations
+// depends on. Not verified at full fan-out or across regions.
+//
+// If discovery ever returns zero companies rather than erroring, suspect the
+// citation path first: every candidate without a citation is dropped downstream,
+// so a search option being ignored fails silently rather than loudly.
+// Revert with OPENAI_SEARCH_MODEL=gpt-4o-mini-search-preview.
+const searchModel = process.env.OPENAI_SEARCH_MODEL ?? "gpt-5-search-api";
 
 const discoveredCompaniesEnvelopeSchema = z.object({
   companies: z.array(z.unknown()),

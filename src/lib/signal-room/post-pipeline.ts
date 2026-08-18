@@ -27,7 +27,15 @@ import {
  * failures rather than only the model's opinion of itself.
  */
 
-const model = process.env.OPENAI_POST_MODEL ?? process.env.OPENAI_RESEARCH_MODEL ?? "gpt-5";
+// gpt-5.6 ships as three variants (luna / sol / terra). All three were verified
+// against the Responses API with strict json_schema, which is what these four
+// passes need. Which one writes best has NOT been compared — swap the default
+// via OPENAI_POST_MODEL once you have run the same brief through more than one.
+//
+// Note the research fallback was removed deliberately: OPENAI_RESEARCH_MODEL is
+// set to a cheaper model for briefs, and inheriting it here would silently
+// downgrade the critique pass, which is where the draft quality comes from.
+const model = process.env.OPENAI_POST_MODEL ?? "gpt-5.6-sol";
 const PASS_TIMEOUT = 100_000;
 
 const VOICE = `You are drafting for Yenson Umana, an independent consultant who runs Inference Readiness Reviews for startups with a production AI path. He writes to founders and CTOs.

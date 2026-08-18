@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Save,
   Sparkles,
+  Wand2,
 } from "lucide-react";
 import { FormEvent, useEffect, useState, useTransition } from "react";
 import { apiJson } from "@/lib/signal-room/client";
@@ -30,6 +31,16 @@ import {
   StudioSelect,
   StudioTextarea,
 } from "@/components/signal-room/ui";
+
+interface AutopilotBrief {
+  topic: string;
+  pillar: PostPillar;
+  format: PostFormat;
+  pointOfView: string;
+  reasoning: string;
+  rejected: string[];
+  accountIds: string[];
+}
 
 const pillarPrompts: Record<PostPillar, { topic: string; pointOfView: string; format: PostFormat }> = {
   "Technical field note": {
@@ -162,9 +173,12 @@ function PostGenerator({
   const [exemplar, setExemplar] = useState("");
   const [accountId, setAccountId] = useState("");
   const [error, setError] = useState("");
+  const [brief, setBrief] = useState<AutopilotBrief | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isAutopilot, startAutopilot] = useTransition();
 
   const formatSpec = POST_FORMATS.find((spec) => spec.id === format) ?? POST_FORMATS[0];
+  const busy = isPending || isAutopilot;
 
   function changePillar(next: PostPillar) {
     setPillar(next);
@@ -189,6 +203,43 @@ function PostGenerator({
         ...account.brief.uncertainties.map((item) => `- ${item}`),
       ].join("\n")
     );
+  }
+
+  /**
+   * Magic button: no operator input at all. The route plans the brief from the
+   * workspace, then runs the same four passes. The returned brief is shown so
+   * the choice of subject is reviewable rather than opaque, and it back-fills
+   * the form so the next run can be a manual edit of what it chose.
+   */
+  function runAutopilot() {
+    setError("");
+    setBrief(null);
+    startAutopilot(async () => {
+      try {
+        const result = await apiJson<{ post: PostDraft; brief: AutopilotBrief | null }>(
+          "/api/signal-room/generate-post",
+          {
+            method: "POST",
+            body: JSON.stringify({ autopilot: true, persist: mode === "supabase" }),
+          }
+        );
+        if (result.brief) {
+          setBrief(result.brief);
+          setPillar(result.brief.pillar);
+          setFormat(result.brief.format);
+          setTopic(result.brief.topic);
+          setPointOfView(result.brief.pointOfView);
+        }
+        const now = new Date().toISOString();
+        onGenerated(
+          mode === "supabase"
+            ? result.post
+            : { ...result.post, id: `demo-${crypto.randomUUID()}`, createdAt: now, updatedAt: now }
+        );
+      } catch (requestError) {
+        setError(requestError instanceof Error ? requestError.message : "Autopilot failed.");
+      }
+    });
   }
 
   function submit(event: FormEvent) {
@@ -227,7 +278,44 @@ function PostGenerator({
         <Sparkles className="h-4 w-4 text-signal" />
         <h2 className="text-sm font-semibold">Generate a draft</h2>
       </div>
-      <form onSubmit={submit} className="mt-5 space-y-5">
+
+      <div className="mt-5 border border-signal/30 bg-signal/5 p-4">
+        <StudioButton type="button" onClick={runAutopilot} loading={isAutopilot} disabled={busy} className="w-full">
+          <Wand2 className="h-4 w-4" />
+          {isAutopilot ? "Choosing a subject" : "Write this week's post"}
+        </StudioButton>
+        <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
+          No input needed. Picks the pillar by rotation, reads your account briefs for
+          evidence, avoids what you have already argued, then runs all four passes.
+        </p>
+        {brief ? (
+          <div className="mt-4 border-t border-signal/20 pt-3">
+            <p className="consulting-kicker text-signal">Why this subject</p>
+            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">{brief.reasoning}</p>
+            {brief.rejected.length > 0 ? (
+              <>
+                <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                  Angles it passed over
+                </p>
+                <ul className="mt-1 space-y-1">
+                  {brief.rejected.map((item, index) => (
+                    <li key={index} className="text-[11px] leading-5 text-muted-foreground">- {item}</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+            <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
+              Its choices are loaded below. Edit and regenerate if you disagree.
+            </p>
+          </div>
+        ) : null}
+      </div>
+
+      <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+        Or brief it yourself
+      </p>
+
+      <form onSubmit={submit} className="mt-4 space-y-5">
         <Field label="Authority pillar">
           <StudioSelect value={pillar} onChange={(event) => changePillar(event.target.value as PostPillar)}>
             <option>Technical field note</option><option>Startup strategy</option><option>Operator story</option>
@@ -255,7 +343,7 @@ function PostGenerator({
           <StudioTextarea value={exemplar} onChange={(event) => setExemplar(event.target.value)} className="min-h-24 text-xs" />
         </Field>
         {error ? <p className="text-xs leading-5 text-destructive" role="alert">{error}</p> : null}
-        <StudioButton type="submit" loading={isPending} className="w-full">
+        <StudioButton type="submit" loading={isPending} disabled={busy} className="w-full">
           <RefreshCw className="h-4 w-4" />
           {isPending ? "Angle, draft, critique, revise" : "Generate substantive post"}
         </StudioButton>
