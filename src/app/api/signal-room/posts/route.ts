@@ -9,7 +9,7 @@ const updateSchema = z.object({
   pillar: z.enum(["Technical field note", "Startup strategy", "Operator story"]).optional(),
   status: z.enum(["idea", "draft", "ready", "published"]).optional(),
   hook: z.string().max(500).optional(),
-  draft: z.string().max(10_000).optional(),
+  draft: z.string().max(20_000).optional(),
   takeaway: z.string().max(1000).optional(),
   accountIds: z.array(z.string()).max(10).optional(),
 });

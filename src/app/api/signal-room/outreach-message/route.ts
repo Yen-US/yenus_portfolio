@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { buildConnectionNote, buildCorrectionOpener } from "@/lib/signal-room/setting-ai";
+import {
+  buildConnectionNote,
+  buildConversationStarter,
+  buildCorrectionOpener,
+} from "@/lib/signal-room/setting-ai";
 import { isSameOrigin, takeRateLimit } from "@/lib/signal-room/request-guard";
 
 // These routes make bounded model calls that can legitimately run ~60s.
@@ -22,7 +26,7 @@ const observationSchema = z.object({
 });
 
 const schema = z.object({
-  format: z.enum(["opener", "connection"]).default("opener"),
+  format: z.enum(["opener", "connection", "starter"]).default("opener"),
   account: z.object({
     name: z.string().trim().min(1).max(150),
     oneLiner: z.string().trim().max(500),
@@ -39,6 +43,8 @@ const schema = z.object({
    */
   skipFieldTest: z.boolean().default(false),
   patternLine: z.string().trim().max(600).default(""),
+  /** The accepted note, so the starter never repeats what it already said. */
+  connectionNote: z.string().trim().max(1000).default(""),
 });
 
 export async function POST(request: NextRequest) {
@@ -64,6 +70,16 @@ export async function POST(request: NextRequest) {
         },
         { status: 422 }
       );
+    }
+
+    if (input.format === "starter") {
+      const starter = await buildConversationStarter({
+        account: input.account,
+        brief: (input.brief as never) ?? null,
+        observations: input.observations,
+        connectionNote: input.connectionNote,
+      });
+      return NextResponse.json({ starter });
     }
 
     if (input.format === "connection") {

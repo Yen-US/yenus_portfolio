@@ -160,6 +160,106 @@ export function toneCheckSummary(checks: ToneCheck[]) {
   };
 }
 
+/** Jargon that reads as an audit when stacked. */
+const HEAVY_JARGON = [
+  "feature extraction",
+  "streaming inference",
+  "cue detection",
+  "downstream synthesis",
+  "multimodal capture",
+  "on-the-fly synthesis",
+  "stakeholder exports",
+  "server-side",
+  "orchestration layer",
+  "inference pipeline",
+];
+
+/** Asking what they use, rather than how they think. */
+const STACK_QUESTION_MARKERS = [
+  "which framework",
+  "what framework",
+  "which service",
+  "what service",
+  "which provider",
+  "what provider",
+  "which vendor",
+  "what stack",
+  "which tools",
+  "do you use",
+  "are you using",
+  "which model",
+];
+
+/**
+ * Checks for the first DM after a connection is accepted.
+ *
+ * The failure mode here is different from the note's: length is not capped by
+ * the platform, so the real risks are re-explaining research they already read,
+ * asking them to disclose their stack, and stacking enough questions that
+ * answering becomes a chore. All three suppress replies.
+ */
+export function getConversationStarterChecks(message: string): ToneCheck[] {
+  const trimmed = message.trim();
+  const lower = trimmed.toLowerCase();
+
+  const questionCount = (trimmed.match(/\?/g) ?? []).length;
+  const words = trimmed.split(/\s+/).filter(Boolean).length;
+  const jargon = HEAVY_JARGON.filter((term) => lower.includes(term));
+  const stackAsks = STACK_QUESTION_MARKERS.filter((marker) => lower.includes(marker));
+  const plusList = /\b[\w-]+\s\+\s[\w-]+\s\+\s[\w-]+\b/.test(trimmed);
+
+  return [
+    {
+      id: "one-question",
+      label: "Exactly one question",
+      passed: questionCount === 1,
+      detail:
+        questionCount === 1
+          ? "One question to answer."
+          : questionCount === 0
+            ? "No question. The message gives them nothing to reply to."
+            : `${questionCount} questions. Multiple asks force triage — the most common reason a good message gets no reply.`,
+    },
+    {
+      id: "asks-perspective",
+      label: "Asks how they think, not what they use",
+      passed: stackAsks.length === 0,
+      detail:
+        stackAsks.length === 0
+          ? "Asks for judgment rather than disclosure."
+          : `Asks them to name their stack (${stackAsks.join(", ")}). Rephrase as how they think about the tradeoff.`,
+    },
+    {
+      id: "jargon-density",
+      label: "Not an architecture interview",
+      passed: jargon.length <= 1,
+      detail:
+        jargon.length <= 1
+          ? "Technical, but readable in one pass."
+          : `Stacks ${jargon.length} heavy terms (${jargon.join(", ")}). Each one added is another thing to parse before replying.`,
+    },
+    {
+      id: "starter-length",
+      label: "Short enough to answer on a phone",
+      passed: words > 0 && words <= 95,
+      detail:
+        words === 0
+          ? "Empty message."
+          : words <= 95
+            ? `${words} words.`
+            : `${words} words. Past ~90 this reads as a brief, not a message.`,
+    },
+    {
+      id: "no-telegraphic-list",
+      label: "Reads as a sentence, not review notes",
+      passed: !plusList,
+      detail: plusList
+        ? "Contains a compressed list like 'latency + auth + drift'. Say it as a phrase a person would speak."
+        : "No telegraphic lists.",
+    },
+  ];
+}
+
 /** LinkedIn truncates a connection note past this. Hard platform limit. */
 export const CONNECTION_NOTE_LIMIT = 300;
 

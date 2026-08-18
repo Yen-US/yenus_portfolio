@@ -7,8 +7,6 @@ import type {
   DiscoveredCompany,
   HandsOnObservation,
   IcpProfile,
-  PostDraft,
-  PostPillar,
   ResearchBrief,
   ResearchSource,
 } from "@/lib/signal-room/types";
@@ -59,23 +57,6 @@ const researchBriefSchema = z.object({
     shortMessage: z.string(),
     loomOutline: z.array(z.string()),
     discoveryQuestions: z.array(z.string()),
-  }),
-});
-
-const postDraftSchema = z.object({
-  title: z.string(),
-  hook: z.string(),
-  draft: z.string(),
-  takeaway: z.string(),
-  evidence: z.array(
-    z.object({ claim: z.string(), sourceUrl: z.string().url(), sourceTitle: z.string() })
-  ),
-  quality: z.object({
-    specificity: z.number().int().min(0).max(100),
-    practicalValue: z.number().int().min(0).max(100),
-    credibility: z.number().int().min(0).max(100),
-    readability: z.number().int().min(0).max(100),
-    notes: z.array(z.string()),
   }),
 });
 
@@ -310,43 +291,6 @@ export async function buildResearchBrief(input: {
           ]
         : [];
     }),
-  };
-}
-
-export async function generateLinkedInPost(input: {
-  topic: string;
-  pillar: PostPillar;
-  pointOfView: string;
-  sourceMaterial: string;
-  accountIds: string[];
-}): Promise<Omit<PostDraft, "id" | "pillar" | "status" | "accountIds" | "createdAt" | "updatedAt">> {
-  const openai = getOpenAI();
-  const response = await openai.responses.create({
-    model,
-    store: false,
-    text: {
-      verbosity: "high",
-      format: {
-        type: "json_schema",
-        name: "linkedin_post_draft",
-        strict: true,
-        schema: postDraftJsonSchema,
-      },
-    },
-    instructions:
-      "Write in Yenson Umana's voice: direct, implementation-grounded, calm, technically precise, and useful to startup founders and CTOs. The post must have one non-obvious central claim, a concrete startup scenario, 3-5 detailed decisions or a reusable framework, and a decisive takeaway. Aim for 1,400-2,400 characters. Use short paragraphs but do not write empty one-line engagement bait. No emojis, fake dialogue, invented metrics, vague inspiration, excessive rhetorical questions, or generic 'AI is changing everything' claims. Do not mention confidential employers or clients. Include only evidence present in the source material; otherwise mark the idea as experience-based and leave the evidence array empty. Score the draft honestly and add revision notes for any score below 80.",
-    input: `PILLAR: ${input.pillar}\nTOPIC: ${input.topic}\nPOINT OF VIEW TO DEFEND: ${input.pointOfView}\nSOURCE MATERIAL AND FIELD NOTES:\n${input.sourceMaterial || "No external source material. Write as an experience-based framework without factual client claims."}`,
-  }, { timeout: 90_000, maxRetries: 0 });
-
-  const parsed = postDraftSchema.parse(JSON.parse(response.output_text));
-  const allowedUrls = new Set(
-    extractHttpUrls(input.sourceMaterial).map(normalizeUrl).filter(Boolean)
-  );
-  return {
-    ...parsed,
-    evidence: parsed.evidence.filter((item) =>
-      allowedUrls.has(normalizeUrl(item.sourceUrl))
-    ),
   };
 }
 
@@ -714,43 +658,6 @@ const researchBriefJsonSchema = {
         shortMessage: { type: "string" },
         loomOutline: { type: "array", items: { type: "string" } },
         discoveryQuestions: { type: "array", items: { type: "string" } },
-      },
-    },
-  },
-} as const;
-
-const postDraftJsonSchema = {
-  type: "object",
-  additionalProperties: false,
-  required: ["title", "hook", "draft", "takeaway", "evidence", "quality"],
-  properties: {
-    title: { type: "string" },
-    hook: { type: "string" },
-    draft: { type: "string" },
-    takeaway: { type: "string" },
-    evidence: {
-      type: "array",
-      items: {
-        type: "object",
-        additionalProperties: false,
-        required: ["claim", "sourceUrl", "sourceTitle"],
-        properties: {
-          claim: { type: "string" },
-          sourceUrl: { type: "string" },
-          sourceTitle: { type: "string" },
-        },
-      },
-    },
-    quality: {
-      type: "object",
-      additionalProperties: false,
-      required: ["specificity", "practicalValue", "credibility", "readability", "notes"],
-      properties: {
-        specificity: { type: "integer", minimum: 0, maximum: 100 },
-        practicalValue: { type: "integer", minimum: 0, maximum: 100 },
-        credibility: { type: "integer", minimum: 0, maximum: 100 },
-        readability: { type: "integer", minimum: 0, maximum: 100 },
-        notes: { type: "array", items: { type: "string" } },
       },
     },
   },

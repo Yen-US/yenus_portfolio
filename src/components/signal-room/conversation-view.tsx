@@ -3,11 +3,16 @@
 import { MessageSquareText, Send, Sparkles, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { apiJson } from "@/lib/signal-room/client";
-import { getConnectionNoteChecks, getToneChecks } from "@/lib/signal-room/tone-checks";
+import {
+  getConnectionNoteChecks,
+  getConversationStarterChecks,
+  getToneChecks,
+} from "@/lib/signal-room/tone-checks";
 import type {
   Account,
   ConnectionNote,
   ConversationMessage,
+  ConversationStarter,
   CorrectionOpener,
   ReplyAnalysis,
 } from "@/lib/signal-room/types";
@@ -37,9 +42,12 @@ export function ConversationView({
   const [opener, setOpener] = useState<CorrectionOpener | null>(null);
   const [note, setNote] = useState<ConnectionNote | null>(null);
   const [noteText, setNoteText] = useState("");
+  const [starter, setStarter] = useState<ConversationStarter | null>(null);
+  const [starterText, setStarterText] = useState("");
   const [skipFieldTest, setSkipFieldTest] = useState(false);
   const [patternLine, setPatternLine] = useState("");
   const [isNoting, startNote] = useTransition();
+  const [isStarting, startStarter] = useTransition();
   const [draft, setDraft] = useState("");
   const [reply, setReply] = useState("");
   const [analysis, setAnalysis] = useState<ReplyAnalysis | null>(null);
@@ -54,7 +62,42 @@ export function ConversationView({
   const canDraft = hasFieldTest || skipFieldTest;
   const toneChecks = getToneChecks(draft);
   const noteChecks = getConnectionNoteChecks(noteText);
+  const starterChecks = getConversationStarterChecks(starterText);
   const failedChecks = toneChecks.filter((check) => !check.passed);
+
+  function generateConversationStarter() {
+    setError("");
+    startStarter(async () => {
+      try {
+        const result = await apiJson<{ starter: ConversationStarter }>(
+          "/api/signal-room/outreach-message",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              format: "starter",
+              account: {
+                name: account.name,
+                oneLiner: account.oneLiner,
+                approxUsers: account.approxUsers,
+                targetName: account.targetName,
+                targetRole: account.targetRole,
+              },
+              brief: account.brief,
+              observations: account.observations,
+              skipFieldTest,
+              // The accepted note is what this message must not repeat. Prefer
+              // the edited text over the generated one — that is what was sent.
+              connectionNote: noteText,
+            }),
+          }
+        );
+        setStarter(result.starter);
+        setStarterText(result.starter.message);
+      } catch (requestError) {
+        setError(requestError instanceof Error ? requestError.message : "Draft failed.");
+      }
+    });
+  }
 
   function generateConnectionNote() {
     setError("");
@@ -193,6 +236,20 @@ export function ConversationView({
 
       <div className="grid gap-8 xl:grid-cols-[1fr_0.9fr]">
         <div className="space-y-8">
+          <ol className="flex flex-wrap gap-x-5 gap-y-2 border border-border bg-secondary/40 px-4 py-3 text-[11px] text-muted-foreground">
+            {[
+              "1 · Connection note",
+              "2 · They accept",
+              "3 · Conversation starter",
+              "4 · They reply",
+              "5 · Go deeper",
+            ].map((step) => (
+              <li key={step} className="whitespace-nowrap">
+                {step}
+              </li>
+            ))}
+          </ol>
+
           <section>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-sm font-semibold">Correction opener</h3>
@@ -266,8 +323,7 @@ export function ConversationView({
                 <div>
                   <h4 className="text-sm font-semibold">Connection note</h4>
                   <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
-                    Under 300 characters — LinkedIn&apos;s hard cap on a request note. Send this
-                    first; the opener above is what you send once they accept.
+                    Step 1. Under 300 characters — LinkedIn&apos;s hard cap on a request note.
                   </p>
                 </div>
                 <StudioButton
@@ -332,6 +388,91 @@ export function ConversationView({
                   <div className="space-y-2 border-t border-border px-4 py-3">
                     <Part label="Signal it opens on" value={note.signalUsed} />
                     <Part label="Deliberately withheld" value={note.withheld} />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="mt-8 border-t border-border pt-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-sm font-semibold">Conversation starter</h4>
+                  <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+                    Step 3, after they accept. Its only job is to earn a reply — so it never
+                    repeats the note&apos;s research, and asks how they think rather than what
+                    they use.
+                  </p>
+                </div>
+                <StudioButton
+                  variant="secondary"
+                  onClick={generateConversationStarter}
+                  loading={isStarting}
+                  disabled={!canDraft}
+                >
+                  <Sparkles className="h-4 w-4" />
+                  Draft starter
+                </StudioButton>
+              </div>
+
+              {!noteText.trim() ? (
+                <p className="mt-4 border border-dashed border-border p-4 text-[11px] leading-5 text-muted-foreground">
+                  Draft the connection note first. The starter reads it so it can avoid repeating
+                  what they already saw — acceptance is permission to advance one step, not to
+                  restart the pitch.
+                </p>
+              ) : null}
+
+              {starter ? (
+                <div className="mt-4 border border-border bg-card">
+                  <div className="flex items-center justify-between border-b border-border px-4 py-2">
+                    <p className="consulting-kicker text-muted-foreground">First DM</p>
+                    <div className="flex items-center gap-3">
+                      <StatusBadge
+                        tone={
+                          starterChecks.every((check) => check.passed) ? "good" : "warn"
+                        }
+                      >
+                        {starterChecks.filter((check) => check.passed).length}/
+                        {starterChecks.length}
+                      </StatusBadge>
+                      <CopyButton text={starterText} label="Copy message" />
+                    </div>
+                  </div>
+                  <div className="px-4 py-4">
+                    <StudioTextarea
+                      value={starterText}
+                      onChange={(event) => setStarterText(event.target.value)}
+                      className="min-h-40 text-sm leading-6"
+                    />
+                  </div>
+                  <div className="divide-y divide-border border-t border-border">
+                    {starterChecks.map((check) => (
+                      <div key={check.id} className="flex gap-3 px-4 py-3">
+                        <span
+                          className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${
+                            check.passed ? "bg-signal" : "bg-brass"
+                          }`}
+                        />
+                        <div>
+                          <p className="text-[11px] font-semibold">{check.label}</p>
+                          <p className="mt-0.5 text-[11px] leading-5 text-muted-foreground">
+                            {check.detail}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-2 border-t border-border px-4 py-3">
+                    <Part label="The one question" value={starter.theQuestion} />
+                    <Part label="Not repeated from the note" value={starter.avoidedRepeating} />
+                  </div>
+                  <div className="border-t border-border bg-secondary/40 px-4 py-3">
+                    <p className="consulting-kicker text-signal">
+                      Hold until they reply — step 5
+                    </p>
+                    <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                      {starter.nextProbe}
+                    </p>
                   </div>
                 </div>
               ) : null}

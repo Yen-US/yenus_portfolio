@@ -48,6 +48,13 @@ export const STARTUP_STAGES = [
 
 export const POST_STATUSES = ["idea", "draft", "ready", "published"] as const;
 
+export const POST_FORMATS_LIST = [
+  "Recognition patterns",
+  "Single argument",
+  "Field note",
+  "Contrarian correction",
+] as const;
+
 export const POST_PILLARS = [
   "Technical field note",
   "Startup strategy",
@@ -58,6 +65,7 @@ export type AccountStatus = (typeof ACCOUNT_STATUSES)[number];
 export type StartupStage = (typeof STARTUP_STAGES)[number];
 export type PostStatus = (typeof POST_STATUSES)[number];
 export type PostPillar = (typeof POST_PILLARS)[number];
+export type PostFormat = (typeof POST_FORMATS_LIST)[number];
 export type MutualFit = (typeof MUTUAL_FIT_VALUES)[number];
 export type CallOutcome = (typeof CALL_OUTCOMES)[number];
 export type ReplyIntent = (typeof REPLY_INTENTS)[number];
@@ -169,6 +177,25 @@ export interface ConnectionNote {
   signalUsed: string;
   /** What the note deliberately leaves out so the reply has somewhere to go. */
   withheld: string;
+}
+
+/**
+ * The first direct message after a connection request is accepted.
+ *
+ * Its only job is to earn a reply. Acceptance is permission to advance one
+ * step, not to restart the pitch — so this must never re-explain the research
+ * already in the connection note, and must ask for the reader's perspective
+ * rather than their stack.
+ */
+export interface ConversationStarter {
+  message: string;
+  charCount: number;
+  /** The single question being asked, isolated so it can be judged alone. */
+  theQuestion: string;
+  /** What the note already said, which this message must not repeat. */
+  avoidedRepeating: string;
+  /** The natural deeper probe to send only after they reply. */
+  nextProbe: string;
 }
 
 export interface HypothesisVerdict {
@@ -313,6 +340,33 @@ export interface PostQuality {
   notes: string[];
 }
 
+export interface PostImagePrompt {
+  concept: string;
+  whyThisOne: string;
+  prompt: string;
+  alternate: string;
+}
+
+export interface PostArtifacts {
+  /** Why the post is built the way it is — the argument for your own review. */
+  rationale: string[];
+  /** Pre-publish checks specific to this draft, not generic advice. */
+  shipChecklist: string[];
+  /** Two or three closing lines to choose between. */
+  ctaVariants: string[];
+  /** The single riskiest claim and how to defend it if challenged. */
+  defenceNotes: string[];
+  image: PostImagePrompt | null;
+}
+
+export interface PostCritique {
+  /** Verdict from the adversarial pass, before revision. */
+  weakestSection: string;
+  cutCandidates: string[];
+  unsupportedClaims: string[];
+  revisionsApplied: string[];
+}
+
 export interface PostDraft {
   id: string;
   title: string;
@@ -324,6 +378,10 @@ export interface PostDraft {
   accountIds: string[];
   evidence: PostEvidence[];
   quality: PostQuality | null;
+  format: PostFormat;
+  outline: string[];
+  artifacts: PostArtifacts | null;
+  critique: PostCritique | null;
   createdAt: string;
   updatedAt: string;
 }

@@ -7,6 +7,7 @@ import type {
   CallRecord,
   ConnectionNote,
   ConversationMessage,
+  ConversationStarter,
   CorrectionOpener,
   CostMathQuestion,
   HandsOnObservation,
@@ -291,6 +292,40 @@ export async function buildConnectionNote(input: {
   return { ...result, charCount: result.note.length };
 }
 
+// --- 3c. Conversation starter (first DM after they accept) ----------------
+
+const conversationStarterSchema = z.object({
+  message: z.string(),
+  theQuestion: z.string(),
+  avoidedRepeating: z.string(),
+  nextProbe: z.string(),
+});
+
+export async function buildConversationStarter(input: {
+  account: Pick<Account, "name" | "oneLiner" | "targetName" | "targetRole">;
+  brief: ResearchBrief | null;
+  observations: HandsOnObservation[];
+  /** The note they already accepted. The one thing this must not repeat. */
+  connectionNote: string;
+}): Promise<ConversationStarter> {
+  const result = await structuredCall({
+    schemaName: "conversation_starter_message",
+    jsonSchema: conversationStarterJsonSchema,
+    parser: conversationStarterSchema,
+    verbosity: "low",
+    reasoningEffort: "low",
+    instructions:
+      "Write the FIRST direct message Yenson Umana sends after a LinkedIn connection request was ACCEPTED.\n\nTHE ONLY GOAL IS A REPLY. Not to prove expertise, not to qualify them, not to open a sale. Every choice serves the single question: is this cheap and enjoyable for a busy CTO to answer?\n\nDO NOT RESTART. They already read the connection note and accepted because of it. Acceptance is permission to advance one step, not to re-present the research. NEVER re-describe what their company does, never re-quote their website, and never repeat the observation the note already made. Referencing their product in passing is fine; explaining it back to them is not.\n\nASK FOR THEIR PERSPECTIVE, NOT THEIR STACK. Never ask which frameworks, services, vendors, or infrastructure they use, and never ask them to enumerate an architecture. Those require disclosure and effort, so they go unanswered. Ask instead how they THINK about a tradeoff - 'how much of that happens in real time versus downstream', 'how do you think about that problem'. A question about judgment is easy and pleasant to answer; a question about implementation is an audit.\n\nEXACTLY ONE QUESTION. One question mark in the whole message. Multiple questions, or one question containing several parts, force the reader to triage and are the most common reason a good message gets no reply.\n\nStructure, in order:\n1. 'Hi {first name} - thanks for connecting.' or a close variant.\n2. One sentence naming what genuinely interested him, in plain language, WITHOUT re-explaining their product back to them.\n3. The single question, phrased as curiosity about how they think, not as a request for detail.\n4. One short sentence of his own perspective that shows he has thought about this territory himself, so the exchange is reciprocal rather than an interrogation. Keep it to one sentence: this is the part that most easily bloats.\n5. A light closing such as 'Curious how you think about it at {company}.'\n\nHard rules: at most 5 sentences and 90 words total. No jargon stacking - never chain more than two technical terms in a sentence, and never use terms like feature extraction, streaming inference, cue detection, downstream synthesis in the same message. No telegraphic lists such as 'latency + auth + drift'. No pitch, no price, no call request, no links, no 'quick chat'. Never mention an employer program, another client, or a named team. No measured claims about their product unless a first-hand observation was supplied. Plain sentences a person would speak aloud.\n\nIn theQuestion, restate the single question alone. In avoidedRepeating, name what the connection note already covered that this message deliberately does not repeat. In nextProbe, write the ONE follow-up question to send only after they reply - it may be more specific, but must still be answerable in a sentence.",
+    input: `RECIPIENT\nName: ${input.account.targetName || "unknown - use a neutral greeting"}\nRole: ${input.account.targetRole || "technical leader"}\n\nCOMPANY\n${input.account.name} - ${input.account.oneLiner}\n\nTHE CONNECTION NOTE THEY ALREADY ACCEPTED (do not repeat its content)\n${input.connectionNote || "Not recorded. Assume the note already named what their product does and one architectural interest."}\n\n${
+      input.observations.length > 0
+        ? `FIRST-HAND OBSERVATIONS (the only numbers you may use)\n${describeObservations(input.observations)}`
+        : "PRODUCT USAGE\nNone. Do not imply the product was used and do not state any measurement about it."
+    }\n\nARCHITECTURE HYPOTHESES (pick at most ONE to build the question around)\n${describeHypotheses(input.brief)}`,
+  });
+
+  return { ...result, charCount: result.message.length };
+}
+
 // --- 4. Reply analysis ----------------------------------------------------
 
 const replyAnalysisSchema = z.object({
@@ -486,6 +521,18 @@ const connectionNoteJsonSchema = {
     note: { type: "string" },
     signalUsed: { type: "string" },
     withheld: { type: "string" },
+  },
+};
+
+const conversationStarterJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["message", "theQuestion", "avoidedRepeating", "nextProbe"],
+  properties: {
+    message: { type: "string" },
+    theQuestion: { type: "string" },
+    avoidedRepeating: { type: "string" },
+    nextProbe: { type: "string" },
   },
 };
 

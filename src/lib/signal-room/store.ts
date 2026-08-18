@@ -126,6 +126,10 @@ interface PostRow {
   account_ids: string[];
   evidence: PostDraft["evidence"];
   quality: PostDraft["quality"];
+  format: PostDraft["format"] | null;
+  outline: string[] | null;
+  artifacts: PostDraft["artifacts"];
+  critique: PostDraft["critique"];
   created_at: string;
   updated_at: string;
 }
@@ -366,6 +370,10 @@ export async function updatePost(id: string, input: Partial<PostDraft>) {
   if (input.accountIds !== undefined) row.account_ids = input.accountIds;
   if (input.evidence !== undefined) row.evidence = input.evidence;
   if (input.quality !== undefined) row.quality = input.quality;
+  if (input.format !== undefined) row.format = input.format;
+  if (input.outline !== undefined) row.outline = input.outline;
+  if (input.artifacts !== undefined) row.artifacts = input.artifacts;
+  if (input.critique !== undefined) row.critique = input.critique;
 
   const { data, error } = await supabase
     .from("signal_posts")
@@ -438,6 +446,10 @@ function toPostRow(
     account_ids: input.accountIds,
     evidence: input.evidence,
     quality: input.quality,
+    format: input.format,
+    outline: input.outline,
+    artifacts: input.artifacts,
+    critique: input.critique,
   };
 }
 
@@ -759,6 +771,10 @@ function mapPostRow(row: PostRow): PostDraft {
     accountIds: row.account_ids ?? [],
     evidence: row.evidence ?? [],
     quality: row.quality,
+    format: row.format ?? "Recognition patterns",
+    outline: row.outline ?? [],
+    artifacts: row.artifacts ?? null,
+    critique: row.critique ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
