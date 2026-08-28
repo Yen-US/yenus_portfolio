@@ -1,8 +1,19 @@
 "use client";
 
-import { Building2, ChevronRight, Crosshair, FilePenLine, LayoutDashboard, PhoneCall, Radar, ShieldAlert } from "lucide-react";
+import { Building2, ChevronRight, Crosshair, FilePenLine, LayoutDashboard, Linkedin, ListChecks, PhoneCall, Radar, ShieldCheck, TrendingUp } from "lucide-react";
 import { useState } from "react";
-import type { Account, DiscoveredCompany, IcpProfile, PostDraft, WorkspaceData } from "@/lib/signal-room/types";
+import type {
+  Account,
+  ContentMetricSnapshot,
+  ContentPost,
+  DiscoveredCompany,
+  IcpProfile,
+  PostDraft,
+  ProfileVersion,
+  SalesEvent,
+  WorkspaceData,
+} from "@/lib/signal-room/types";
+import type { LedgerData } from "@/lib/signal-room/ledger-store";
 import { apiJson, getAccountIdentityKey, emptyAccountRelations, NEW_ACCOUNT_DEFAULTS } from "@/lib/signal-room/client";
 import { cn } from "@/lib/utils";
 import { DiscoverPanel } from "@/components/signal-room/discover-panel";
@@ -11,12 +22,28 @@ import { AccountsPanel } from "@/components/signal-room/accounts-panel";
 import { CallPanel } from "@/components/signal-room/call-panel";
 import { IcpPanel } from "@/components/signal-room/icp-panel";
 import { PostLabPanel } from "@/components/signal-room/post-lab-panel";
+import { TodayPanel } from "@/components/signal-room/today-panel";
+import { FunnelPanel } from "@/components/signal-room/funnel-panel";
+import { LinkedInPanel } from "@/components/signal-room/linkedin-panel";
 import { StatusBadge } from "@/components/signal-room/ui";
 
-type View = "discover" | "accounts" | "calls" | "icp" | "posts" | "overview";
+type View =
+  | "today"
+  | "discover"
+  | "accounts"
+  | "calls"
+  | "icp"
+  | "posts"
+  | "overview"
+  | "funnel"
+  | "linkedin";
 
-/** The three steps that actually move a target toward a client. */
+/**
+ * Today leads, because the question the workspace exists to answer is "what do
+ * I do now" — and answering it from the ledger is cheaper than remembering.
+ */
 const primaryNav: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: "today", label: "Today", icon: ListChecks },
   { id: "discover", label: "Find targets", icon: Radar },
   { id: "accounts", label: "Research & write", icon: Building2 },
   { id: "calls", label: "Calls", icon: PhoneCall },
@@ -24,17 +51,29 @@ const primaryNav: { id: View; label: string; icon: typeof LayoutDashboard }[] = 
 
 /** Everything that is useful later but must not compete for attention now. */
 const advancedNav: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: "funnel", label: "Funnel", icon: TrendingUp },
+  { id: "linkedin", label: "LinkedIn", icon: Linkedin },
   { id: "overview", label: "Dashboard", icon: LayoutDashboard },
   { id: "icp", label: "ICP tuning", icon: Crosshair },
   { id: "posts", label: "Post Lab", icon: FilePenLine },
 ];
 
-export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
-  const [view, setView] = useState<View>("discover");
+export function SignalRoomApp({
+  initialData,
+  ledger,
+}: {
+  initialData: WorkspaceData;
+  ledger: LedgerData;
+}) {
+  const [view, setView] = useState<View>("today");
   const [accounts, setAccounts] = useState(initialData.accounts);
   const [posts, setPosts] = useState(initialData.posts);
   const [icp, setIcp] = useState<IcpProfile | null>(initialData.icp);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [events, setEvents] = useState<SalesEvent[]>(ledger.events);
+  const [contentPosts, setContentPosts] = useState<ContentPost[]>(ledger.posts);
+  const [metrics, setMetrics] = useState<ContentMetricSnapshot[]>(ledger.metrics);
+  const [profiles, setProfiles] = useState<ProfileVersion[]>(ledger.profiles);
 
   async function saveDiscoveredCompany(company: DiscoveredCompany) {
     const accountInput = {
@@ -143,8 +182,8 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
 
             <div className="mt-auto hidden border-t border-background/15 p-4 lg:block">
               <div className="flex items-start gap-3 text-[11px] leading-5 text-background/55">
-                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-brass-soft" />
-                <p>Unlinked and noindex. This route is obscured, not authenticated.</p>
+                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-brass-soft" />
+                <p>Password-gated and noindex. Sessions expire after 14 days.</p>
               </div>
             </div>
           </div>
@@ -168,6 +207,44 @@ export function SignalRoomApp({ initialData }: { initialData: WorkspaceData }) {
           ) : null}
 
           <main className="mx-auto w-full max-w-[1500px] p-4 md:p-7 lg:p-9">
+            {view === "today" ? (
+              <TodayPanel
+                accounts={accounts}
+                events={events}
+                posts={contentPosts}
+                onEventRecorded={(event) =>
+                  setEvents((current) =>
+                    current.some((existing) => existing.id === event.id)
+                      ? current
+                      : [...current, event]
+                  )
+                }
+              />
+            ) : null}
+            {view === "funnel" ? (
+              <FunnelPanel
+                accounts={accounts}
+                events={events}
+                posts={contentPosts}
+                metrics={metrics}
+              />
+            ) : null}
+            {view === "linkedin" ? (
+              <LinkedInPanel
+                posts={contentPosts}
+                metrics={metrics}
+                profiles={profiles}
+                capabilities={ledger.capabilities}
+                onPostsChanged={(post) => setContentPosts((c) => [post, ...c])}
+                onMetricsChanged={(snapshot) =>
+                  setMetrics((current) => [
+                    snapshot,
+                    ...current.filter((existing) => existing.id !== snapshot.id),
+                  ])
+                }
+                onProfilesChanged={(version) => setProfiles((c) => [version, ...c])}
+              />
+            ) : null}
             {view === "overview" ? (
               <OverviewPanel accounts={accounts} posts={posts} icp={icp} onNavigate={setView} />
             ) : null}
