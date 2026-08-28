@@ -52,6 +52,16 @@ const discoverySchema = z.object({
     "$50k-$100k",
     "$100k+",
   ]),
+  /**
+   * Which rung the visitor arrived through. Not persisted to
+   * `discovery_bookings` — that table has no column for it, and adding one
+   * would break every insert until the migration reached prod. It travels on
+   * the owner notification instead, which is where it is actually acted on.
+   */
+  engagement: z
+    .enum(["review", "working-session"])
+    .optional()
+    .default("review"),
   slotDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   slotHour: z
     .number()
@@ -237,6 +247,12 @@ export async function POST(request: NextRequest) {
       ["Company stage", inquiry.companyStage],
       ["Initiative stage", inquiry.initiativeStage],
       ["Investment range", inquiry.investmentRange],
+      [
+        "Arrived via",
+        inquiry.engagement === "working-session"
+          ? "90-minute working session (asked about the lower rung)"
+          : "Inference Readiness Review",
+      ],
       ["Costa Rica time", costaRicaLabel],
       ["Visitor time", `${visitorLabel} (${inquiry.timezone})`],
       ["Duration", `${DISCOVERY_DURATION_MINUTES} minutes`],

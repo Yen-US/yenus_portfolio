@@ -10,6 +10,7 @@ import {
   Globe2,
   LoaderCircle,
 } from "lucide-react";
+import type { DiscoveryEngagement } from "@/lib/discovery-engagement";
 import {
   COSTA_RICA_TIME_ZONE,
   DISCOVERY_DURATION_MINUTES,
@@ -38,7 +39,16 @@ type SubmissionState =
 
 type AvailabilityState = "loading" | "ready" | "error";
 
-export function DiscoveryForm() {
+/**
+ * `engagement` is read from the URL by the page and passed in already narrowed.
+ * An unknown query value degrades to "review" rather than erroring: a mistyped
+ * link should still book a call.
+ */
+export function DiscoveryForm({
+  engagement = "review",
+}: {
+  engagement?: DiscoveryEngagement;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
   const [isPending, startTransition] = useTransition();
@@ -139,6 +149,7 @@ export function DiscoveryForm() {
       slotDate: selectedDate,
       slotHour: selectedHour,
       timezone: visitorTimeZone,
+      engagement,
       consent: formData.get("consent") === "on",
       website: formData.get("website"),
     };
@@ -403,6 +414,16 @@ export function DiscoveryForm() {
           />
         ) : null}
       </fieldset>
+
+      {engagement === "working-session" ? (
+        <p className="border-l-2 border-signal bg-secondary/50 px-4 py-3 text-sm leading-6 text-muted-foreground">
+          <span className="font-semibold text-foreground">
+            Asking about a 90-minute working session.
+          </span>{" "}
+          Book the 30-minute call below and we will confirm whether one bounded
+          decision is the right scope.
+        </p>
+      ) : null}
 
       <fieldset>
         <legend className="consulting-display text-2xl">About you</legend>

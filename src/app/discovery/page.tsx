@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Clock3, MailCheck, ShieldCheck } from "lucide-react";
 import { DiscoveryForm } from "@/components/consulting/discovery-form";
+import { parseEngagement } from "@/lib/discovery-engagement";
 import {
   ConsultingFooter,
   ConsultingHeader,
@@ -19,7 +20,16 @@ const fitSignals = [
   "You need a clear path and independent judgment, not another tool pitch.",
 ];
 
-export default function DiscoveryPage() {
+export default async function DiscoveryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ engagement?: string | string[] }>;
+}) {
+  const params = await searchParams;
+  const engagement = parseEngagement(
+    Array.isArray(params.engagement) ? params.engagement[0] : params.engagement
+  );
+
   return (
     <div className="consulting-shell min-h-screen bg-background text-foreground">
       <ConsultingHeader />
@@ -48,7 +58,7 @@ export default function DiscoveryPage() {
         <section className="consulting-section">
           <div className="consulting-container grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
             <div className="min-w-0 border border-border bg-card p-6 md:p-10 lg:order-2">
-              <DiscoveryForm />
+              <DiscoveryForm engagement={engagement} />
             </div>
 
             <aside className="min-w-0 lg:order-1 lg:sticky lg:top-28 lg:self-start">
