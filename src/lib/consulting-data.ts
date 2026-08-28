@@ -380,3 +380,158 @@ export const faqs = [
       "A mutual NDA is available on request. Engagement boundaries, data access, model usage, IP ownership, and retention expectations are agreed before sensitive material is shared.",
   },
 ];
+
+/**
+ * Homepage content model.
+ *
+ * The homepage answers one buyer's six questions and offers one door. Everything
+ * below is rendered on `/`; everything else in this file now lives on /services,
+ * /work, or /about. Adding a second featured offer here is the change that
+ * quietly undoes the simplification — put it on /services instead.
+ *
+ * No price appears in this object by design. The bands in
+ * `src/lib/signal-room/offers.ts` are internal planning defaults derived from
+ * reasoning, not market data, and stay private until three real pricing
+ * conversations have happened.
+ */
+export const homeHero = {
+  eyebrow: "AI architecture for funded startups",
+  headline: "Your AI works.",
+  headlineAccent: "Now make sure it survives production.",
+  supporting:
+    "A one-week architecture review for AI teams facing inference cost, latency, provider, or capacity decisions in the next 90 days.",
+  ctaLabel: "Bring me your inference bottleneck",
+  ctaHref: "/discovery",
+  trustLine:
+    "Senior AI Solution Architect supporting Microsoft for Startups globally via Accenture. Independent practice; no employer endorsement implied.",
+};
+
+/**
+ * Diagnostic, not demographic. Each symptom is a question the visitor can answer
+ * about their own system in a few seconds — never a claim about what "most"
+ * Series B teams do, which is a market assertion there is no evidence for.
+ */
+export const fitSymptoms = [
+  {
+    number: "01",
+    title: "Cost is moving faster than usage",
+    body:
+      "You cannot explain cost per successful request, or predict what scale does to margin.",
+  },
+  {
+    number: "02",
+    title: "Latency has no accountable budget",
+    body:
+      "Retrieval, guardrails, model calls, and post-processing all consume time, but no owner can show where it goes.",
+  },
+  {
+    number: "03",
+    title: "One provider decision can stop the product",
+    body:
+      "Quota, model availability, deprecation, or regional failure has no evaluated escape path.",
+  },
+];
+
+/** The one-week Review, as rendered on the homepage. */
+export const featuredOffer = {
+  name: "Inference Readiness Review",
+  duration: "One week · fixed scope",
+  subheading:
+    "One week to turn an exposed inference path into explicit decisions your team can own.",
+  deliverables: [
+    "Quota and provider risk map with named single points of failure",
+    "Model-substitution matrix and required evaluation evidence",
+    "Latency budget decomposed by hop",
+    "Cold-start and fallback strategy",
+    "Provider portfolio recommendation",
+    "90-day sequence with owners and decision gates",
+  ],
+  boundary:
+    "Not a code audit, security review, implementation retainer, or vendor pitch.",
+  ctaLabel: "Explore fit for the Review",
+};
+
+/** What the week actually consists of, in the team's language rather than mine. */
+export const reviewWeek = [
+  {
+    number: "01",
+    title: "Map the live path",
+    body: "Workloads, models, providers, dependencies, traffic, and SLOs.",
+  },
+  {
+    number: "02",
+    title: "Measure the failure surface",
+    body:
+      "Cost, TTFT and latency, cold starts, quota, concentration, and fallback gaps.",
+  },
+  {
+    number: "03",
+    title: "Make the decisions explicit",
+    body: "Viable substitutions, evidence needed, trade-offs, and ownership.",
+  },
+  {
+    number: "04",
+    title: "Leave the team a sequence",
+    body: "A 90-day plan with decision gates, not a backlog-shaped wishlist.",
+  },
+];
+
+/**
+ * The lower rung. Deliberately one bounded decision, not a compressed Review:
+ * it must never include the risk map, substitution matrix, latency
+ * decomposition, and 90-day plan, or it cannibalizes the offer above it.
+ *
+ * Described as "paid" without a figure. The $500-750 band is unvalidated.
+ */
+export const workingSession = {
+  eyebrow: "One decision, before a full Review",
+  title: "Not ready for a one-week engagement?",
+  body:
+    "Use a paid 90-minute inference working session to resolve one bounded decision and identify the next test.",
+  outputs: [
+    "One clearly framed inference decision",
+    "Options and explicit trade-offs",
+    "The next measurement or experiment",
+    "A short written decision note after the call",
+  ],
+  ctaLabel: "Ask about a working session",
+  ctaHref: "/discovery?engagement=working-session",
+};
+
+/**
+ * Only claims already supported elsewhere in this file or by the existing case
+ * studies. "60+" and "since 2022" both trace to `careerSignals`.
+ */
+export const credibility = {
+  eyebrow: "Why me",
+  title: "Production AI judgment, independently held.",
+  facts: [
+    "Building production AI systems since 2022",
+    "More than 60 founding teams advised",
+    "Senior AI Solution Architect supporting Microsoft for Startups via Accenture",
+    "Based in Costa Rica, working globally in English",
+    "One active sprint at a time",
+  ],
+  firewall:
+    "My independent work uses only public information and information a client explicitly provides for its engagement. No confidential Microsoft, Accenture, or other client information is used or disclosed.",
+  conflictReview:
+    "Current independent work is limited to non-conflicting engagements and does not imply endorsement by Microsoft, Accenture, or any current or former employer.",
+};
+
+/**
+ * The honest gap. The featured offer has no completed engagement behind it yet,
+ * and a sophisticated buyer will notice before we do. Naming it costs one
+ * sentence and buys the credibility that an overclaim would spend.
+ *
+ * Delete this line when the first Review ships and becomes `proof[2]`.
+ */
+export const proofCaveat =
+  "These engagements demonstrate the architecture method; the first dedicated Inference Readiness Review will become the direct case study for this offer.";
+
+export const finalCta = {
+  eyebrow: "30-minute technical conversation",
+  title: "Bring the inference decision your team cannot leave implicit.",
+  body:
+    "In 30 minutes, we will clarify the constraint, whether the Review fits, and the next responsible step — even when that step is not hiring me.",
+  ctaLabel: "Start a technical conversation",
+};
