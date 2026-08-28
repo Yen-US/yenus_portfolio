@@ -3,12 +3,15 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { consultant } from "@/lib/consulting-data";
 
+/**
+ * Real routes, not in-page anchors. The homepage no longer renders a section
+ * per nav item, so anchors would scroll to nothing.
+ */
 const navigation = [
-  { href: "/#work", label: "Work" },
-  { href: "/#services", label: "Services" },
-  { href: "/#approach", label: "Approach" },
-  { href: "/#perspective", label: "Perspective" },
-  { href: "/#about", label: "About" },
+  { href: "/#review", label: "The Review" },
+  { href: "/services", label: "Services" },
+  { href: "/work", label: "Work" },
+  { href: "/about", label: "About" },
 ];
 
 export function ConsultingHeader() {
@@ -58,7 +61,7 @@ export function ConsultingHeader() {
           href="/discovery"
           className="focus-ring group inline-flex min-h-10 items-center justify-center gap-2 rounded-sm bg-foreground px-4 text-sm font-semibold text-background transition-colors hover:bg-signal"
         >
-          <span className="hidden sm:inline">Discuss your initiative</span>
+          <span className="hidden sm:inline">Book a discovery call</span>
           <span className="sm:hidden">Discovery</span>
           <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </Link>
