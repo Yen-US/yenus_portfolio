@@ -167,7 +167,9 @@ create table if not exists public.signal_content_metrics (
 	id uuid primary key default gen_random_uuid(),
 	post_id uuid not null references public.signal_content_posts (id) on delete cascade,
 	observed_at timestamptz not null default now(),
-	window text not null check (window in ('24h', '7d', '30d', 'custom')),
+	-- Quoted: `window` is a reserved word in Postgres (window functions), and
+	-- unquoted it is a syntax error rather than a warning.
+	"window" text not null check ("window" in ('24h', '7d', '30d', 'custom')),
 	source text not null default 'manual'
 		check (source in ('manual', 'linkedin_export', 'composio', 'public_page')),
 	impressions integer check (impressions >= 0),
@@ -183,7 +185,7 @@ create table if not exists public.signal_content_metrics (
 	notes text not null default '',
 	-- One canonical reading per post/window/source; revisions replace it rather
 	-- than accumulating into a double-counted total.
-	unique (post_id, window, source),
+	unique (post_id, "window", source),
 	created_at timestamptz not null default now(),
 	updated_at timestamptz not null default now()
 );
