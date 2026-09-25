@@ -7,6 +7,7 @@ import {
   Download,
   FilePenLine,
   Image as ImageIcon,
+  Plus,
   RefreshCw,
   Save,
   Sparkles,
@@ -104,7 +105,12 @@ export function PostLabPanel({
       <PanelHeading
         eyebrow="LinkedIn authority"
         title="Post Lab"
-        action={<StatusBadge tone="good">Next: {recommendedPillar}</StatusBadge>}
+        action={
+          <div className="flex items-center gap-2">
+            <StatusBadge tone="good">Next: {recommendedPillar}</StatusBadge>
+            <NewDraftButton mode={mode} pillar={recommendedPillar} onCreated={upsertPost} />
+          </div>
+        }
       />
 
       <div className="mt-7 grid gap-7 2xl:grid-cols-[280px_minmax(0,1fr)_360px]">
@@ -126,7 +132,7 @@ export function PostLabPanel({
               </button>
             ))}
             {posts.length === 0 ? (
-              <p className="border-b border-border px-3 py-8 text-sm text-muted-foreground">No drafts yet.</p>
+              <p className="border-b border-border px-3 py-8 text-sm text-muted-foreground">No drafts yet. Write one, or generate.</p>
             ) : null}
           </div>
 
@@ -146,7 +152,7 @@ export function PostLabPanel({
             <PostEditor key={selected.id} post={selected} mode={mode} onChange={upsertPost} />
           ) : (
             <div className="grid min-h-96 place-items-center border border-dashed border-border text-center">
-              <div><FilePenLine className="mx-auto h-6 w-6 text-signal" /><p className="mt-4 text-sm font-semibold">Generate the first substantive draft</p></div>
+              <div><FilePenLine className="mx-auto h-6 w-6 text-signal" /><p className="mt-4 text-sm font-semibold">Write the first draft, or generate one</p></div>
             </div>
           )}
         </main>
@@ -159,6 +165,73 @@ export function PostLabPanel({
         />
       </div>
     </div>
+  );
+}
+
+/**
+ * An empty draft the operator fills in.
+ *
+ * The generator is four model passes and a couple of minutes; that is the
+ * wrong tool for text already written elsewhere. This inserts a blank row and
+ * selects it, so Post Lab can hold a post that no model touched — the rubric
+ * in the editor then judges it exactly like any generated draft.
+ */
+function NewDraftButton({
+  mode,
+  pillar,
+  onCreated,
+}: {
+  mode: "supabase" | "demo";
+  pillar: PostPillar;
+  onCreated: (post: PostDraft) => void;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  function create() {
+    startTransition(async () => {
+      const now = new Date().toISOString();
+      const blank = {
+        title: "Untitled draft",
+        pillar,
+        status: "draft" as PostStatus,
+        format: "Single argument" as PostFormat,
+        hook: "",
+        draft: "",
+        takeaway: "",
+        accountIds: [],
+        outline: [],
+        evidence: [],
+      };
+      try {
+        if (mode === "supabase") {
+          const result = await apiJson<{ post: PostDraft }>("/api/signal-room/posts", {
+            method: "POST",
+            body: JSON.stringify(blank),
+          });
+          onCreated(result.post);
+        } else {
+          onCreated({
+            ...blank,
+            id: `demo-${crypto.randomUUID()}`,
+            quality: null,
+            artifacts: null,
+            critique: null,
+            createdAt: now,
+            updatedAt: now,
+          });
+        }
+      } catch {
+        // Surfaced by the editor on the next save rather than a banner here;
+        // a failed insert leaves the list exactly as it was.
+      }
+    });
+  }
+
+  return (
+    <StudioButton variant="secondary" onClick={create} loading={isPending}>
+      <Plus className="h-4 w-4" />
+      New draft
+    </StudioButton>
   );
 }
 
