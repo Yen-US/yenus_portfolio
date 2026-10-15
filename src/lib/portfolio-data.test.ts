@@ -50,6 +50,8 @@ describe("portfolio copy", () => {
   it("publishes no unsupported counts or outcomes", () => {
     const joined = strings.join("\n");
     expect(joined).not.toMatch(/60\+|sixty|zero downtime|0 min|testimonial/i);
+    // Client descriptor withheld until approved.
+    expect(joined).not.toMatch(/\bYC\b|Y Combinator/);
   });
 });
 

@@ -342,6 +342,10 @@
     outline: 3px solid var(--st-yellow);
     outline-offset: 3px;
   }
+  /* On the yellow timetable strip the ring switches to ink to stay visible. */
+  .st-strip .station-focus:focus-visible {
+    outline-color: var(--st-yellow-ink);
+  }
 
   .station-link {
     text-decoration: underline;
@@ -480,15 +484,7 @@
     color: var(--st-paper);
   }
 
-  .flapchip::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(50% - 0.5px);
-    height: 1px;
-    background: var(--st-seam);
-  }
+  /* No hinge seam at chip scale: across 13px capitals it reads as strikethrough. */
 
   /* ---- Buttons ---------------------------------------------------------- */
 

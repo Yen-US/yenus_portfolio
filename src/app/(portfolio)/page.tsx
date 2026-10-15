@@ -86,11 +86,18 @@ function Hero() {
             {heroLine}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          {/* The printed timetable strip: every recruiter action in one place. */}
+          <div className="st-strip mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 bg-[var(--st-yellow)] p-3 text-[var(--st-yellow-ink)] sm:p-4">
             <DownloadCvButton />
-            <a href={`mailto:${person.email}`} className="st-btn st-btn-secondary station-focus">
+            <Link href="/cv" className="st-btn st-btn-dark station-focus">
+              View CV
+            </Link>
+            <a
+              href={`mailto:${person.email}`}
+              className="station-focus station-link inline-flex items-center gap-2 font-semibold"
+            >
               <Mail aria-hidden="true" className="h-4 w-4" strokeWidth={2.25} />
-              Email me
+              {person.email}
             </a>
           </div>
         </div>
@@ -122,9 +129,9 @@ function SectionTitle({ id, children }: { id: string; children: React.ReactNode 
   );
 }
 
-function StackLine({ items, dark = false }: { items: string[]; dark?: boolean }) {
+function StackLine({ items }: { items: string[] }) {
   return (
-    <p className={`mt-6 text-sm font-semibold ${dark ? "text-[var(--st-yellow-ink)]/75" : "text-[var(--st-muted)]"}`}>
+    <p className="text-sm font-semibold text-[var(--st-muted)]">
       <span className="sr-only">Stack: </span>
       {items.join(" / ")}
     </p>
@@ -165,119 +172,78 @@ function SelectedWork() {
                 </li>
               ))}
             </ul>
-            <StackLine items={leadProject.stack} />
+            <div className="mt-6">
+              <StackLine items={leadProject.stack} />
+            </div>
           </div>
         </article>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-12">
-          <ProjectPoster project={projects[0]} />
-          <ProjectShot project={projects[1]} />
-          <ProjectNote project={projects[2]} />
-        </div>
+        {/* The rest stay spine-out: ruled rows, ranked below the face-out lead. */}
+        <ol aria-label="More projects" className="mt-4 bg-[var(--st-housing)]">
+          {projects.map((project) => (
+            <ProjectSpine key={project.id} project={project} />
+          ))}
+        </ol>
       </div>
     </section>
   );
 }
 
-/** AOP Beacon: printed yellow poster, the most architecture-dense project. */
-function ProjectPoster({ project }: { project: Project }) {
+function ProjectSpine({ project }: { project: Project }) {
   return (
-    <article
+    <li
       aria-labelledby={`${project.id}-title`}
-      className="flex flex-col bg-[var(--st-yellow)] p-6 text-[var(--st-yellow-ink)] md:p-8 lg:col-span-5 lg:row-span-2"
-    >
-      <p className="text-sm font-semibold">{project.role}</p>
-      <h3 id={`${project.id}-title`} className="station-display mt-3 text-6xl font-black leading-[0.85] md:text-7xl">
-        {project.name}
-      </h3>
-      <p className="mt-6 text-lg font-semibold leading-7">{project.summary}</p>
-      <ul className="mt-6 grid gap-4 border-t-2 border-[var(--st-yellow-ink)] pt-6">
-        {project.points.map((point) => (
-          <li key={point} className="leading-7">{point}</li>
-        ))}
-      </ul>
-      <div className="mt-auto pt-8">
-        <StackLine items={project.stack} dark />
-        {project.link && (
-          <a
-            href={project.link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="st-btn st-btn-dark station-focus mt-5"
-          >
-            {project.link.label}
-            <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-          </a>
-        )}
-      </div>
-    </article>
-  );
-}
-
-function ProjectShot({ project }: { project: Project }) {
-  return (
-    <article
-      aria-labelledby={`${project.id}-title`}
-      className="grid bg-[var(--st-housing)] lg:col-span-7"
-    >
-      {project.image && (
-        <div className="relative aspect-[16/9] overflow-hidden bg-[var(--st-tile)]">
-          <Image
-            src={project.image.src}
-            alt={project.image.alt}
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover object-top"
-          />
-        </div>
-      )}
-      <div className="grid gap-4 p-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:p-8">
-        <div>
-          <p className="text-sm font-semibold text-[var(--st-yellow)]">{project.role}</p>
-          <h3 id={`${project.id}-title`} className="station-display mt-2 text-4xl font-extrabold leading-none">
-            {project.name}
-          </h3>
-          <p className="mt-4 max-w-prose leading-7 text-[var(--st-paper)]">{project.summary}</p>
-          {project.points.map((point) => (
-            <p key={point} className="mt-2 max-w-prose leading-7 text-[var(--st-muted)]">{point}</p>
-          ))}
-        </div>
-        {project.link && (
-          <a
-            href={project.link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="station-focus station-link inline-flex items-center gap-1 font-semibold text-[var(--st-paper)]"
-          >
-            {project.link.label}
-            <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-          </a>
-        )}
-      </div>
-    </article>
-  );
-}
-
-function ProjectNote({ project }: { project: Project }) {
-  return (
-    <article
-      aria-labelledby={`${project.id}-title`}
-      className="grid gap-3 border-2 border-[var(--st-tile)] p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:gap-8 md:p-8 lg:col-span-7"
+      className="grid gap-5 border-t border-[var(--st-line)] p-5 first:border-t-0 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.5fr)_minmax(0,0.9fr)] md:gap-8 md:p-8"
     >
       <div>
-        <p className="text-sm font-semibold text-[var(--st-yellow)]">{project.role}</p>
-        <h3 id={`${project.id}-title`} className="station-display mt-2 text-3xl font-extrabold leading-none">
+        <h3
+          id={`${project.id}-title`}
+          className="station-display text-3xl font-extrabold leading-[0.95] text-[var(--st-yellow)] md:text-4xl"
+        >
           {project.name}
         </h3>
+        <p className="mt-2 text-sm text-[var(--st-muted)]">{project.role}</p>
       </div>
       <div>
-        <p className="leading-7 text-[var(--st-paper)]">{project.summary}</p>
-        <StackLine items={project.stack} />
+        <p className="max-w-prose text-lg leading-7 text-[var(--st-paper)]">{project.summary}</p>
+        {project.points.length > 0 && (
+          <ul className="mt-4 grid max-w-prose gap-2 leading-7 text-[var(--st-muted)]">
+            {project.points.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
+          </ul>
+        )}
       </div>
-    </article>
+      <div className="flex flex-col gap-4">
+        {project.image && (
+          <div className="relative aspect-[16/10] overflow-hidden bg-[var(--st-tile)]">
+            <Image
+              src={project.image.src}
+              alt={project.image.alt}
+              fill
+              sizes="(min-width: 768px) 22vw, 100vw"
+              className="object-cover object-top"
+            />
+          </div>
+        )}
+        <StackLine items={project.stack} />
+        {project.link && (
+          <a
+            href={project.link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="station-focus station-link inline-flex items-center gap-1 self-start font-semibold text-[var(--st-paper)]"
+          >
+            {project.link.label}
+            <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+          </a>
+        )}
+      </div>
+    </li>
   );
 }
 
+/** The rules as a departures listing: ruled rows, rule left, reason right. */
 function Approach() {
   return (
     <section
@@ -285,20 +251,21 @@ function Approach() {
       aria-labelledby="approach-title"
       className="scroll-mt-20 border-y border-[var(--st-line)] bg-[var(--st-housing)] py-20 md:py-28"
     >
-      <div className="station-wrap grid gap-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <SectionTitle id="approach-title">How I make architecture calls</SectionTitle>
-          <p className="mt-6 max-w-md text-lg leading-8 text-[var(--st-muted)]">
-            The rules I bring to every system, whether I am advising a startup team or running my own product.
-          </p>
-        </div>
-        <ol className="grid gap-10 md:gap-12">
+      <div className="station-wrap">
+        <SectionTitle id="approach-title">How I make architecture calls</SectionTitle>
+        <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--st-muted)]">
+          The rules I bring to every system, whether I am advising a startup team or running my own product.
+        </p>
+        <ol className="mt-12 border-t-[3px] border-[var(--st-paper)]">
           {principles.map((item) => (
-            <li key={item.title}>
-              <h3 className="station-display text-[clamp(2.25rem,4.6vw,3.75rem)] font-extrabold leading-[0.95] text-[var(--st-paper)]">
+            <li
+              key={item.title}
+              className="grid gap-2 border-b border-[var(--st-line)] py-6 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:items-baseline md:gap-12 md:py-8"
+            >
+              <h3 className="station-display text-[clamp(2rem,4vw,3.25rem)] font-extrabold leading-[0.95] text-[var(--st-paper)]">
                 {item.title}
               </h3>
-              <p className="mt-3 max-w-xl text-lg leading-8 text-[var(--st-muted)]">{item.body}</p>
+              <p className="max-w-xl text-lg leading-8 text-[var(--st-muted)]">{item.body}</p>
             </li>
           ))}
         </ol>

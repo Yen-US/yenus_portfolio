@@ -10,6 +10,8 @@
  * - Employment dates confirmed by Yenson on 2026-10-15: Microsoft (via
  *   Accenture) ended Oct 2026, Wind River ended Jun 2026. The supplied CV
  *   listed both as "Present". No current-employment claim is made for either.
+ * - The migration client's funding descriptor ("YC-backed") is withheld until
+ *   Yenson approves publishing it; the client stays anonymous either way.
  * - Typographic dashes are written as plain hyphens to match the site's copy rules.
  */
 
@@ -115,7 +117,7 @@ export const leadProject = {
   name: "Vercel + GCP to Azure migration",
   route: ["VERCEL + GCP", "TO AZURE", "IN 1 WEEK"],
   context:
-    "A full production migration for a Y Combinator-backed startup, delivered in one week as part of my Microsoft for Startups advisory work. The client stays anonymous.",
+    "A full production migration for a startup, delivered in one week as part of my Microsoft for Startups advisory work. The client stays anonymous.",
   points: [
     "One target architecture with acceptance gates per subsystem, then a single cutover, instead of carrying two platforms for months.",
     "Agent-assisted execution with Claude Code and MCP, run with the startup's own engineers so they owned the result.",
@@ -263,7 +265,7 @@ export const keywords = [
 export const cvProjects = [
   {
     name: "Full Vercel + GCP to Azure Migration",
-    body: "Led a 1-week migration for a YC-backed startup, utilizing Claude Code and MCP for seamless transition.",
+    body: "Led a 1-week migration for a startup, utilizing Claude Code and MCP for seamless transition.",
     stack: "Azure, Claude Code, MCP, Azure Agent Dev Kit",
   },
   {

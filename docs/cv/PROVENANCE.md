@@ -17,6 +17,7 @@ supplied file itself.
 | Microsoft (via Accenture) dates | May 2024 - Present | May 2024 - Oct 2026 | Confirmed by Yenson, 2026-10-15 (role ended 4 Oct 2026) |
 | Wind River dates | Oct 2024 - Present | Oct 2024 - Jun 2026 | Confirmed by Yenson, 2026-10-15 |
 | Summary | "AI advisor for Microsoft for Startups, leading..." | "Former AI advisor for Microsoft for Startups (via Accenture), where I led..." | Follows from the confirmed end date |
+| Migration project client | "a YC-backed startup" | "a startup" | Funding descriptor withheld until Yenson approves publishing it |
 | Dashes and contact layout | Typographic dashes, one contact line | Plain hyphens, two contact lines | Formatting only |
 
 Everything else (competencies, bullet text, projects, certifications, education, keywords) is carried over
