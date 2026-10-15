@@ -1,0 +1,47 @@
+{
+  "title": "Choose the visual world for yenus.dev /",
+  "question": "The roll assigned the Split-Flap Departures Board. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Split-Flap Departures Board",
+      "kicker": "THE ROLL",
+      "lineage": "Solari split-flap boards and printed rail departure timetables",
+      "thesis": "A career read like a station board: one glance tells you the role, where he has been, and how to reach him.",
+      "palette": ["#0b0b0c", "#1a1a1c", "#f2f0ea", "#ffc919", "#ff5b1f"],
+      "materials": ["split-flap tiles with a hinge seam", "printed yellow timetable poster", "enamel station signage"],
+      "viewport": "Black board housing full-bleed; the name and role flip in on flaps at monumental scale; a yellow timetable strip below carries the CV download and email as the primary actions.",
+      "risk": "Becomes a gimmick if long-form copy is forced onto flaps; prose must live on the printed timetable sheets.",
+      "raised": [
+        {"from": "challenger-anime-wall", "raise": "Signal orange is reserved for one state only: the live action (CV/contact)."},
+        {"from": "challenger-pulp-rack", "raise": "Selected work: one lead project turns face-out full width, the rest stay as spines."},
+        {"from": "challenger-seven-segment", "raise": "Unlit ghost flaps are drawn, not empty space."},
+        {"from": "challenger-plankton", "raise": "The board is still at rest; motion only fires on arrival."},
+        {"from": "challenger-papercut", "raise": "Depth by flat overlap only: no drop shadows, no gradients."},
+        {"from": "challenger-zine", "raise": "The server-rendered state is the animation's end state; reduced motion shows it directly."}
+      ],
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-seven-segment-alarm-clock-hero.webp"
+    },
+    {
+      "id": "model-pick",
+      "label": "Trace Waterfall",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "OpenTelemetry span waterfalls",
+      "thesis": "Career and projects as spans on one timeline, each expandable to its decision.",
+      "palette": ["#0d1117", "#e6edf3", "#7ee787", "#ffa657"],
+      "materials": ["span bars", "monospace attributes"],
+      "viewport": "A root span named for the role; child spans for each employer stretch across a time axis.",
+      "risk": "Familiar developer-tool look; drifts toward the generic dashboard the founder dislikes."
+    },
+    {"id": "challenger-anime-wall", "label": "Mecha Crisis Wall", "verdict": "declined", "lineage": "90s anime command centres", "palette": ["#000000", "#ff7a00", "#9cff2e"], "materials": ["phosphor type", "hazard chevrons"], "case": "Fuses poorly: alarm framing misreads a calm architect for recruiters.", "kept": "One reserved alert colour."},
+    {"id": "challenger-pulp-rack", "label": "Pulp Paperback Rack", "verdict": "declined", "lineage": "drugstore wire racks", "palette": ["#1b2a52", "#ffd400", "#d0202e"], "materials": ["painted covers"], "case": "Fuses poorly: lurid covers undercut credibility.", "kept": "Face-out promotion of the lead item."},
+    {"id": "challenger-zine", "label": "Hand-drawn Zine", "verdict": "declined", "lineage": "marker zines", "palette": ["#f6efdc", "#111111", "#ffe14d"], "materials": ["marker", "highlighter"], "case": "Fuses poorly: cream paper is on the founder's no-list.", "kept": "Reduced motion renders the finished state."},
+    {"id": "challenger-seven-segment", "label": "Seven-Segment Displays", "verdict": "declined", "lineage": "LED clocks and price totems", "palette": ["#0a0a0a", "#ff2a1a"], "materials": ["LED segments"], "case": "Near-duplicate of the assigned signage family with lower text range.", "kept": "Ghost cells are designed."},
+    {"id": "challenger-plankton", "label": "Bioluminescent Wake", "verdict": "declined", "lineage": "night-sea plankton", "palette": ["#02040a", "#2fd6ff"], "materials": ["GPU particles"], "case": "Fuses poorly: the dark-plus-neon AI rut.", "kept": "Stillness at rest."},
+    {"id": "challenger-papercut", "label": "Layered Papercut", "verdict": "declined", "lineage": "Łowicz wycinanki", "palette": ["#e2231a", "#0a8f3c", "#ffd200"], "materials": ["flat cut paper"], "case": "Fuses poorly: folk ornament has no tie to the subject.", "kept": "Depth by overlap, never tone."}
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "canon": true,
+  "canonCard": {"label": "The category standard", "thesis": "A clean developer portfolio: hero, projects grid, experience timeline.", "palette": ["#ffffff", "#0f172a", "#2563eb"], "materials": ["clean grid", "screenshots"], "viewport": "Name, role, two buttons, portrait.", "risk": "Indistinguishable from every other portfolio by design."},
+  "steer": true
+}

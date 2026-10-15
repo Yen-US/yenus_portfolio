@@ -24,7 +24,7 @@ ${profile.headline}
 - ICP: ${profile.icp}
 
 ## Current focus
-- Senior AI Solution Architect at Microsoft (via Accenture) — sole AI advisor for Microsoft for Startups across LATAM
+- Former Senior AI Solution Architect at Microsoft (via Accenture), May 2024 – Oct 2026 — sole AI advisor for Microsoft for Startups across LATAM
 - Shipping production AI since October 2022 — joined OneReach.ai one month before ChatGPT launched. An early adopter who became a domain expert before the broader field caught up.
 - Founder of Presencia Studio (presencia.studio) — end-to-end brand experience studio (NFC cards, smart objects, custom brand activations, digital profiles, landing pages, loyalty systems, monthly plans). Also the vehicle for outside advisory engagements.
 - Open: ${profile.status}

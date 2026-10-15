@@ -282,3 +282,288 @@
     }
   }
 }
+
+/*
+ * Station: the recruiter portfolio at `/` and `/cv`.
+ * A departures-board world: board-black housing, split-flap tiles, printed
+ * timetable yellow, and one reserved signal orange for the CV action.
+ * Depth comes from flat overlap only; no shadows, no gradients.
+ */
+@layer components {
+  .station {
+    --st-ink: #0c0c0d;
+    --st-housing: #141416;
+    --st-tile: #1f1f22;
+    --st-tile-top: #26262a;
+    --st-ghost: #18181a;
+    --st-seam: #0a0a0b;
+    --st-line: #2c2c31;
+    --st-paper: #f1f0ec;
+    --st-muted: #a6a6ad;
+    --st-yellow: #ffc61a;
+    --st-yellow-ink: #17140a;
+    --st-orange: #ff5a1f;
+    background: var(--st-ink);
+    color: var(--st-paper);
+    color-scheme: dark;
+    font-family: var(--font-station-body), ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "tnum";
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .station ::selection {
+    background: var(--st-yellow);
+    color: var(--st-yellow-ink);
+  }
+
+  .station-display {
+    font-family: var(--font-station-display), ui-sans-serif, system-ui, sans-serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+  }
+
+  .station-wrap {
+    width: min(100% - 2rem, 84rem);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .station-wrap {
+      width: min(100% - 4rem, 84rem);
+    }
+  }
+
+  .station-focus {
+    outline: none;
+  }
+  .station-focus:focus-visible {
+    outline: 3px solid var(--st-yellow);
+    outline-offset: 3px;
+  }
+
+  .station-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+    transition: text-decoration-color 160ms ease;
+  }
+  .station-link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* ---- Split-flap board ------------------------------------------------ */
+
+  .flapboard {
+    container-type: inline-size;
+    background: var(--st-housing);
+    padding: clamp(0.5rem, 1.6cqw, 1rem);
+  }
+
+  .flaprow {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: clamp(2px, 0.45cqw, 5px);
+  }
+
+  .flaprow + .flaprow {
+    margin-top: clamp(3px, 0.7cqw, 8px);
+  }
+
+  .flap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 0.74;
+    overflow: hidden;
+    background: var(--st-tile);
+    border-radius: 2px;
+    color: var(--st-paper);
+    font-family: var(--font-station-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 800;
+    font-size: calc(100cqw / var(--cols) * 1.02);
+    line-height: 1;
+  }
+
+  .flap[data-tone="yellow"] {
+    color: var(--st-yellow);
+  }
+
+  .flap[data-ghost] {
+    background: var(--st-ghost);
+  }
+
+  /* The upper leaf sits a shade lighter than the lower, like a real flap. */
+  .flap::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 50% 0;
+    background: var(--st-tile-top);
+    opacity: 0.32;
+    pointer-events: none;
+  }
+
+  .flap[data-ghost]::before {
+    opacity: 0.12;
+  }
+
+  /* The hinge seam. */
+  .flap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% - 1px);
+    height: 2px;
+    background: var(--st-seam);
+    pointer-events: none;
+  }
+
+  .flap-char {
+    display: block;
+  }
+
+  .flap-leaf {
+    position: absolute;
+    inset: 0 0 50% 0;
+    background: var(--st-tile-top);
+    transform-origin: 50% 100%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /*
+   * Arrival: each tile's upper leaf flutters a few times over a character that
+   * is already painted. The text never waits on an animation: it is in the
+   * server HTML at full opacity from the first frame, and the leaf has no fill,
+   * so it exists only while it is moving. No JS, no animation support, or
+   * reduced motion all show the same final board.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .flapboard[data-animate] .flap:not([data-ghost]) .flap-leaf {
+      animation: flap-flutter 90ms linear var(--flips, 3) none;
+      animation-delay: var(--delay, 0ms);
+    }
+  }
+
+  /* 2D only: seen head-on, a falling flap is a vertical squash onto the hinge. */
+  /* Translucent, so a glyph under a moving leaf stays legible mid-flutter. */
+  @keyframes flap-flutter {
+    0% {
+      opacity: 0.55;
+      transform: scaleY(1);
+    }
+    100% {
+      opacity: 0.55;
+      transform: scaleY(0);
+    }
+  }
+
+  /* ---- Flap chips (skills) -------------------------------------------- */
+
+  .flapchip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--st-tile);
+    border-radius: 2px;
+    font-family: var(--font-station-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--st-paper);
+  }
+
+  .flapchip::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% - 0.5px);
+    height: 1px;
+    background: var(--st-seam);
+  }
+
+  /* ---- Buttons ---------------------------------------------------------- */
+
+  .st-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding-inline: 1.25rem;
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    transition: background-color 160ms ease, color 160ms ease, transform 120ms ease;
+  }
+  .st-btn:active {
+    transform: translateY(1px);
+  }
+
+  .st-btn-primary {
+    background: var(--st-orange);
+    color: #120804;
+  }
+  .st-btn-primary:hover {
+    background: var(--st-paper);
+  }
+
+  .st-btn-secondary {
+    background: transparent;
+    color: var(--st-paper);
+    box-shadow: inset 0 0 0 1.5px var(--st-paper);
+  }
+  .st-btn-secondary:hover {
+    background: var(--st-paper);
+    color: var(--st-ink);
+  }
+
+  .st-btn-dark {
+    background: var(--st-yellow-ink);
+    color: var(--st-yellow);
+  }
+  .st-btn-dark:hover {
+    background: var(--st-ink);
+    color: var(--st-paper);
+  }
+
+  /* ---- Mobile nav (works without JS) ---------------------------------- */
+
+  .st-menu > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .st-menu > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* ---- CV sheet ---------------------------------------------------------- */
+
+  .cv-sheet {
+    background: var(--st-paper);
+    color: #141416;
+  }
+
+  @media print {
+    .station {
+      background: #fff;
+      color: #000;
+    }
+    .station-noprint {
+      display: none !important;
+    }
+    .cv-sheet {
+      background: #fff;
+      padding: 0 !important;
+    }
+  }
+}

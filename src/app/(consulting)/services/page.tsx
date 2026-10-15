@@ -13,6 +13,7 @@ import {
 } from "@/components/consulting/site-chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Ways to Work Together",
   description:
     "The full set of engagement formats — from a 90-minute inference working session to the Inference Readiness Review, architecture and direction sprints, and fractional architecture support.",

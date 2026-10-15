@@ -167,7 +167,7 @@ export function HeroSection() {
               {/* Caption rail */}
               <div className="absolute inset-x-0 bottom-0 p-4">
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Currently
+                  Previously
                 </p>
                 <p className="mt-1 text-sm leading-snug text-foreground">
                   Senior AI Solution Architect

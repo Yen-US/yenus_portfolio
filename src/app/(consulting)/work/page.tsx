@@ -12,6 +12,7 @@ import {
 } from "@/components/consulting/site-chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/work" },
   title: "Startup Work",
   description:
     "Two engagements written as the decisions they actually were: a seven-day production migration with zero customer-visible downtime, and a guardrailed live-event AI system.",

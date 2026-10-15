@@ -1,10 +1,42 @@
 import type { Metadata } from "next";
 import { Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+
+/*
+ * Shared faces are not preloaded: the portfolio (`/`, `/cv`) never uses them,
+ * and a preload is fetched at high priority on every route whether or not the
+ * page paints with it. Pages that do use them still load them via CSS with
+ * `font-display: swap`. Same files and options the `geist` package ships, minus
+ * the preload.
+ */
+const GeistSans = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+  preload: false,
+});
+
+const GeistMono = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
+  adjustFontFallback: false,
+  fallback: [
+    "ui-monospace",
+    "SFMono-Regular",
+    "Roboto Mono",
+    "Menlo",
+    "Monaco",
+    "Liberation Mono",
+    "DejaVu Sans Mono",
+    "Courier New",
+    "monospace",
+  ],
+  weight: "100 900",
+  preload: false,
+});
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -12,6 +44,7 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -28,18 +61,25 @@ export const metadata: Metadata = {
     ],
   },
   title: {
-    default: "Yenson Umaña · AI Architecture for Startups",
+    default: "Yenson Umaña · Senior AI Solution Architect",
     template: "%s · Yenson Umaña",
   },
   description:
-    "AI strategy and production-ready architecture for early and growth-stage startups building in the new AI world.",
+    "Senior AI Solution Architect building production agentic AI systems and Azure migrations. Portfolio, experience, and CV.",
   openGraph: {
-    title: "Yenson Umaña · AI Architecture for Startups",
+    title: "Yenson Umaña · Senior AI Solution Architect",
     description:
-      "From AI ambition to production clarity for founders, CTOs, and lean startup teams.",
+      "Production agentic AI systems, Azure migrations, and architecture judgement. Portfolio and CV.",
     url: "https://yenus.dev",
     siteName: "Yenson Umaña",
     type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Yenson Umaña · Senior AI Solution Architect",
+    description:
+      "Production agentic AI systems, Azure migrations, and architecture judgement. Portfolio and CV.",
   },
 };
 

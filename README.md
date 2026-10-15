@@ -1,12 +1,15 @@
-# Yenson Umaña · AI Architecture for Startups
+# Yenson Umaña · Senior AI Solution Architect
 
-Personal-brand consulting site for Yenson Umaña, focused on helping early and growth-stage startups move from AI ambition to production clarity.
+Personal site for Yenson Umaña: a recruiter-facing portfolio and CV at `/`, and the independent consulting practice at `/consulting`.
 
 The previous career portfolio is preserved at `/career` and excluded from search indexing.
 
 ## Routes
 
-- `/` - Consulting homepage
+- `/` - Portfolio: selected work, approach, experience, skills, contact
+- `/cv` - Accessible HTML CV; the PDF download (`public/yenson-ai-resume.pdf`) is generated from the same data with `pnpm generate-public-cv` (see `docs/cv/PROVENANCE.md`)
+- `/consulting` - Consulting homepage (formerly `/`)
+- `/services`, `/work`, `/about` - Consulting sub-pages
 - `/discovery` - Qualified discovery call request
 - `/career` - Hidden archive of the previous portfolio
 - `/signal-room` - Unlinked startup research and LinkedIn content workspace
@@ -71,6 +74,7 @@ The route is obscured, not authenticated. Do not store sensitive information the
 
 ## Content
 
+- `src/lib/portfolio-data.ts` - Portfolio and CV copy; every claim traces to the CV or public repos
 - `src/lib/consulting-data.ts` - Consulting positioning, offers, proof, approach, and FAQs
 - `src/lib/resume-data.ts` - Archived career and portfolio content
 - `docs/plans/2026-07-27-ai-consulting-site-strategy.md` - Positioning and conversion decisions

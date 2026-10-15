@@ -10,7 +10,8 @@
     "generate-summaries": "tsx scripts/generate-summaries.ts",
     "generate-ai-resume": "tsx scripts/generate-ai-resume.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate-public-cv": "node scripts/generate-public-cv.mts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",

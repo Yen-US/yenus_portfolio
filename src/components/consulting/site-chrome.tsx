@@ -8,7 +8,7 @@ import { consultant } from "@/lib/consulting-data";
  * per nav item, so anchors would scroll to nothing.
  */
 const navigation = [
-  { href: "/#review", label: "The Review" },
+  { href: "/consulting#review", label: "The Review" },
   { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
@@ -19,9 +19,9 @@ export function ConsultingHeader() {
     <header className="consulting-header sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
       <div className="consulting-container flex h-[72px] items-center justify-between gap-6">
         <Link
-          href="/"
+          href="/consulting"
           className="focus-ring flex shrink-0 items-center gap-3 rounded-sm"
-          aria-label="Yenson Umaña, home"
+          aria-label="Yenson Umaña, consulting home"
         >
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-border bg-card p-1">
             <Image
@@ -92,6 +92,9 @@ export function ConsultingFooter() {
             ))}
             <Link href="/discovery" className="hover:text-signal">
               Discovery
+            </Link>
+            <Link href="/" className="hover:text-signal">
+              Portfolio and CV
             </Link>
           </nav>
         </div>

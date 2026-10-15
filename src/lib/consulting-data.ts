@@ -7,7 +7,7 @@ export const consultant = {
   linkedin: "https://www.linkedin.com/in/yenus/",
   github: "https://github.com/Yen-US",
   credential:
-    "Senior AI Solution Architect supporting Microsoft for Startups globally via Accenture.",
+    "Former Senior AI Solution Architect for Microsoft for Startups, via Accenture (May 2024 - Oct 2026).",
   availability:
     "One active architecture or direction sprint at a time, plus a small number of advisory relationships.",
 };
@@ -291,10 +291,10 @@ export const careerSignals = [
       "Owned roadmap, tooling, and architecture for Wind River's Engineering Excellence function before moving into full-stack platform engineering.",
   },
   {
-    year: "Today",
+    year: "2024-26",
     title: "Startup architecture at the decision table",
     body:
-      "Work with founders and lean engineering teams on AI architecture, agent systems, evaluation, and technical direction through Microsoft for Startups.",
+      "Worked with founders and lean engineering teams on AI architecture, agent systems, evaluation, and technical direction through Microsoft for Startups.",
   },
   {
     year: "Also",
@@ -365,9 +365,9 @@ export const faqs = [
       "I advise founders and engineering teams personally on decisions and architecture. Presencia Studio is the engineering organization I founded to build and operate systems. They reinforce each other, but an advisory engagement never assumes Presencia does the building.",
   },
   {
-    question: "How does this work alongside your current role?",
+    question: "Are you still with Microsoft for Startups?",
     answer:
-      "I accept a limited number of non-conflicting engagements, each subject to a conflict review. Client work is independent and does not imply endorsement by Microsoft, Accenture, or any current or former employer.",
+      "No. My role there, via Accenture, ended in October 2026. I accept a limited number of non-conflicting engagements, each subject to a conflict review. Client work is independent and does not imply endorsement by Microsoft, Accenture, or any former employer.",
   },
   {
     question: "Can you work with a distributed or international team?",
@@ -403,7 +403,7 @@ export const homeHero = {
   ctaLabel: "Bring me your inference bottleneck",
   ctaHref: "/discovery",
   trustLine:
-    "Senior AI Solution Architect supporting Microsoft for Startups globally via Accenture. Independent practice; no employer endorsement implied.",
+    "Former Senior AI Solution Architect for Microsoft for Startups, via Accenture. Independent practice; no employer endorsement implied.",
 };
 
 /**
@@ -508,14 +508,14 @@ export const credibility = {
   facts: [
     "Building production AI systems since 2022",
     "More than 60 founding teams advised",
-    "Senior AI Solution Architect supporting Microsoft for Startups via Accenture",
+    "Former Senior AI Solution Architect for Microsoft for Startups, via Accenture",
     "Based in Costa Rica, working globally in English",
     "One active sprint at a time",
   ],
   firewall:
     "My independent work uses only public information and information a client explicitly provides for its engagement. No confidential Microsoft, Accenture, or other client information is used or disclosed.",
   conflictReview:
-    "Current independent work is limited to non-conflicting engagements and does not imply endorsement by Microsoft, Accenture, or any current or former employer.",
+    "Independent work is limited to non-conflicting engagements and does not imply endorsement by Microsoft, Accenture, or any former employer.",
 };
 
 /**
