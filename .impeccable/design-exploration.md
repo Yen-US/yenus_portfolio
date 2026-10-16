@@ -1,32 +1,49 @@
-# Portfolio `/`: design exploration (Claude Design skill, CLI mode)
+# Portfolio `/`: design exploration, round 2 (Claude Design skill, CLI mode; Fable 5.1, 2026-10-16)
+
+Round 1 (2026-10-15) chose the split-flap departures board, shipped in PR #2 and live. The founder liked it and
+asked for a push beyond it in UI, UX and wording. This round treats the board as evidence and anti-reference.
 
 ## Surface commitment
-This is a **Decide/Learn** surface (a recruiter is convinced in one pass) with **Explore** as secondary
-(selected work). So one idea lands per section, a hero is earned, and work gets a browsing composition,
-not a feature grid.
+Still a **Decide/Learn** surface (a recruiter is convinced in one pass; Persuade) with **Explore** secondary
+(selected work). A hero is earned; the work browses; nothing is a feature grid.
 
 ## Context read before designing
-- `src/app/globals.css`, `tailwind.config.ts`, `src/components/consulting/*`: the incumbent consulting world
-  (cream ground, Instrument Serif with italic accent, green signal, mono kickers). The founder dislikes
-  exactly that look, so it is anti-reference for `/` and stays untouched at `/consulting`.
-- CV `public/yenson-ai-resume.pdf` (claims), `Yen-US/amplification-of-potential` source (AOP facts),
-  portraits `public/YenUSPP2.webp` (alpha cutout), brand mark `public/brand/yenson-umana-mark.svg`.
+- The live `/` (`.station`, Big Shoulders + Barlow, board black, timetable yellow, signal orange), `DESIGN.md` round 1,
+  the finish review and the surface brief in `.impeccable/`.
+- `src/lib/portfolio-data.ts` (CV facts, confirmed dates) and `src/lib/resume-data.ts` (the eight roles published at
+  `/career`, which the founder designated as the source of experience facts). Public repo
+  `Yen-US/amplification-of-potential` for AOP Beacon.
+- Taste-skill design read: a senior engineer's portfolio for recruiters; expressive typographic language; dials
+  VARIANCE 8 / MOTION 7 / DENSITY 4 (redesign-overhaul).
 
-## Three compositions considered
-1. **Conservative: résumé spread.** Asymmetric split hero (name left, portrait right), work list,
-   vertical experience timeline, skills tag cloud, contact. Lowest risk; indistinguishable from most
-   developer portfolios. Rejected as the build, kept as the structural floor (every section it has, the
-   chosen direction also has).
-2. **Strong-fit: departures board.** (Chosen.) A career read like a station board. Split-flap tiles flip
-   the name and role in once on load, then hold still. The lead project turns "face-out" as its own route
-   board (VERCEL + GCP / TO AZURE / IN 1 WEEK). Experience is a printed yellow timetable poster. Approach is
-   station rules in large type. Skills are small flap chips. One reserved signal orange for the CV action.
-3. **Divergent: Architecture Decision Record.** The whole page as an ADR: Status / Context / Decision /
-   Consequences per project, with margin annotations. Most original for the subject, but it is a Read
-   register: quiet, document-like, little motion. It misses the founder's "bold, animated" ask. Its best
-   discipline (each project states the decision and the trade-off, not adjectives) is folded into option 2.
+## Three compositions (composition, type, story, interaction; not palette swaps)
+1. **Section drawing** (strong-fit, chosen). The page as a large-format drawing sheet: a title block carries identity
+   and every action (desktop right column, phone bottom bar); work is three details with typographic section cuts
+   and decision callouts; experience is a dimensioned chain of eight roles on one 2021 to 2026 axis. Archivo in two
+   widths. Drafting white, ink, graphite, one marker.
+2. **Broadside** (divergent, kinetic). Dark plates; name and role as one enormous variable-width stack whose width
+   axis compresses on scroll; projects led by their decision as a headline. Anybody for display. Rejected: a known
+   genre, the scroll-linked axis is spectacle a recruiter does not need, and it would put JS on the critical path.
+   Its display energy (variable width as voice) is adopted into option 1.
+3. **Tap to open** (divergent, physical). His real objects (NFC card, beacon puck, painting) as pressable objects that
+   flip to their digital side. Rejected: it positions him as an NFC-product maker before an AI architect, and the lead
+   recruiter proof (the Azure migration) has no object. Its tactile press is kept for buttons and detail rows.
 
-## Why option 2
-Strongest audience fit (recruiters scan boards in seconds), original in the category (not dark-neon dev,
-not cream editorial), and the motion is native to the object (flaps), so animation is meaning, not
-decoration. Impeccable's concept roll independently assigned the same world (seed 3cac0cb4).
+The comparison board with all three rendered: `~/artifacts/yenus-fable-redesign/concepts/Comparison Board.html`
+(PNG beside it).
+
+## Why option 1
+Fastest recruiter read (role and CV action never more than a glance away), the most original composition in the
+category (not dark-neon dev, not cream editorial, not a departures board), and every expressive element carries
+information: dates as lengths, decisions as callouts, the title block as the action surface, the sheet index with
+real counts. Copy moved from interchangeable slogans to specific, dated, sourced statements.
+
+## Copy decisions
+- Hero: "Production AI, drawn to scale." with a dated lede (Oct 2022, a month before ChatGPT; Microsoft for Startups
+  advisory 2024 to 2026). Draft for the founder.
+- Work: "The decisions inside three systems." Each detail's callouts are the decisions already published or in the CV.
+- Rules: "Four rules, each with the project it came from." Replaces the consulting-derived principles; each rule
+  names its source project.
+- Experience: "Tier 2 support in January 2021. Senior AI architect by May 2024." Both dates are on the record.
+- Not reused: the old consulting tagline, "60+ teams", "most senior worldwide", "YC-backed", "zero downtime",
+  tenure labels and promotion counts.

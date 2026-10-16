@@ -1,52 +1,47 @@
-# Slop diagnostic (Claude Design skill), portfolio `/` and `/cv`
+# Slop diagnostic (Claude Design skill), portfolio `/`, round 2 (sheet world, 2026-10-16)
 
-Evidence: Playwright v1.63.0 captures in `~/artifacts/yenus-portfolio-qa/r1/` (Chromium 1440, Chromium 390,
-WebKit iPhone 15, plus reduced-motion variants).
+Diagnose first, then treat. Scored out of 10 (10 = maximum slop). Evidence: Playwright 1.63 captures in
+`~/artifacts/yenus-fable-redesign/after/` (Chromium 1440 / 390 / 320, WebKit iPhone 15, reduced motion, no JS).
 
-## Round 1 score: 1 / 10
+## Baseline being replaced (the live station board), re-scored for the record: 0 / 10
+No tells fired in round 1's final audit. The founder's complaint was not slop; it was that the wording read as
+common and that the design should go further. This round is judged on that, plus the ten tells.
+
+## Before fix (first build of the sheet world): 1 / 10
 
 | # | Tell | Fired? | Note |
 |---|------|--------|------|
-| 1 | Tech gradient | no | No gradients anywhere; depth is flat overlap. |
-| 2 | Generic tech hue | no | Timetable yellow + reserved signal orange on board black. |
-| 3 | Feature-tile grid | no | Work is one face-out board + an asymmetric 5/7 poster grid, not equal icon tiles. |
-| 4 | Accent rail | no | No coloured left strips. |
-| 5 | Unearned blur | no | No blur or glass. |
-| 6 | Monument stat | **borderline, counted** | `AI-102` / `AZ-204` set at 36px display size read as stat monuments rather than credentials. |
-| 7 | Icon topper | no | Icons only inside buttons. |
-| 8 | Center stack | no | Left-aligned asymmetric compositions throughout. |
-| 9 | Default type | no | Big Shoulders (signage display) + Barlow (DIN-like body), chosen for the station world. |
-| 10 | Wrong surface | no | Decide/Learn surface; the hero is earned and the work section browses. |
+| 1 | Tech gradient | no | No gradients. The chain track briefly used a repeating-gradient for year ticks; removed before capture. |
+| 2 | Generic tech hue | no | Ink on drafting white with one survey-orange marker. |
+| 3 | Feature-tile grid | no | Work is three ruled details of unequal weight (lead detail larger), each with its own figure. |
+| 4 | Accent rail | no | No coloured side strips. The OG card's 3px divider is a structural rule between two columns (detector false positive). |
+| 5 | Unearned blur | no | None. |
+| 6 | Monument stat | no | Certification codes are body text in the title block and skills; the chain numbers are dates, not stats. |
+| 7 | Icon topper | no | Icons only inside buttons, trailing. |
+| 8 | Center stack | no | Left-aligned asymmetric compositions; the title block is a right column, not a centred card. |
+| 9 | Default type | no | Archivo variable (two widths), chosen for the drawing-stamp voice. |
+| 10 | Wrong surface | no | Decide/Learn surface; a hero is earned, the work browses. |
+
+**Counted, borderline:** none of the ten, but a compositional defect that behaves like tell 8/10: the title block's
+actions were pushed to the bottom of a viewport-tall column, leaving a dead band and placing Download CV on the fold.
 
 ### Non-tell defects found in the same captures (higher priority than the score)
-- **Critical:** hero flap characters invisible after the arrival animation in motion-enabled browsers. The
-  flutter leaf parks at `rotateX(-90deg)` under `perspective`, which projects over the glyph instead of
-  vanishing. Reduced-motion captures were correct.
-- Hero board under-scaled on desktop: 16 columns leave large ghost areas and empty space above and below.
-- Flap glyphs sit small inside their tiles.
-- OG card text line uses two middle dots (taste rule: max one per line).
-- Contact line "I reply from <email>" reads awkwardly.
+- **Title block dead band** (above): fixed by adding the sheet index (real counts, in-page links) and the Education row,
+  so the block is full and the actions sit at about 760px on a 900px viewport.
+- **Chain bars invisible in full-page captures and below the fold**: the scroll-timeline fill started from scaleX(0),
+  so substantive content was hidden until scrolled. Fixed: bars are always painted (graphite) and only the ink overlay
+  animates.
+- Straight apostrophes in copy ("startup's"); replaced with typographic ones.
+- The fixed mobile bar was a labelled `div`; now a `nav` landmark.
+- Dead `.sh-menu` CSS removed.
 
-## Repairs (matched to diagnosis)
-- Tell 6 → remove the monument: certification codes drop to the body hierarchy (bold, same size as the name line).
-- Leaf: `backwards` fill so it returns to its hidden base state after fluttering.
-- Board: desktop 13 columns (bigger tiles, fewer ghost cells); glyph size raised to fill the tile.
-- OG line separators changed to slashes; contact copy rewritten plainly.
-
-## Round 2 score: 0 / 10
-
-Evidence: `~/artifacts/yenus-portfolio-qa/r3/` and `after/` (post-repair captures).
+## After fix: 0 / 10
 
 | # | Tell | Fired? |
 |---|------|--------|
-| 1-5, 7-10 | as round 1 | no |
-| 6 | Monument stat | no: certification codes now bold body text beside their names |
+| 1-10 | as above | no |
 
-Compositional tells (3, 8, 10) did not fire in either round. Defects repaired and verified in captures:
-- Hero characters render in Chromium and WebKit with motion on (the flap motion is now 2D `scaleY`, no
-  `perspective`, removing the projected-leaf failure and a Chromium full-page raster artifact seen in round 2).
-- Desktop board is 13 columns; glyphs fill the tiles.
-- OG separators and contact copy repaired.
-
-Additional repairs from the web-design-guidelines review: mobile menu closes after link selection (still a
-native `<details>` without JS), skip link on `/cv`, `theme-color`, `translate="no"` on the name, touch-action.
+Compositional tells (3, 8, 10) did not fire in either pass. Detector (`impeccable detect`) on `src/app/(sheet)` and
+`src/components/sheet` after fix: one warning, `side-tab` on the OG card's column divider, judged a false positive
+(it separates two columns of a title block; it is not a card accent). Type-ramp advisories cleared by declaring the
+`role` and `lede` steps in DESIGN.md and moving the chain title to 1.375rem.
