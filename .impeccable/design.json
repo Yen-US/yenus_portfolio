@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T23:39:07+00:00",
+  "title": "Design System: Yenson Umaña · Station",
+  "extensions": {
+    "scope": "Applies only to / and /cv inside the .station wrapper (src/app/(portfolio)/layout.tsx). Tokens are --st-* custom properties on .station. The consulting world (:root, .consulting-shell, consulting- classes; /consulting, /services, /work, /about, /discovery) is out of scope.",
+    "colorMeta": {
+      "board-ink": {
+        "role": "neutral",
+        "displayName": "Board Ink",
+        "canonical": "#0c0c0d",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "housing": {
+        "role": "neutral",
+        "displayName": "Housing",
+        "canonical": "#141416",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "tile": {
+        "role": "neutral",
+        "displayName": "Flap Tile",
+        "canonical": "#1f1f22",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "tile-top": {
+        "role": "neutral",
+        "displayName": "Upper Leaf",
+        "canonical": "#26262a",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "ghost-tile": {
+        "role": "neutral",
+        "displayName": "Ghost Tile",
+        "canonical": "#18181a",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "hinge-seam": {
+        "role": "neutral",
+        "displayName": "Hinge Seam",
+        "canonical": "#0a0a0b",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "rule-line": {
+        "role": "neutral",
+        "displayName": "Rule Line",
+        "canonical": "#2c2c31",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "enamel-paper": {
+        "role": "neutral",
+        "displayName": "Enamel Paper",
+        "canonical": "#f1f0ec",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "platform-grey": {
+        "role": "neutral",
+        "displayName": "Platform Grey",
+        "canonical": "#a6a6ad",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "sheet-grey": {
+        "role": "neutral",
+        "displayName": "Sheet Grey",
+        "canonical": "#4a4a50",
+        "tonalRamp": [
+          "#0a0a0b",
+          "#141416",
+          "#26262a",
+          "#3a3a40",
+          "#5c5c63",
+          "#8a8a91",
+          "#c4c4c9",
+          "#f1f0ec"
+        ]
+      },
+      "timetable-yellow": {
+        "role": "primary",
+        "displayName": "Timetable Yellow",
+        "canonical": "#ffc61a",
+        "tonalRamp": [
+          "oklch(25% 0.05 85)",
+          "oklch(36% 0.08 85)",
+          "oklch(48% 0.11 85)",
+          "oklch(60% 0.14 85)",
+          "oklch(72% 0.16 85)",
+          "oklch(85% 0.17 85)",
+          "oklch(91% 0.11 90)",
+          "oklch(96% 0.05 95)"
+        ]
+      },
+      "timetable-ink": {
+        "role": "primary",
+        "displayName": "Timetable Ink",
+        "canonical": "#17140a",
+        "tonalRamp": [
+          "oklch(15% 0.015 90)",
+          "oklch(20% 0.02 90)",
+          "oklch(30% 0.025 90)",
+          "oklch(42% 0.03 90)",
+          "oklch(55% 0.03 90)",
+          "oklch(68% 0.03 90)",
+          "oklch(82% 0.02 90)",
+          "oklch(95% 0.01 90)"
+        ]
+      },
+      "signal-orange": {
+        "role": "secondary",
+        "displayName": "Signal Orange",
+        "canonical": "#ff5a1f",
+        "tonalRamp": [
+          "oklch(25% 0.08 40)",
+          "oklch(36% 0.12 40)",
+          "oklch(48% 0.16 40)",
+          "oklch(60% 0.2 40)",
+          "oklch(68% 0.21 40)",
+          "oklch(78% 0.14 45)",
+          "oklch(88% 0.07 50)",
+          "oklch(96% 0.02 55)"
+        ]
+      },
+      "signal-ink": {
+        "role": "secondary",
+        "displayName": "Signal Ink",
+        "canonical": "#120804",
+        "tonalRamp": [
+          "oklch(15% 0.02 40)",
+          "oklch(22% 0.03 40)",
+          "oklch(32% 0.04 40)",
+          "oklch(45% 0.05 40)",
+          "oklch(58% 0.05 40)",
+          "oklch(70% 0.04 40)",
+          "oklch(83% 0.03 40)",
+          "oklch(95% 0.01 40)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Section titles in Big Shoulders 900 uppercase; contact closer one step larger."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Approach principle titles and the lead project name."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project spine names, experience role titles, timetable dates, CV section heads."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All reading copy in Barlow 400 with tabular figures, about 65-70ch."
+      },
+      "body-strong": {
+        "displayName": "Body Strong",
+        "purpose": "Organisation lines, certification codes, inline emphasis."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons and links on yellow (600); nav links at 400."
+      },
+      "chip": {
+        "displayName": "Chip",
+        "purpose": "Skill flap chips only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "stroke-inset",
+        "value": "inset 0 0 0 1.5px #f1f0ec",
+        "purpose": "Border of the secondary button only. A line, not elevation; the world has no drop shadows."
+      }
+    ],
+    "motion": [
+      {
+        "name": "flap-flutter",
+        "value": "90ms linear, 2-5 iterations, fill none, staggered delay 120ms + 140ms/row + 26ms/col + deterministic jitter",
+        "purpose": "One-time arrival on the hero board: the upper leaf squashes (scaleY 1 to 0) at 55% opacity over an already-painted glyph. Gated on prefers-reduced-motion: no-preference."
+      },
+      {
+        "name": "state-colour",
+        "value": "160ms ease",
+        "purpose": "Button and link colour and underline transitions."
+      },
+      {
+        "name": "press",
+        "value": "120ms ease, translateY(1px)",
+        "purpose": "Button :active."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "note": "Header Download CV appears; mobile-menu CV link hides; hero board 10 to 13 columns."
+      },
+      {
+        "name": "md",
+        "value": "768px",
+        "note": "Container gutters 1rem to 2rem; section padding 5rem to 7rem; row grids open."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "note": "Desktop nav; hero board beside portrait panel at full viewport height."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Download CV Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single signal-orange action; only for the CV download.",
+      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 15V3\"/><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><path d=\"m7 10 5 5 5-5\"/></svg>Download CV</a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3rem; padding: 0 1.25rem; border-radius: 2px; font-family: Barlow, ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-size: 0.95rem; white-space: nowrap; text-decoration: none; outline: none; transition: background-color 160ms ease, color 160ms ease, transform 120ms ease; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 3px solid #ffc61a; outline-offset: 3px; } .ds-btn-primary { background: #ff5a1f; color: #120804; } .ds-btn-primary:hover { background: #f1f0ec; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined enamel button on dark for email, LinkedIn, GitHub.",
+      "html": "<div class=\"ds-dark\"><a class=\"ds-btn2\" href=\"#\">Email me</a></div>",
+      "css": ".ds-dark { background: #141416; padding: 1.5rem; } .ds-btn2 { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 1.25rem; border-radius: 2px; background: transparent; color: #f1f0ec; box-shadow: inset 0 0 0 1.5px #f1f0ec; font-family: Barlow, ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-size: 0.95rem; text-decoration: none; outline: none; transition: background-color 160ms ease, color 160ms ease, transform 120ms ease; } .ds-btn2:hover { background: #f1f0ec; color: #0c0c0d; } .ds-btn2:active { transform: translateY(1px); } .ds-btn2:focus-visible { outline: 3px solid #ffc61a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Timetable Action Strip",
+      "kind": "custom",
+      "refersTo": "button-on-timetable",
+      "description": "Yellow printed strip holding every recruiter action: orange download, ink View CV, underlined email.",
+      "html": "<div class=\"ds-strip\"><a class=\"ds-s-primary\" href=\"#\">Download CV</a><a class=\"ds-s-dark\" href=\"#\">View CV</a><a class=\"ds-s-link\" href=\"#\">name@example.com</a></div>",
+      "css": ".ds-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; padding: 1rem; background: #ffc61a; color: #17140a; font-family: Barlow, ui-sans-serif, system-ui, sans-serif; } .ds-s-primary, .ds-s-dark { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.25rem; border-radius: 2px; font-weight: 600; font-size: 0.95rem; text-decoration: none; outline: none; transition: background-color 160ms ease, color 160ms ease; } .ds-s-primary { background: #ff5a1f; color: #120804; } .ds-s-primary:hover { background: #f1f0ec; } .ds-s-dark { background: #17140a; color: #ffc61a; } .ds-s-dark:hover { background: #0c0c0d; color: #f1f0ec; } .ds-s-link { font-weight: 600; color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.22em; text-decoration-color: rgba(23,20,10,0.45); outline: none; } .ds-s-link:hover { text-decoration-color: #17140a; } .ds-strip a:focus-visible { outline: 3px solid #17140a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Split-Flap Board",
+      "kind": "custom",
+      "refersTo": "flap-tile",
+      "description": "Signature board: real text in fixed columns, hinge seam, lighter upper leaf, ghost tiles for empty cells; second line in yellow.",
+      "html": "<div class=\"ds-board\"><div class=\"ds-row\"><span class=\"ds-flap\">Y</span><span class=\"ds-flap\">E</span><span class=\"ds-flap\">N</span><span class=\"ds-flap ds-ghost\"></span><span class=\"ds-flap ds-ghost\"></span><span class=\"ds-flap ds-ghost\"></span></div><div class=\"ds-row\"><span class=\"ds-flap ds-y\">A</span><span class=\"ds-flap ds-y\">I</span><span class=\"ds-flap ds-ghost\"></span><span class=\"ds-flap ds-y\">S</span><span class=\"ds-flap ds-y\">A</span><span class=\"ds-flap ds-ghost\"></span></div></div>",
+      "css": ".ds-board { background: #141416; padding: 0.75rem; width: 22rem; } .ds-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; } .ds-row + .ds-row { margin-top: 6px; } .ds-flap { position: relative; display: grid; place-items: center; aspect-ratio: 0.74; overflow: hidden; background: #1f1f22; border-radius: 2px; color: #f1f0ec; font-family: 'Big Shoulders', ui-sans-serif, system-ui, sans-serif; font-weight: 800; font-size: 3.6rem; line-height: 1; text-transform: uppercase; } .ds-flap.ds-y { color: #ffc61a; } .ds-flap.ds-ghost { background: #18181a; } .ds-flap::before { content: ''; position: absolute; inset: 0 0 50% 0; background: #26262a; opacity: 0.32; pointer-events: none; } .ds-flap.ds-ghost::before { opacity: 0.12; } .ds-flap::after { content: ''; position: absolute; left: 0; right: 0; top: calc(50% - 1px); height: 2px; background: #0a0a0b; }"
+    },
+    {
+      "name": "Flap Chip",
+      "kind": "chip",
+      "refersTo": "flap-chip",
+      "description": "Static skill tag in flap-tile material, no hinge seam.",
+      "html": "<ul class=\"ds-chips\"><li class=\"ds-chip\">Azure OpenAI</li><li class=\"ds-chip\">MCP</li><li class=\"ds-chip\">Kubernetes</li></ul>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; margin: 0; padding: 1rem; background: #0c0c0d; } .ds-chip { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.3rem 0.7rem; background: #1f1f22; border-radius: 2px; color: #f1f0ec; font-family: 'Big Shoulders', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Timetable Sheet",
+      "kind": "card",
+      "refersTo": "timetable-sheet",
+      "description": "Yellow printed sheet with heavy 6px edge rules and 2px row rules; dates left, role right.",
+      "html": "<div class=\"ds-sheet\"><h2 class=\"ds-sheet-h\">Experience</h2><div class=\"ds-sheet-row\"><p class=\"ds-date\">2025 - Present</p><div><h3 class=\"ds-role\">Founder</h3><p class=\"ds-org\"><b>Presencia Studio</b> / Costa Rica</p><p class=\"ds-body\">Developed end-to-end brand experiences with NFC cards and smart objects.</p></div></div></div>",
+      "css": ".ds-sheet { background: #ffc61a; color: #17140a; padding: 3rem 2.5rem; font-family: Barlow, ui-sans-serif, system-ui, sans-serif; } .ds-sheet-h { margin: 0; padding-bottom: 1.25rem; border-bottom: 6px solid #17140a; font-family: 'Big Shoulders', ui-sans-serif, system-ui, sans-serif; font-weight: 900; font-size: 4rem; line-height: 0.9; text-transform: uppercase; } .ds-sheet-row { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 2rem; padding: 1.75rem 0; border-bottom: 2px solid #17140a; } .ds-date, .ds-role { margin: 0; font-family: 'Big Shoulders', ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; line-height: 1; } .ds-date { font-weight: 800; font-size: 1.75rem; } .ds-role { font-weight: 900; font-size: 2.25rem; } .ds-org { margin: 0.5rem 0 0; font-size: 1.125rem; } .ds-body { margin: 1rem 0 0; line-height: 1.75rem; }"
+    },
+    {
+      "name": "Station Header",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky board-ink header: yellow brand-mark square, display name, grey nav links, orange Download CV.",
+      "html": "<header class=\"ds-head\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-mark\"></span>Yenson Umaña</a><nav class=\"ds-nav\"><a href=\"#\">Work</a><a href=\"#\">Approach</a><a href=\"#\">Experience</a><a href=\"#\">CV</a></nav></header>",
+      "css": ".ds-head { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; height: 4rem; padding: 0 2rem; background: #0c0c0d; border-bottom: 1px solid #2c2c31; } .ds-brand { display: flex; align-items: center; gap: 0.75rem; color: #f1f0ec; text-decoration: none; font-family: 'Big Shoulders', ui-sans-serif, system-ui, sans-serif; font-weight: 800; font-size: 1.25rem; line-height: 1; letter-spacing: 0.01em; text-transform: uppercase; } .ds-mark { width: 2.5rem; height: 2.5rem; background: #ffc61a; } .ds-nav { display: flex; gap: 1.75rem; } .ds-nav a { color: #a6a6ad; font-family: Barlow, ui-sans-serif, system-ui, sans-serif; font-size: 0.95rem; text-decoration: none; outline: none; transition: color 160ms ease; } .ds-nav a:hover { color: #f1f0ec; } .ds-head a:focus-visible { outline: 3px solid #ffc61a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ruled Listing Row",
+      "kind": "custom",
+      "refersTo": "board-panel",
+      "description": "Departures-style listing on housing: display title left, muted reason right, 1px rule lines.",
+      "html": "<ol class=\"ds-list\"><li><h3>Decide before the technology.</h3><p>Name the outcome, the constraints, and the cost of failure before choosing a model or a platform.</p></li><li><h3>Humans review what matters.</h3><p>Where a bad output has real consequences, a person stays in the loop by design.</p></li></ol>",
+      "css": ".ds-list { list-style: none; margin: 0; padding: 0 2rem; background: #141416; border-top: 3px solid #f1f0ec; } .ds-list li { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 3rem; align-items: baseline; padding: 2rem 0; border-bottom: 1px solid #2c2c31; } .ds-list h3 { margin: 0; color: #f1f0ec; font-family: 'Big Shoulders', ui-sans-serif, system-ui, sans-serif; font-weight: 800; font-size: 2.75rem; line-height: 0.95; text-transform: uppercase; } .ds-list p { margin: 0; color: #a6a6ad; font-family: Barlow, ui-sans-serif, system-ui, sans-serif; font-size: 1.125rem; line-height: 2rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Departures Board",
+    "overview": "**Creative North Star: \"The Departures Board\"**\n\nA career read the way a traveller reads a station: role, route, and how to reach him at a glance. The world is board-black housing carrying split-flap tiles with a drawn hinge seam and ghost tiles for empty cells, printed timetable-yellow sheets that carry readable prose in black, enamel off-white signage type, and one signal orange reserved for the live action (Download CV). It is loud at the display scale and plain at the reading scale: monumental condensed capitals on the board, a calm DIN-like sans for everything a recruiter actually reads.\n\nDepth is flat overlap: housing sits on ink, tiles sit on housing, a yellow sheet sits on the board. Nothing floats, nothing glows, nothing graduates. The one motion is mechanical and once: the hero board's upper leaves flutter onto characters that are already painted, then the board is static.\n\n**Scope.** This system governs only `/` and `/cv`, everything rendered inside the `.station` wrapper (the `(portfolio)` route group layout). Tokens are declared as `--st-*` custom properties on `.station`, not on `:root`. The consulting world (cream and serif palette in `:root` and `.consulting-shell`, `consulting-` classes, served at `/consulting`, `/services`, `/work`, `/about`, `/discovery`) is a separate, intentionally preserved system and is out of scope for this file. Do not pull its tokens into station surfaces or station tokens into it.",
+    "keyCharacteristics": [
+      "Board-black housing, split-flap tiles with a hinge seam, ghost tiles for empty cells.",
+      "Timetable yellow as a printed sheet material carrying black prose, never as a text accent on long copy.",
+      "Signal orange appears only on the Download CV action.",
+      "Condensed signage capitals for display; DIN-like sans for reading, with tabular figures throughout.",
+      "Near-square corners (2px) on tiles and buttons; sheets and panels are square.",
+      "Flat overlap for depth; no drop shadows, no gradients, no blur.",
+      "One CSS-only arrival flutter on the hero board; content never waits on it."
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Signal orange marks the Download CV action and nothing else. A second orange element is a second signal, and the board stops meaning anything.",
+        "section": "colors"
+      },
+      {
+        "name": "The Printed Sheet Rule",
+        "body": "Yellow is a surface you print black text on, or a short label colour at display or heading scale on dark. Long prose is never set in yellow on black.",
+        "section": "colors"
+      },
+      {
+        "name": "The CV Paper Rule",
+        "body": "The `/cv` sheet is enamel paper, not yellow: it is the long-form reading and print document. In print the station ground becomes white and chrome is hidden.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Big Shoulders speaks in capitals at heading scale and above; Barlow speaks everything that is read. No third face, and no monospace.",
+        "section": "typography"
+      },
+      {
+        "name": "The Credential Is Body Rule",
+        "body": "Codes and numbers (certification codes, dates in copy) are bold body text beside their names, not display-scale stat monuments.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Overlap Rule",
+        "body": "A surface is lifted by being a different material laid on top, never by a shadow. If a layer needs to separate, move it one step along ink, housing, tile.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** scope every station style under `.station` and use the `--st-*` tokens; leave the consulting world untouched.",
+      "**Do** reserve signal orange for Download CV.",
+      "**Do** print readable prose on yellow in timetable ink, with heavy 6px rules at sheet edges and 2px row rules.",
+      "**Do** set display type in Big Shoulders uppercase at 800 to 900 and reading type in Barlow 400/600 with tabular figures.",
+      "**Do** keep tiles, chips, and buttons at 2px radius and every panel square.",
+      "**Do** separate layers by material (ink, housing, tile, yellow sheet), never by shadow.",
+      "**Do** render final content in the server HTML; motion may decorate it, never gate it.",
+      "**Do** switch the focus ring from yellow to timetable ink on yellow surfaces."
+    ],
+    "donts": [
+      "**Don't** use drop shadows, gradients, blur, or glass. An inset stroke used as a button border is allowed.",
+      "**Don't** add a monospace face or a third typeface.",
+      "**Don't** set long prose in yellow or orange on black.",
+      "**Don't** draw a hinge seam on anything smaller than a flap tile.",
+      "**Don't** place the dark-shirted portrait directly on board black; it sits on a yellow panel.",
+      "**Don't** turn credentials or numbers into display-scale stat monuments.",
+      "**Don't** use cards with rounded corners for listings; use ruled rows.",
+      "**Don't** animate anything beyond the one hero arrival flutter."
+    ]
+  }
+}

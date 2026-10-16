@@ -13,6 +13,7 @@ import {
 } from "@/components/consulting/site-chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "About",
   description:
     "How Yenson Umaña works: the approach behind each engagement, the boundary between independent advisory and Presencia Studio, and answers to the questions that come before a first call.",
@@ -45,7 +46,7 @@ export default function AboutPage() {
                 decisions while the product itself is still moving.
               </p>
               <p className="mt-5 text-sm leading-6 text-white/65">
-                Through Microsoft for Startups, I see the patterns between a
+                Through Microsoft for Startups, I saw the patterns between a
                 promising demo and a production system across many teams. That
                 pattern recognition is the leverage I bring to your table. You
                 work directly with me, with no sales layer or junior handoff.

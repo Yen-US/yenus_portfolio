@@ -9,6 +9,7 @@ import {
 import { consultant } from "@/lib/consulting-data";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/discovery" },
   title: "Book a Discovery Call",
   description:
     "Book a confirmed 30-minute conversation with Yenson Umaña about your startup's AI product, architecture, or path to production.",

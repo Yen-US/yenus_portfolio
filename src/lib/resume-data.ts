@@ -55,9 +55,9 @@ export const experiences: Experience[] = [
     company: "Microsoft",
     companyNote: "via Accenture",
     location: "Remote (Global)",
-    period: "May 2024 – Present",
-    tenure: "2 years +",
-    current: true,
+    period: "May 2024 – Oct 2026",
+    tenure: "2 years 5 months",
+    current: false,
     description:
       "Most senior AI advisor for the Microsoft for Startups program worldwide. Architecture reviews, agentic system design, cloud migrations, and enablement.",
     highlights: [
@@ -100,9 +100,9 @@ export const experiences: Experience[] = [
     role: "Full Stack Software Engineer",
     company: "Wind River",
     location: "San José, Costa Rica (Remote)",
-    period: "Oct 2024 – Present",
+    period: "Oct 2024 – Jun 2026",
     tenure: "2 years 10 months total at Wind River",
-    current: true,
+    current: false,
     promoted: true,
     highlights: [
       "Architected cloud systems with Angular, Vue.js, Next.js, Golang, and Java on PostgreSQL",

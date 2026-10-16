@@ -10,7 +10,8 @@
     "generate-summaries": "tsx scripts/generate-summaries.ts",
     "generate-ai-resume": "tsx scripts/generate-ai-resume.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate-public-cv": "node scripts/generate-public-cv.mts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
@@ -51,5 +52,8 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

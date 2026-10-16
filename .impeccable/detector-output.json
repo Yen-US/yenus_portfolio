@@ -1,0 +1,13 @@
+[
+  {
+    "antipattern": "codex-grid-background",
+    "name": "Decorative grid-line background",
+    "description": "A decorative grid or line-field background drawn with hairline linear-gradient layers tiled by a fixed pixel cell is a recurring generated-UI signature. Reserve grid overlays for actual canvas, map, blueprint, or measurement surfaces; elsewhere use product structure or a plain surface.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "/home/claude-dev/worktrees/yenus_portfolio/feat/recruiter-portfolio/src/app/globals.css",
+    "line": 213,
+    "snippet": "two-axis grid-line gradient background",
+    "advisory": true
+  }
+]
