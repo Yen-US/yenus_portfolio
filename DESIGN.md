@@ -1,281 +1,272 @@
 ---
-name: Yenson Umaña · Sheet
-description: The recruiter portfolio at /, read like a large-format drawing sheet with a title block, section cuts, and a dimensioned career chain.
+name: Yenson Umaña · Showroom
+description: The homepage at /, a showroom of the two products Yenson built from scratch, each shown as a real phone rising out of a field in the product's own colour.
 colors:
-  paper: "#f2f3f0"
-  panel: "#e7e9e4"
-  ink: "#121315"
-  graphite: "#55585e"
-  rule: "#c6c9c4"
-  marker: "#ff4a00"
-  on-ink-muted: "#b9bcb6"
+  stage: "#0e0f10"
+  panel: "#17181a"
+  line: "#2a2b2e"
+  ink: "#f3f1ec"
+  muted: "#a4a49d"
+  bezel: "#0b0b0c"
+  presencia-field: "#f4dca1"
+  presencia-ink: "#0b0b0a"
+  listo-field: "#0f5f3f"
+  listo-ink: "#ffffff"
+  listo-accent: "#ffb020"
 typography:
   display:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.25rem, 11.5vw, 8.25rem)"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.25rem, 5vw, 3.75rem)"
     fontWeight: 800
-    lineHeight: 0.9
+    lineHeight: 0.95
     letterSpacing: "-0.035em"
-    fontVariation: "\"wdth\" 125"
-  section:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.25rem, 6vw, 5rem)"
+    fontVariation: "\"opsz\" 96, \"wdth\" 100"
+  closer:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.5rem, 7vw, 6rem)"
     fontWeight: 800
-    lineHeight: 0.9
+    lineHeight: 0.95
     letterSpacing: "-0.035em"
-    fontVariation: "\"wdth\" 125"
-  title:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.625rem, 3.2vw, 2.75rem)"
-    fontWeight: 800
-    lineHeight: 1
+    fontVariation: "\"opsz\" 96, \"wdth\" 100"
+  heading:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.75rem, 3.4vw, 2.75rem)"
+    fontWeight: 700
+    lineHeight: 1.05
     letterSpacing: "-0.02em"
-    fontVariation: "\"wdth\" 112"
-  title-lead:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.875rem, 4.2vw, 3.5rem)"
-    fontWeight: 800
-    lineHeight: 1
+    fontVariation: "\"opsz\" 48"
+  intro:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.375rem, 2.4vw, 2rem)"
+    fontWeight: 700
+    lineHeight: 1.05
     letterSpacing: "-0.02em"
-    fontVariation: "\"wdth\" 112"
-  role:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.25rem"
-    fontWeight: 600
-    lineHeight: 1.25
   lede:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.375rem"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.125rem"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.75rem
   body:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.75rem
     fontFeature: "\"tnum\""
-  body-large:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+  strong:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.125rem"
-    fontWeight: 400
-    lineHeight: 1.6
+    fontWeight: 700
+    lineHeight: 1.5rem
   label:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.95rem"
     fontWeight: 600
     lineHeight: 1.5rem
     fontFeature: "\"tnum\""
   brand:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.05rem"
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.1rem"
     fontWeight: 700
-    lineHeight: 1
-    letterSpacing: "-0.01em"
-    fontVariation: "\"wdth\" 118"
-  small:
-    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.8rem"
-    fontWeight: 400
+    lineHeight: 1.05
+  screen-label:
+    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.85rem"
+    fontWeight: 600
     lineHeight: 1.25
 rounded:
-  none: "0px"
+  button: "0.5rem"
+  switch: "0.75rem"
+  card: "1.25rem"
+  phone: "2.4rem"
+  laptop: "0.9rem"
 spacing:
   gutter-mobile: "1rem"
-  gutter-desktop: "2.5rem"
-  container: "92rem"
-  section: "4rem"
-  section-desktop: "6rem"
-  row: "1.75rem"
-  row-desktop: "2.25rem"
-  title-block-pad: "1.25rem"
-  title-block-pad-desktop: "2rem"
+  gutter-desktop: "2rem"
+  container: "88rem"
+  section: "3.5rem"
+  section-desktop: "5rem"
+  card-pad: "1.25rem"
+  card-pad-desktop: "1.75rem"
+  card-min-height: "34rem"
 components:
   button:
-    backgroundColor: "{colors.paper}"
+    backgroundColor: "transparent"
     textColor: "{colors.ink}"
     border: "1.5px solid {colors.ink}"
     typography: "{typography.label}"
-    rounded: "{rounded.none}"
-    padding: "0 1rem"
+    rounded: "{rounded.button}"
+    padding: "0 1.1rem"
     height: "3rem"
   button-hover:
     backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
+    textColor: "{colors.stage}"
   button-primary:
-    backgroundColor: "{colors.marker}"
-    textColor: "{colors.ink}"
-    border: "1.5px solid {colors.marker}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.stage}"
+    border: "1.5px solid {colors.ink}"
     typography: "{typography.label}"
-    rounded: "{rounded.none}"
-    padding: "0 1rem"
+    rounded: "{rounded.button}"
+    padding: "0 1.1rem"
     height: "3rem"
-  button-primary-hover:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-  title-block:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    border: "1.5px solid {colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "1.25rem"
-  band-ink:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
-    padding: "0.75rem 1rem"
-    height: "3.75rem"
-  band-paper:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    border: "1.5px solid {colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "0.75rem 1rem"
-    height: "3.75rem"
-  chain-track:
+  button-on-field:
+    backgroundColor: "transparent"
+    textColor: "product ink"
+    border: "1.5px solid product ink"
+    rounded: "{rounded.button}"
+    height: "3rem"
+  switch:
     backgroundColor: "{colors.panel}"
-    height: "0.75rem"
-  chain-bar:
+    border: "1.5px solid {colors.line}"
+    rounded: "{rounded.switch}"
+    height: "3.5rem"
+  switch-selected:
     backgroundColor: "{colors.ink}"
-    height: "0.75rem"
+    textColor: "{colors.stage}"
+    rounded: "{rounded.button}"
+  product-card:
+    backgroundColor: "product field"
+    textColor: "product ink"
+    rounded: "{rounded.card}"
+    padding: "1.25rem"
+    minHeight: "34rem"
+  phone:
+    backgroundColor: "{colors.bezel}"
+    border: "10px solid {colors.bezel}"
+    rounded: "{rounded.phone} {rounded.phone} 0 0"
+    width: "min(17rem, 72%)"
+  laptop:
+    backgroundColor: "{colors.bezel}"
+    border: "8px solid {colors.bezel}"
+    rounded: "{rounded.laptop}"
   contact-band:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.ink}"
   nav-link:
-    textColor: "{colors.graphite}"
+    textColor: "{colors.muted}"
     typography: "{typography.label}"
   nav-link-hover:
     textColor: "{colors.ink}"
 ---
 
-# Design System: Yenson Umaña · Sheet
+# Design System: Yenson Umaña · Showroom
 
 ## Overview
 
-**Creative North Star: "The Working Drawing"**
+**Creative North Star: "The Showroom"**
 
-A senior architect's portfolio read the way an engineer reads a drawing sheet: a title block that says who, what, and how to reach them; details that cut through real systems and annotate the decisions inside them; a dimensioned chain where career dates are lengths you can compare. The world is drafting white (a cool off-white, not cream), ink, graphite for secondary text, and one survey-orange marker reserved for the live action (Download CV) and the open end of the one running role. One type family, Archivo, in two widths: expanded to its widest for display, normal for everything a recruiter reads.
+The homepage shows the work instead of describing the person. A dark, neutral stage holds two product cards, each a field in that product's own colour with a real phone rising out of its bottom edge, showing the product's real public screens. The visitor swipes or taps through them. Below, each product gets one paragraph of what Yenson built and a disclosure of the decisions you can see in it, beside a real desktop capture. The rest of the record is brief and links to `/career` and `/cv`. There is no education, certification or skills inventory on this page; those live on the CV.
 
-Depth is ink on paper. Nothing floats, nothing glows, nothing graduates. Motion is drafting motion: rules ink in from the left over content that is already painted, chain bars are inked as they scroll into view, a detail's title widens by a few units of the width axis when it is hovered, and buttons press one pixel. Nothing waits on motion; reduced motion shows the finished sheet.
+Depth is physical: a bezel around a screenshot, a card on a stage. There are no gradients, no blur, no glass, no shadows. Motion is the product's own: native scroll-snap through real screens, a segmented switch between the two products, buttons that press. Nothing waits on motion; without JavaScript the first screen of each product is visible and swipeable from the first frame.
 
-**Scope.** This system governs `/`, everything inside the `.sheet` wrapper (the `(sheet)` route group). Tokens are `--sh-*` custom properties on `.sheet`, not on `:root`. The CV at `/cv` keeps its own "station" world (`.station`, `--st-*`, Big Shoulders and Barlow) in the `(portfolio)` route group, and the consulting pages keep theirs (`:root`, `.consulting-shell`). Do not pull tokens across worlds.
+**Scope.** This system governs `/`, everything inside the `.home` wrapper (the `(home)` route group), with `--hm-*` tokens on `.home`. The CV at `/cv` keeps the station world (`.station`, `--st-*`) and the consulting pages keep theirs. Product tints are set per card as `--tint-field`, `--tint-ink`, `--tint-accent` and are read from the live products, not invented.
 
 **Key Characteristics:**
-- Drafting-white paper, ink rules, graphite secondary text, one marker colour reserved for the CV action and the live chain end.
-- A title block that carries identity, a sheet index with real counts, and every recruiter action; on phones its two main actions move to a fixed bottom bar.
-- One family, two widths: Archivo expanded (width 125) for display, normal width for reading, tabular figures throughout.
-- Square corners everywhere; depth is ink on paper, never shadow, gradient, blur or glass.
-- Section cuts: systems drawn as stacked ink and paper bands with a dimension line, not illustrations.
-- A dimensioned career chain: roles as bars on one Jan 2021 to Dec 2026 axis; overlaps overlap.
-- Motion that inks the sheet in and never gates content.
+- Two products lead; identity is one sentence and a header.
+- Each product card wears the product's own colour; the page itself is neutral.
+- Real screens in a real bezel; no mockups, no illustrations.
+- One family, Bricolage Grotesque, with optical size and width axes; tabular figures.
+- Rounded, tactile shapes (cards 1.25rem, phones 2.4rem, buttons 0.5rem) on a flat stage.
+- Depth is bezel and card, never shadow, gradient or blur.
+- Deep detail sits behind disclosures or on existing pages.
 
 ## Colors
 
-A white sheet, ink, graphite, and one marker.
+A dark stage, warm off-white ink, and two product colours that are not ours.
 
 ### Primary
-- **Paper** (`paper`): the sheet, every surface except the contact band, the ink bands and the ink bars. Also the text colour on ink.
-- **Ink** (`ink`): all primary text, every structural rule, the ink bands, the chain bars, the contact band, buttons on hover, and the focus ring on paper.
+- **Stage** (`stage`): the page ground, header, sections.
+- **Ink** (`ink`): all primary text, primary button fill, the selected switch segment, focus rings.
 
 ### Secondary
-- **Marker** (`marker`): the Download CV button (header, title block, mobile bar, contact band) and the 5px cap on the running role's bar. Its text is Ink.
+- **Presencia field / ink** (`presencia-field`, `presencia-ink`): the Presencia Studio card, read from the live site's hero field.
+- **Listo field / ink / accent** (`listo-field`, `listo-ink`, `listo-accent`): the Listo card, read from the live site's primary green and amber.
 
 ### Neutral
-- **Graphite** (`graphite`): secondary text (nav at rest, metadata labels, stack lines, sources, dimension labels, the always-painted base of chain bars, the footer).
-- **Rule** (`rule`): hairline dividers inside listings and the title block table.
-- **Panel** (`panel`): the chain track behind bars.
-- **On-ink Muted** (`on-ink-muted`): secondary text on the ink contact band and the notes in ink bands.
+- **Panel** (`panel`): the switch housing, the mobile menu, the contact band.
+- **Line** (`line`): 1px dividers and outlined borders on the stage.
+- **Muted** (`muted`): secondary text, nav at rest, screen labels, unselected switch text.
+- **Bezel** (`bezel`): phone and laptop frames.
 
 ### Named Rules
-**The One Marker Rule.** Marker means "the live action" and "now". It appears on Download CV and on the open end of the one running role, and nowhere else. A second marker element is a second signal.
+**The Borrowed Colour Rule.** A product's colour appears only on that product's card and in its OG tile. The page never adopts a product colour for its own elements.
 
-**The Ink-on-Paper Rule.** Text is ink or graphite on paper, or paper or on-ink-muted on ink. No text is ever set in marker.
-
-**The Not-Cream Rule.** Paper is a cool off-white (#f2f3f0). It must not drift warm.
+**The Neutral Stage Rule.** Page text is ink or muted on stage or panel; on a card it is the product's ink on the product's field. Nothing else.
 
 ## Typography
 
-**Family:** Archivo (variable: `wdth` 62 to 125, `wght` 100 to 900), loaded once via next/font as `--font-sheet`. No second family, no monospace.
+**Family:** Bricolage Grotesque (variable: `opsz` 12 to 96, `wdth` 75 to 100, `wght` 200 to 800), loaded once via next/font as `--font-home`. No second family, no monospace.
 
-**Character:** A drawing title stamp over an engineer's notes. Display is Archivo pushed to its widest width at 800, set tight. Reading is the same family at normal width, 400 and 600, with tabular figures so dates and codes align.
+**Character:** A characterful grotesque that stays plain at reading sizes and gets tight and heavy at display sizes through its optical size axis.
 
 ### Hierarchy
-- **Display** (800, width 125, clamp 2.25rem to 8.25rem, 0.9): the hero statement only.
-- **Section** (800, width 125, clamp 2.25rem to 5rem, 0.9): section titles and the contact closer (which may run to 6.5rem).
-- **Title** (800, width 112, clamp 1.625rem to 2.75rem; the lead detail clamp 1.875rem to 3.5rem, 1.0): detail titles and rule titles. On hover or focus-within, width eases to 120.
-- **Title block name** (800, width 125, uppercase, clamp 2rem to 2.75rem).
-- **Lede** (400, 1.125rem to 1.375rem, 1.6): the hero lede and detail context lines, capped at about 32em.
-- **Body** (400, 1.0625rem, 1.75rem): callouts, rule bodies, chain bullets, skills. Caps at about 36em.
-- **Label** (600, 0.95rem): buttons, metadata rows, the sheet index, stack lines, sources. Nav links use the same size at 400.
-- **Brand** (700, width 118, uppercase, 1.05rem): the name in the header only.
-- **Small** (400, 0.8rem): dimension labels and axis years, always in graphite.
+- **Display** (800, opsz 96, clamp 2.25rem to 3.75rem, 0.95): product names on the cards. The contact closer runs to 6rem.
+- **Heading** (700, opsz 48, clamp 1.75rem to 2.75rem, 1.05): section and chapter titles.
+- **Intro** (700, clamp 1.375rem to 2rem): the one-sentence H1.
+- **Lede** (400, 1.125rem, 1.75rem): the one line on each card.
+- **Body** (400, 1.0625rem, 1.75rem): chapter paragraphs, list bodies, decisions.
+- **Strong** (700, 1.125rem): employer names and item names in lists.
+- **Label** (600, 0.95rem): buttons, dates, nav, the stage caption.
+- **Screen label** (600, 0.85rem): the current screen's name on a card.
 
 ### Named Rules
-**The Two Widths Rule.** Width 125 speaks at display and section scale; width 112 for titles; width 100 for everything that is read. No other widths except the hover ease to 120.
+**One Sentence Rule.** Each unit of copy is one sentence: the intro, a card line, a chapter paragraph, a decision. If it needs a second sentence it belongs behind a disclosure or on another page.
 
-**The Credential Is Body Rule.** Certification codes are bold body text beside their names, never display-scale numbers.
-
-**No Eyebrow Rule.** No small uppercase label sits above a heading. The heading carries its own weight.
+**The Credential Is Not Here Rule.** Certifications, education and skills inventories do not appear on `/`.
 
 ## Layout
 
-One centred container, `min(100% - 2rem, 92rem)` on phones and `min(100% - 5rem, 92rem)` from 768px. Sections are separated by 1px ink rules and padded 4rem (6rem from 768px). Compositions are left-aligned and asymmetric: the hero is a drawing area beside a 26rem title block at 1024px and above and fills the viewport under the 4rem header; details are 1.1fr copy beside 0.9fr figure; rules and skills are two columns (title left, body right); the chain is a 22rem text column beside the axis.
+One centred container, `min(100% - 2rem, 88rem)` on phones and `min(100% - 4rem, 88rem)` from 768px. Sections are separated by 1px lines and padded 3.5rem (5rem from 768px).
 
-Listings are ruled rows, never cards: 2px ink rule to open, hairline rules between rows. Figures (section cuts, the portrait, the Presencia screenshot) sit in the right column of their detail. On phones every grid collapses to one column, the title block becomes a bordered block under the lede, the chain bar moves above its text, and the two main actions live in a fixed bottom bar. Anchor targets carry a 5rem scroll margin for the sticky header.
+The showroom: intro sentence, then on phones a two-segment switch and one product card (the other is hidden by CSS `:has`, no JavaScript); from 1024px both cards sit side by side and the switch disappears. On phones a card is a field (name, line, then the phone right-aligned and clipped by the field's bottom edge so it reads as rising out of it) with the dots, the current screen's name and the open-product button in a row under the field on the stage. From 640px the whole card is the field: copy across the top, the dots, screen name and open button in a column bottom-left, the phone bottom-right.
+
+Chapters alternate copy and laptop capture left to right. Also built and Experience are two-column (title left, ruled rows right). Contact is a closer with the email and the five actions. On phones every grid collapses to one column and the switch chooses which product card shows.
 
 ## Elevation & Depth
 
-Flat. There are no shadows, gradients, blur or glass. A surface is lifted by being a different material: paper, ink, or panel. The only line-weights are 1px (rules), 1.5px (borders of buttons, the title block, paper bands), 2px (section openers) and 3px (the OG card frame).
+Physical only: a card on the stage, a bezel around a screen. No shadows, gradients, blur or glass.
 
 ## Shapes
 
-Square. Every button, band, block, figure frame and bar has 0 radius. Rules are the recurring form: hairlines inside listings, 1px ink structural rules, 1.5px ink borders, 2px ink openers, and the dimension line with 15px end ticks and a centred graphite label on a paper patch.
+Rounded, tactile: cards 1.25rem, the phone 2.4rem at its top corners (bottom edge clipped by the card), laptop 0.9rem, switch 0.75rem, buttons 0.5rem. Dots are 0.5rem circles that scale to 1.5x when current.
 
 ## Components
 
 ### Buttons
-Ink-outlined blocks with the label left and a 16px stroke icon right; they fill on hover and press on click.
-- **Shape:** square, minimum height 3rem, 1rem inline padding, 1.5px ink border.
-- **Default:** paper with ink text; hover fills ink with paper text. Used for View CV, Email, LinkedIn, GitHub.
-- **Primary (Download CV):** marker with ink text, marker border; hover fills ink with paper text. Only for the CV download.
-- **On ink (contact band):** ink with paper border and text; hover fills paper with ink text. Primary keeps marker.
-- **Hover / Focus / Active:** 160ms colour transitions; `:active` translates down 1px. Focus is a 3px ink outline at 3px offset; on ink it switches to paper.
+Outlined ink pills with 0.5rem corners, 3rem tall, a 16px stroke icon before or after the label. Default fills ink on hover; primary (Download CV) is ink-filled and empties on hover. On a product card, buttons take the product's ink and fill with it on hover. `:active` scales to 0.985. Focus is a 3px ink outline at 3px offset (product ink on a card).
 
-### Title Block
-A bordered block (1.5px ink) on phones, the hero's right column with a 1px ink left rule on desktop. Three parts separated by 1px ink rules: identity (name in display uppercase, role, a hairline-ruled table of Based in, Certified, Education, Revision), the sheet index (desktop only: four in-page links with real counts), and the actions (Download CV full width, then View CV and Email, then LinkedIn and GitHub in pairs).
+### Product switch
+Two radios styled as a segmented control inside a panel housing; the checked segment fills ink. Pure CSS, keyboard operable; hidden from 1024px where both cards are visible.
 
-### Mobile Action Bar
-Fixed to the bottom under 1024px, paper with a 1.5px ink top rule, two buttons (Download CV, Email), padded for the safe area. Present in server HTML; with JavaScript it slides away while the title block is on screen.
+### Product card
+A field in the product's tint with the product's ink; min height 34rem; name in Display, one line in Lede; the phone bottom-right rising from the edge; open-product button bottom-left; dots and the screen label on the left.
 
-### Section Cut
-A figure of 2px-gapped bands, each 3.75rem tall with a label left and a graphite or on-ink-muted note right. Ink bands are solid ink with paper text; paper bands are paper with a 1.5px ink border. A dimension line below carries the one measure the system was designed to (1 week, 4 s). Bands slide 4px right, staggered 30ms, when the detail is hovered.
+### Phone (signature)
+A bezel (10px, bezel colour, 2.4rem top corners, no bottom edge) around a horizontal scroll-snap track of the product's real public screens (600x1298 captures). Native swipe works without JavaScript; with it, a tap steps to the next screen, dots are live buttons with 2.75rem hit areas, arrow keys step, and the current screen's label updates politely. Smooth scrolling only under `prefers-reduced-motion: no-preference`.
 
-### Career Chain
-A six-column year axis (2021 to 2026) with 1px ink ticks and graphite years, then one ruled row per role: title, employer and place, dates; the track (panel) with the bar (graphite base, ink overlay) positioned by month; CV bullets under the bar for CV roles. The running role's bar ends in a 5px marker cap. The ink overlay sweeps across each bar over its entry into the viewport (CSS scroll timeline only).
+### Laptop
+An 8px bezel around the product's real desktop capture (1440x900).
+
+### Disclosure
+`<details>` with a bold summary and a "+" that rotates to "x" when open. Holds the decisions list.
 
 ### Navigation
-- **Desktop (1024px and up):** sticky 4rem header on paper with a 1px ink rule below; brand mark and the name in Brand type at left; links in Label at 400 graphite turning ink on hover, 1.75rem apart; Download CV at right.
-- **Mobile:** a native `<details>` menu that works without JavaScript; a 2.75rem ink-outlined square opens a 16rem bordered panel of 2.75rem-tall links that fill ink on hover.
-- **Links in text:** 1.5px underline at 0.2em offset, 40% current colour at rest, full on hover.
+Sticky 4rem header on the stage with a 1px line; brand mark in an ink square and the name; links in Label muted turning ink on hover; Download CV (phones: "CV") at right; a native `<details>` menu under 1024px.
 
 ### Social card
-The OG image is the title block drawn at 1200x630: paper, a 3px ink frame, the hero statement left, name, role, place and certifications right, a marker strip with yenus.dev and CV.
+The OG image: name and role, the one line, and the two product fields side by side with their domains.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** scope every sheet style under `.sheet` with `--sh-*` tokens; leave the station and consulting worlds untouched.
-- **Do** reserve marker for Download CV and the running role's bar end.
-- **Do** set display in Archivo width 125 at 800 and reading in width 100 at 400 and 600 with tabular figures.
-- **Do** keep every corner square and separate layers by material (paper, ink, panel), never by shadow.
-- **Do** render final content in the server HTML; motion may ink it in, never gate it.
-- **Do** draw systems as bands and dimension lines, never as illustrations.
-- **Do** keep every bar's length an actual number of months.
+- **Do** lead with the products; identity is one sentence.
+- **Do** use only real public screens and desktop captures of the products, labelled by what they show.
+- **Do** read product colours from the live products and keep them on their cards.
+- **Do** keep every copy unit to one sentence and put depth behind disclosures or on `/career` and `/cv`.
+- **Do** keep swiping native and tapping a progressive enhancement.
 
 ### Don't:
-- **Don't** use drop shadows, gradients, blur, glass, or a blueprint grid background.
+- **Don't** put education, certifications or a skills inventory on `/`.
+- **Don't** invent traction, user counts, revenue or outcomes for either product.
+- **Don't** use gradients, blur, glass or shadows; depth is bezel and card.
 - **Don't** add a second typeface or a monospace face.
-- **Don't** set text in marker, or long prose in graphite on ink.
-- **Don't** put a small uppercase label above any heading.
-- **Don't** add a count, outcome, client, or superlative that is not in the CV or the `/career` record.
-- **Don't** use cards or rounded containers for listings; use ruled rows.
+- **Don't** show account, admin or customer pages of the products; public pages only.

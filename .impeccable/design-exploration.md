@@ -1,49 +1,39 @@
-# Portfolio `/`: design exploration, round 2 (Claude Design skill, CLI mode; Fable 5.1, 2026-10-16)
+# Portfolio `/`: design exploration, round 3 (Claude Design skill, CLI mode; Fable 5.1, 2026-10-16)
 
-Round 1 (2026-10-15) chose the split-flap departures board, shipped in PR #2 and live. The founder liked it and
-asked for a push beyond it in UI, UX and wording. This round treats the board as evidence and anti-reference.
+Round 1 (2026-10-15) shipped the split-flap departures board (live). Round 2 (earlier today) built a drawing-sheet
+composition; the founder rejected it: education highlighted at the top, too much text, no wow. The founder then
+set the direction: feature Presencia Studio and Listo as real products created from scratch.
 
 ## Surface commitment
-Still a **Decide/Learn** surface (a recruiter is convinced in one pass; Persuade) with **Explore** secondary
-(selected work). A hero is earned; the work browses; nothing is a feature grid.
+**Decide/Learn** (a recruiter decides and acts) with the **work leading**: impeccable Experience mode. The artifact
+leads from the first viewport and the interface recedes. A hero exists, but it is the products, not a statement.
 
 ## Context read before designing
-- The live `/` (`.station`, Big Shoulders + Barlow, board black, timetable yellow, signal orange), `DESIGN.md` round 1,
-  the finish review and the surface brief in `.impeccable/`.
-- `src/lib/portfolio-data.ts` (CV facts, confirmed dates) and `src/lib/resume-data.ts` (the eight roles published at
-  `/career`, which the founder designated as the source of experience facts). Public repo
-  `Yen-US/amplification-of-potential` for AOP Beacon.
-- Taste-skill design read: a senior engineer's portfolio for recruiters; expressive typographic language; dials
-  VARIANCE 8 / MOTION 7 / DENSITY 4 (redesign-overhaul).
+- The founder's verbatim brief (products first, show don't tell, halve the prose, no education, one signature
+  interaction, phone first).
+- Both live products, captured 2026-10-16 on public pages only: www.presencia.studio (home, /tarjeta-digital,
+  /restaurantes, /loyalty) and usalisto.com (home, /cotizar, /servicios/electricidad, /propiedades). Their READMEs,
+  routes and brand guides were read, read-only, to verify what each product does and what was built.
+- The previous previews' visible word counts: 790 (board), 1014 (sheet).
 
-## Three compositions (composition, type, story, interaction; not palette swaps)
-1. **Section drawing** (strong-fit, chosen). The page as a large-format drawing sheet: a title block carries identity
-   and every action (desktop right column, phone bottom bar); work is three details with typographic section cuts
-   and decision callouts; experience is a dimensioned chain of eight roles on one 2021 to 2026 axis. Archivo in two
-   widths. Drafting white, ink, graphite, one marker.
-2. **Broadside** (divergent, kinetic). Dark plates; name and role as one enormous variable-width stack whose width
-   axis compresses on scroll; projects led by their decision as a headline. Anybody for display. Rejected: a known
-   genre, the scroll-linked axis is spectacle a recruiter does not need, and it would put JS on the critical path.
-   Its display energy (variable width as voice) is adopted into option 1.
-3. **Tap to open** (divergent, physical). His real objects (NFC card, beacon puck, painting) as pressable objects that
-   flip to their digital side. Rejected: it positions him as an NFC-product maker before an AI architect, and the lead
-   recruiter proof (the Azure migration) has no object. Its tactile press is kept for buttons and detail rows.
+## Direction (one, built fully): the Showroom
+A dark neutral stage. Two product cards side by side (phones: one at a time via a CSS-only segmented switch), each a
+field in the product's own colour with a real phone rising out of the card's bottom edge. The phone holds the
+product's real screens in a native scroll-snap track: swipe, or tap to step, dots and arrow keys as enhancement.
+Below: one paragraph per product on what was built, decisions behind a disclosure, a real desktop capture in a
+laptop bezel. Then two "also built" rows, three employed roles with links to `/career` and `/cv`, and the contact
+closer. Education, certifications and skills inventories are off the page.
 
-The comparison board with all three rendered: `~/artifacts/yenus-fable-redesign/concepts/Comparison Board.html`
-(PNG beside it).
-
-## Why option 1
-Fastest recruiter read (role and CV action never more than a glance away), the most original composition in the
-category (not dark-neon dev, not cream editorial, not a departures board), and every expressive element carries
-information: dates as lengths, decisions as callouts, the title block as the action surface, the sheet index with
-real counts. Copy moved from interchangeable slogans to specific, dated, sourced statements.
+Why this and not variants: the founder named the two anchors and asked for one strong direction; the earlier
+three-option round is on the comparison board. Internal alternatives considered and dropped: an AOP Beacon replica
+as the hero (an event-company side project would lead the hiring story), a product reel carousel (nested scrollers
+on phones), a dark broadside of type (text, not product).
 
 ## Copy decisions
-- Hero: "Production AI, drawn to scale." with a dated lede (Oct 2022, a month before ChatGPT; Microsoft for Startups
-  advisory 2024 to 2026). Draft for the founder.
-- Work: "The decisions inside three systems." Each detail's callouts are the decisions already published or in the CV.
-- Rules: "Four rules, each with the project it came from." Replaces the consulting-derived principles; each rule
-  names its source project.
-- Experience: "Tier 2 support in January 2021. Senior AI architect by May 2024." Both dates are on the record.
-- Not reused: the old consulting tagline, "60+ teams", "most senior worldwide", "YC-backed", "zero downtime",
-  tenure labels and promotion counts.
+- H1: "Senior AI Solution Architect. I build products from scratch and advise startups on production AI."
+- Card lines and chapter paragraphs are one sentence each, sourced from the live products and the CV.
+- Decisions are things visible in the product: menus edited by the merchant with a fixed QR, stamps validated by
+  staff, quotes per job, contact shared after payment, offers without WhatsApp.
+- Visible words on `/`: 316 desktop, 295 phone (sheet preview: 1014). Cut of 69%.
+- Phone first screen: identity line, product switch, product name and line, then the phone rising from the field.
+- Nothing invented: no traction, revenue, user counts or outcomes; roles keep their confirmed end dates.

@@ -5,10 +5,9 @@ import { person } from "@/lib/portfolio-data";
 import { MobileMenu } from "@/components/portfolio/mobile-menu";
 
 const navigation = [
-  { href: "/#work", label: "Work" },
-  { href: "/#approach", label: "Approach" },
+  { href: "/#work", label: "Products" },
+  { href: "/#also", label: "Also built" },
   { href: "/#experience", label: "Experience" },
-  { href: "/#skills", label: "Skills" },
   { href: "/cv", label: "CV" },
   { href: "/consulting", label: "Consulting" },
 ];

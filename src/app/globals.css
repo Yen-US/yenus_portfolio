@@ -565,360 +565,422 @@
 }
 
 /*
- * Sheet: the recruiter portfolio at `/`.
- * A drawing sheet: drafting white, ink rules, graphite for secondary text, and
- * one survey-orange marker reserved for the CV action and the live end of the
- * career chain. One type family (Archivo) in two widths: expanded for display,
- * normal for reading. Depth is ink on paper; no shadows, gradients, or blur.
- * Scoped under `.sheet`; the station world (`/cv`) and the consulting world
- * are untouched.
+ * Home: the showroom at `/`.
+ * A dark, neutral stage so the two products' own colours lead. Each product
+ * card is a field in its brand tint with a real phone rising out of it; the
+ * phone shows the product's real public screens, swiped natively or stepped
+ * by tap and keyboard. One type family (Bricolage Grotesque). No gradients,
+ * blur, or shadows beyond the phone bezel's own ink.
  */
 @layer components {
-  .sheet {
-    --sh-paper: #f2f3f0;
-    --sh-panel: #e7e9e4;
-    --sh-ink: #121315;
-    --sh-graphite: #55585e;
-    --sh-rule: #c6c9c4;
-    --sh-marker: #ff4a00;
-    --sh-on-ink-muted: #b9bcb6;
-    background: var(--sh-paper);
-    color: var(--sh-ink);
-    color-scheme: light;
-    font-family: var(--font-sheet), ui-sans-serif, system-ui, sans-serif;
+  .home {
+    --hm-bg: #0e0f10;
+    --hm-panel: #17181a;
+    --hm-line: #2a2b2e;
+    --hm-ink: #f3f1ec;
+    --hm-muted: #a4a49d;
+    background: var(--hm-bg);
+    color: var(--hm-ink);
+    color-scheme: dark;
+    font-family: var(--font-home), ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: "tnum";
-    font-variation-settings: "wdth" 100;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    accent-color: var(--sh-ink);
-    caret-color: var(--sh-marker);
-    scrollbar-color: var(--sh-ink) var(--sh-paper);
+    accent-color: var(--hm-ink);
+    scrollbar-color: var(--hm-muted) var(--hm-bg);
+  }
+  .home ::selection {
+    background: var(--hm-ink);
+    color: var(--hm-bg);
   }
 
-  .sheet ::selection {
-    background: var(--sh-marker);
-    color: var(--sh-ink);
-  }
-
-  /* Display voice: the same family, pushed to its widest. */
-  .sh-display {
+  .hm-display {
     font-weight: 800;
-    font-variation-settings: "wdth" 125;
+    font-variation-settings: "opsz" 96, "wdth" 100;
     letter-spacing: -0.035em;
-    line-height: 0.9;
+    line-height: 0.95;
     text-wrap: balance;
   }
-  .sh-title {
-    font-weight: 800;
-    font-variation-settings: "wdth" 112;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    text-wrap: balance;
-    transition: font-variation-settings 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  .sh-detail:hover .sh-title,
-  .sh-detail:focus-within .sh-title {
-    font-variation-settings: "wdth" 120;
-  }
-  .sh-label {
+  .hm-h {
     font-weight: 700;
-    font-variation-settings: "wdth" 118;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    line-height: 1;
+    font-variation-settings: "opsz" 48;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
   }
 
-  .sh-wrap {
-    width: min(100% - 2rem, 92rem);
+  .hm-wrap {
+    width: min(100% - 2rem, 88rem);
     margin-inline: auto;
   }
   @media (min-width: 768px) {
-    .sh-wrap {
-      width: min(100% - 5rem, 92rem);
+    .hm-wrap {
+      width: min(100% - 4rem, 88rem);
     }
   }
 
-  .sh-focus {
+  .hm-focus {
     outline: none;
   }
-  .sh-focus:focus-visible {
-    outline: 3px solid var(--sh-ink);
+  .hm-focus:focus-visible {
+    outline: 3px solid var(--hm-ink);
     outline-offset: 3px;
   }
-  .sh-on-ink .sh-focus:focus-visible {
-    outline-color: var(--sh-paper);
+  .hm-field .hm-focus:focus-visible,
+  .hm-card .hm-phone:focus-visible {
+    outline-color: var(--tint-ink);
   }
 
-  .sh-link {
+  .hm-link {
     text-decoration: underline;
     text-decoration-thickness: 1.5px;
     text-underline-offset: 0.2em;
-    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
     transition: text-decoration-color 160ms ease;
   }
-  .sh-link:hover {
+  .hm-link:hover {
     text-decoration-color: currentColor;
   }
 
-  /* ---- Buttons: ink-outlined blocks that fill on hover and press on click ---- */
-  .sh-btn {
+  /* ---- Buttons ---- */
+  .hm-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 0.6rem;
     min-height: 3rem;
-    padding-inline: 1rem;
-    border: 1.5px solid var(--sh-ink);
-    background: var(--sh-paper);
-    color: var(--sh-ink);
+    padding-inline: 1.1rem;
+    border-radius: 0.5rem;
+    border: 1.5px solid var(--hm-ink);
+    background: transparent;
+    color: var(--hm-ink);
     font-weight: 600;
     font-size: 0.95rem;
     line-height: 1.2;
     white-space: nowrap;
-    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 120ms ease;
+    transition: background-color 160ms ease, color 160ms ease, transform 120ms ease;
   }
-  .sh-btn:hover {
-    background: var(--sh-ink);
-    color: var(--sh-paper);
+  .hm-btn:hover {
+    background: var(--hm-ink);
+    color: var(--hm-bg);
   }
-  .sh-btn:active {
-    transform: translateY(1px);
+  .hm-btn:active {
+    transform: scale(0.985);
   }
-  .sh-btn-primary {
-    background: var(--sh-marker);
-    border-color: var(--sh-marker);
+  .hm-btn-primary {
+    background: var(--hm-ink);
+    color: var(--hm-bg);
   }
-  .sh-btn-primary:hover {
-    background: var(--sh-ink);
-    border-color: var(--sh-ink);
+  .hm-btn-primary:hover {
+    background: transparent;
+    color: var(--hm-ink);
   }
-  .sh-on-ink .sh-btn {
-    border-color: var(--sh-paper);
-    background: var(--sh-ink);
-    color: var(--sh-paper);
-  }
-  .sh-on-ink .sh-btn:hover {
-    background: var(--sh-paper);
-    color: var(--sh-ink);
-  }
-  .sh-on-ink .sh-btn-primary {
-    background: var(--sh-marker);
-    border-color: var(--sh-marker);
-    color: var(--sh-ink);
-  }
-
-  /* ---- Rules ---- */
-  .sh-rule {
-    height: 1px;
-    background: var(--sh-ink);
-  }
-  .sh-hairline {
-    height: 1px;
-    background: var(--sh-rule);
-  }
-  /* A dimension line: a rule with end ticks and a centred label. */
-  .sh-dim {
-    position: relative;
-    height: 1px;
-    background: var(--sh-ink);
-  }
-  .sh-dim::before,
-  .sh-dim::after {
-    content: "";
-    position: absolute;
-    top: -7px;
-    width: 1px;
-    height: 15px;
-    background: var(--sh-ink);
-  }
-  .sh-dim::before {
-    left: 0;
-  }
-  .sh-dim::after {
-    right: 0;
-  }
-  .sh-dim > span {
-    position: absolute;
-    left: 50%;
-    top: 7px;
-    transform: translateX(-50%);
-    padding-inline: 0.5rem;
-    background: var(--sh-paper);
-    font-size: 0.8rem;
-    color: var(--sh-graphite);
-    white-space: nowrap;
-  }
-
-  /*
-   * Arrival: decorative rules ink in from the left over content that is already
-   * painted. Nothing waits on it; reduced motion shows the finished sheet.
-   */
-  @media (prefers-reduced-motion: no-preference) {
-    .sh-inkin {
-      transform-origin: left center;
-      animation: sh-inkin 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-      animation-delay: var(--inkin-delay, 0ms);
+  /* On a product field the button takes the product's ink. */
+  @media (min-width: 640px) {
+    .hm-card .hm-btn {
+      border-color: var(--tint-ink);
+      color: var(--tint-ink);
+      background: transparent;
     }
-  }
-  @keyframes sh-inkin {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
+    .hm-card .hm-btn:hover {
+      background: var(--tint-ink);
+      color: var(--tint-field);
     }
   }
 
-  /* ---- Section cut: a system drawn as stacked bands ---- */
-  .sh-cut {
-    display: grid;
-    gap: 2px;
-  }
-  .sh-band {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-height: 3.75rem;
-    padding: 0.75rem 1rem;
-    font-weight: 600;
-    font-size: 1rem;
-    line-height: 1.25;
-  }
-  .sh-band[data-tone="ink"] {
-    background: var(--sh-ink);
-    color: var(--sh-paper);
-  }
-  .sh-band[data-tone="ink"] > small {
-    color: var(--sh-on-ink-muted);
-  }
-  .sh-band[data-tone="paper"] {
-    background: var(--sh-paper);
-    color: var(--sh-ink);
-    border: 1.5px solid var(--sh-ink);
-  }
-  .sh-band[data-tone="paper"] > small {
-    color: var(--sh-graphite);
-  }
-  .sh-band > small {
-    font-size: 0.85rem;
-    font-weight: 400;
-    white-space: nowrap;
-  }
-  .sh-detail:hover .sh-band,
-  .sh-detail:focus-within .sh-band {
-    transform: translateX(4px);
-  }
-  .sh-band {
-    transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  .sh-band:nth-child(2) {
-    transition-delay: 30ms;
-  }
-  .sh-band:nth-child(3) {
-    transition-delay: 60ms;
-  }
-  .sh-band:nth-child(4) {
-    transition-delay: 90ms;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .sh-detail:hover .sh-band,
-    .sh-detail:focus-within .sh-band {
-      transform: none;
-    }
-    .sh-detail:hover .sh-title,
-    .sh-detail:focus-within .sh-title {
-      font-variation-settings: "wdth" 112;
-    }
-  }
-
-  /* ---- Career chain: roles as dimensioned bars on one axis ---- */
-  .chain-axis {
-    display: grid;
-    grid-template-columns: repeat(var(--years), minmax(0, 1fr));
-    border-bottom: 1px solid var(--sh-ink);
-  }
-  .chain-axis > span {
-    border-left: 1px solid var(--sh-ink);
-    padding: 0 0 0.35rem 0.4rem;
-    font-size: 0.8rem;
-    color: var(--sh-graphite);
-  }
-  .chain-track {
-    position: relative;
-    height: 0.75rem;
-    background: var(--sh-panel);
-  }
-  /*
-   * A bar is always painted (graphite), so the chain reads in print, in
-   * full-page captures, and in browsers without scroll timelines. The ink
-   * overlay is the motion: it sweeps across each bar as it scrolls into view.
-   */
-  .chain-bar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(var(--start) / var(--total) * 100%);
-    width: calc((var(--end) - var(--start)) / var(--total) * 100%);
-    background: var(--sh-graphite);
-  }
-  .chain-bar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--sh-ink);
-    transform-origin: left center;
-  }
-  .chain-bar[data-current]::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 5px;
-    background: var(--sh-marker);
-  }
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .chain-bar::before {
-        animation: chain-fill 1s linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 100%;
-      }
-    }
-  }
-  @keyframes chain-fill {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  /* ---- Mobile action bar: the title block's actions within thumb reach ---- */
-  .sh-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 30;
+  /* ---- Product switch (phones): radios styled as a segmented control, no JS needed ---- */
+  .hm-switch {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
-    background: var(--sh-paper);
-    border-top: 1.5px solid var(--sh-ink);
-    transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 240ms;
+    gap: 4px;
+    padding: 4px;
+    border: 1.5px solid var(--hm-line);
+    border-radius: 0.75rem;
+    background: var(--hm-panel);
   }
-  .sh-bar[data-hidden] {
-    transform: translateY(100%);
-    visibility: hidden;
+  .hm-switch input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .hm-switch label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--hm-muted);
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .hm-switch input:checked + label {
+    background: var(--hm-ink);
+    color: var(--hm-bg);
+  }
+  .hm-switch input:focus-visible + label {
+    outline: 3px solid var(--hm-ink);
+    outline-offset: 2px;
+  }
+  @media (max-width: 1023.98px) {
+    .hm-stage:has(#switch-presencia:checked) .hm-card[data-product="listo"],
+    .hm-stage:has(#switch-listo:checked) .hm-card[data-product="presencia"] {
+      display: none;
+    }
   }
   @media (min-width: 1024px) {
-    .sh-bar {
+    .hm-switch {
       display: none;
     }
   }
 
+  /* ---- Product card ----
+   * Phones: the field (name, line, the phone rising out of its bottom edge) comes first,
+   * then the controls and the open-product action sit under it on the stage.
+   * From 640px: the whole card is the field; controls sit in a column beside the phone. */
+  .hm-card {
+    position: relative;
+    display: grid;
+    gap: 0.75rem;
+    min-height: 0;
+  }
+  .hm-field {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0.5rem;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    background: var(--tint-field);
+    color: var(--tint-ink);
+    min-height: 26rem;
+  }
+  .hm-card-copy {
+    position: relative;
+    z-index: 2;
+    padding: 1.25rem 1.25rem 0;
+  }
+  .hm-card-side {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    padding: 0 0.25rem;
+    min-width: 0;
+    color: var(--hm-ink);
+  }
+  .hm-card-side .hm-dots {
+    order: 1;
+  }
+  .hm-card-side .hm-screen-label {
+    order: 2;
+    flex: 1 1 8rem;
+  }
+  .hm-card-actions {
+    order: 3;
+    flex: 1 0 100%;
+    margin-top: 0.25rem;
+  }
+  .hm-card-actions .hm-btn {
+    white-space: normal;
+    text-align: left;
+  }
+  @media (min-width: 640px) {
+    .hm-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "field field" "side phone";
+      gap: 0;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      background: var(--tint-field);
+      color: var(--tint-ink);
+      min-height: 32rem;
+    }
+    .hm-field {
+      display: contents;
+    }
+    .hm-card-copy {
+      grid-area: field;
+      padding: 1.75rem 1.75rem 0;
+    }
+    .hm-phone {
+      grid-area: phone;
+    }
+    .hm-card-side {
+      grid-area: side;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 0 0 1.75rem 1.75rem;
+      color: var(--tint-ink);
+    }
+    .hm-card-side .hm-screen-label {
+      flex: 0 0 auto;
+    }
+    .hm-card-actions {
+      flex: 0 0 auto;
+      margin-top: 0.5rem;
+    }
+  }
+
+  /* ---- Phone: a bezel around a scroll-snap track of real screens ---- */
+  .hm-phone {
+    position: relative;
+    justify-self: end;
+    align-self: end;
+    width: clamp(13rem, 74vw, 17rem);
+    aspect-ratio: 600 / 1298;
+    margin-right: 0.75rem;
+    margin-bottom: -34%;
+    border: 10px solid #0b0b0c;
+    border-bottom-width: 0;
+    border-radius: 2.4rem 2.4rem 0 0;
+    background: #0b0b0c;
+    overflow: hidden;
+    transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @media (min-width: 640px) {
+    .hm-phone {
+      margin-right: 1.75rem;
+      width: 17rem;
+    }
+  }
+  .hm-phone:active {
+    transform: translateY(2px);
+  }
+  .hm-track {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 1.8rem 1.8rem 0 0;
+  }
+  .hm-track::-webkit-scrollbar {
+    display: none;
+  }
+  .hm-track > li {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+    height: 100%;
+  }
+  .hm-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    background: #fff;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hm-track {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Dots: real buttons with 44px hit areas, in a row; the current one grows. */
+  .hm-dots {
+    display: flex;
+    margin-left: -0.75rem;
+  }
+  .hm-dots button {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .hm-dots button::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.35;
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+  .hm-dots button[aria-current="true"]::before {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  .hm-dots button:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: -6px;
+    border-radius: 50%;
+  }
+  .hm-screen-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Laptop frame for the desktop capture ---- */
+  .hm-laptop {
+    border: 8px solid #0b0b0c;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background: #0b0b0c;
+  }
+  .hm-laptop img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---- Disclosure ---- */
+  .hm-details > summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    font-weight: 600;
+  }
+  .hm-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .hm-details > summary::after {
+    content: "+";
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: transform 200ms ease;
+  }
+  .hm-details[open] > summary::after {
+    transform: rotate(45deg);
+  }
+
+  /* ---- Mobile nav (works without JS) ---- */
+  .hm-menu > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .hm-menu > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hm-card,
+    .hm-phone,
+    .hm-switch label,
+    .hm-dots button::before {
+      transition: none;
+    }
+  }
 }
