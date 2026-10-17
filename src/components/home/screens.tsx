@@ -14,12 +14,15 @@ export function Screens({
   name,
   screens,
   priority = false,
+  deferRest = false,
   copy,
   children,
 }: {
   name: string;
   screens: Screen[];
   priority?: boolean;
+  /** Mark every screen after the first as low fetch priority (pages with several phones). */
+  deferRest?: boolean;
   /** The card's name and line, rendered inside the field above the phone. */
   copy: React.ReactNode;
   /** The card's action, rendered with the dots and the screen name. */
@@ -86,7 +89,7 @@ export function Screens({
                   height={1298}
                   sizes="(min-width: 640px) 17rem, 66vw"
                   priority={priority && i === 0}
-                  fetchPriority={priority && i === 0 ? "high" : undefined}
+                  fetchPriority={priority && i === 0 ? "high" : deferRest && i > 0 ? "low" : undefined}
                   loading={priority && i === 0 ? undefined : "lazy"}
                   draggable={false}
                 />

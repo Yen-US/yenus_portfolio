@@ -984,3 +984,69 @@
     }
   }
 }
+
+/* ---- Client work (/work/customer-acquisition): same showroom world ---- */
+@layer components {
+  .cw-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.25rem;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .cw-flow > li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.75rem;
+    border: 1.5px solid var(--hm-line);
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .cw-flow > li[data-end] {
+    border-color: var(--hm-ink);
+    background: var(--hm-ink);
+    color: var(--hm-bg);
+  }
+  .cw-flow > li + li::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    margin: 0 0.6rem 0 0.1rem;
+    border-right: 1.5px solid var(--hm-muted);
+    border-bottom: 1.5px solid var(--hm-muted);
+    transform: translateX(-0.9rem) rotate(-45deg);
+  }
+  .cw-gallery {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  }
+  .cw-gallery figure {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: var(--hm-panel);
+  }
+  .cw-gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .cw-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+  }
+  .cw-logo img {
+    display: block;
+    height: 2.25rem;
+    width: auto;
+  }
+}

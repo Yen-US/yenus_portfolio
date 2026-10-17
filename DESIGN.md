@@ -270,3 +270,13 @@ The OG image: name and role, the one line, and the two product fields side by si
 - **Don't** use gradients, blur, glass or shadows; depth is bezel and card.
 - **Don't** add a second typeface or a monospace face.
 - **Don't** show account, admin or customer pages of the products; public pages only.
+
+## Addendum: client work page (`/work/customer-acquisition`, 2026-10-17)
+
+Inherits this system unchanged. Each client case is a product card in the client's own colour (read from the
+client's live page: Guanacaste Earthmoving dark earth `#2a1409` with cream ink `#f6efe1`; JR Rodríguez warm paper
+`#f4f0e6` with ink) carrying the client's logo, name, one line and the phone of real public screens. Beside it: one
+sentence on the role, then Context, What I built, How a customer arrives, Where it stands (dated), real public
+images, public links. Three additions, all prefixed `cw-`: the acquisition-flow chain (outlined chips, final step
+filled ink, a drawn chevron between steps), the public-image gallery (auto-fit grid, 0.75rem corners on the panel
+colour), and the logo row. No new colours, type, shadows or motion.
