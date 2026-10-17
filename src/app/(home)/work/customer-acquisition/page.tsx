@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { DownloadCvButton, EmailButton, HomeFooter, HomeHeader } from "@/components/home/home-chrome";
 import { Screens } from "@/components/home/screens";
-import { cases, closing, intro, type ClientCase } from "@/lib/client-work-data";
+import { cases, closing, intro, system, type ClientCase } from "@/lib/client-work-data";
 import { person } from "@/lib/home-data";
 
 export const metadata: Metadata = {
@@ -52,6 +52,18 @@ export default function CustomerAcquisitionPage() {
         {cases.map((c, i) => (
           <CaseSection key={c.id} c={c} priority={i === 0} />
         ))}
+
+        <section aria-labelledby="cw-system" className="border-t border-[var(--hm-line)] py-10 md:py-14">
+          <div className="hm-wrap grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-14">
+            <h2 id="cw-system" className="hm-h text-[clamp(1.5rem,3vw,2.25rem)]">
+              {system.title}
+            </h2>
+            <div className="grid max-w-[44em] gap-3 text-[1.0625rem] leading-7">
+              <p className="text-[var(--hm-ink)]">{system.body[0]}</p>
+              <p className="text-[var(--hm-muted)]">{system.body[1]}</p>
+            </div>
+          </div>
+        </section>
 
         <section aria-labelledby="cw-closing" className="border-t border-[var(--hm-line)] bg-[var(--hm-panel)] py-14 md:py-20">
           <div className="hm-wrap grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end lg:gap-14">

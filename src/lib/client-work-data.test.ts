@@ -47,6 +47,14 @@ describe("client work copy", () => {
     }
   });
 
+  it("describes presenciaCM within its verified boundaries", () => {
+    const note = work.system.body.join(" ");
+    expect(note).toMatch(/internal/);
+    expect(note).toMatch(/person approves|a person/);
+    expect(note).toMatch(/wabot/);
+    expect(note).not.toMatch(/autonomous|self-service|SaaS|sign up now|all channels|unified inbox|every channel|optimi[sz]es|closes sales|AI sales/i);
+  });
+
   it("dates every state claim", () => {
     for (const c of work.cases) expect(c.story.state).toMatch(/17 October 2026/);
   });

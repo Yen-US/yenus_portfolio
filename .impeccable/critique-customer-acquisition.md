@@ -53,3 +53,11 @@ account ids, dashboard hosts, phone numbers, UTM parameters, budgets or testimon
 | **Total** | | **17/20** | Good |
 
 Questions skipped: fewer than 3 open priority issues remain.
+
+## Addendum (presenciaCM note, same day)
+Founder: "We can briefly mention a bit about the underlying system enabling this, presenciaCM". Added a two-sentence
+"The system behind both" section between the cases and the closer, and named presenciaCM in the GE events line and
+the JR inquiry line. Claims checked read-only against the presenciaCM repository and the inquiry release record;
+boundaries stated (wabot separate, a person approves and closes, internal tool, not a product to sign up for). No
+screenshot of the system. Re-verified: 0 overflow, 0 errors, interactions unchanged; visible words 582 / 574.
+Slop re-score: 0/10 (a text section, no new composition).

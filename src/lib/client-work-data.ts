@@ -71,7 +71,7 @@ export const cases: ClientCase[] = [
         "A bilingual landing page in the company's voice: services, the fleet with manufacturer spec sheets, coverage, and real job-site photography.",
         "A two-tap chooser (what you need, where it is) that writes the first WhatsApp message for the visitor; no form, no account.",
         "Every section ends in a WhatsApp button that opens a chat with Guanacaste Earthmoving directly, with the context already written.",
-        "Page, scroll and chooser events reported to the Presencia dashboard, so demand by service and zone is read from behaviour, not guessed.",
+        "Page, scroll and chooser events reported to presenciaCM, so demand by service and zone is read from behaviour, not guessed.",
       ],
       flow: ["Facebook or Google ad", "Landing page", "Two taps", "WhatsApp with GE", "GE quotes the job"],
       state:
@@ -109,7 +109,7 @@ export const cases: ClientCase[] = [
       built: [
         "A bilingual commission landing built around his real paintings, each with its own inquiry link, in his register rather than a gallery template.",
         "Two ways in: a WhatsApp conversation that Presencia qualifies first, and a formal inquiry form.",
-        "The form lands in the Presencia inbox as an email thread; a person reads it, replies by email and hands the conversation to JR.",
+        "The form lands in presenciaCM as an email thread; a person reads it, replies by email and hands the conversation to JR.",
         "A public Facebook page with posts that link back to the site, and ads pointed at the page.",
       ],
       flow: ["Facebook post or ad", "Commission page", "WhatsApp or formal inquiry", "Presencia qualifies", "JR and the buyer talk"],
@@ -128,6 +128,23 @@ export const cases: ClientCase[] = [
     ],
   },
 ];
+
+/**
+ * The internal system behind both cases. Verified against the presenciaCM
+ * repository (brand card and refinement digest, agent-drafted content with
+ * human accept/edit/reject, Herald publishing to the Facebook page, ads on
+ * published posts, the landing-event ingest route) and the 2026-10-17 inquiry
+ * release (web inquiries as email threads). wabot is a separate service.
+ * Not a public product: internal sign-in only.
+ */
+export const system = {
+  name: "presenciaCM",
+  title: "The system behind both",
+  body: [
+    "Both cases run on presenciaCM, an internal operating system I built for Presencia Studio: it holds each brand's context and voice, drafts and schedules content that a person approves before it is published to the brand's Facebook page, creates the ads on those posts, and receives the landing-page events and web inquiries as email threads.",
+    "WhatsApp leads are qualified by a separate connected service, wabot; closing stays with a person. presenciaCM is an internal tool, not a product you can sign up for.",
+  ],
+};
 
 export const closing = {
   title: "Same hands, different jobs.",
