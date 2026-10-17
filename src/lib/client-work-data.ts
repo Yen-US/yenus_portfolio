@@ -66,14 +66,14 @@ export const cases: ClientCase[] = [
     logo: { src: "/work/customer-acquisition/ge/logo.webp", alt: "Guanacaste Earthmoving logo", width: 240, height: 240 },
     story: {
       context:
-        "Lot owners, contractors and developers in Guanacaste who need a machine or a job quoted, most of them on a phone, from a Facebook or Google ad.",
+        "Lot owners, contractors and developers in Guanacaste who need a machine or a job quoted, most of them on a phone, arriving from Facebook or from finding the page online.",
       built: [
         "A bilingual landing page in the company's voice: services, the fleet with manufacturer spec sheets, coverage, and real job-site photography.",
         "A two-tap chooser (what you need, where it is) that writes the first WhatsApp message for the visitor; no form, no account.",
-        "Every section ends in a WhatsApp button that opens a chat with Guanacaste Earthmoving directly, with the context already written.",
+        "Every section ends in a WhatsApp button that opens a chat with Guanacaste Earthmoving's own number directly, with the context already written; no bot in between.",
         "Page, scroll and chooser events reported to presenciaCM, so demand by service and zone is read from behaviour, not guessed.",
       ],
-      flow: ["Facebook or Google ad", "Landing page", "Two taps", "WhatsApp with GE", "GE quotes the job"],
+      flow: ["Facebook or the web", "Landing page", "Two taps", "WhatsApp with GE directly", "GE quotes the job"],
       state:
         "Live in Spanish and English as of 17 October 2026. Quotes happen in the company's own WhatsApp; no customer figures are published here.",
     },
@@ -108,11 +108,11 @@ export const cases: ClientCase[] = [
         "An artist with a recognisable style and a gallery in Tamarindo, whose serious buyers write first and expect a formal reply.",
       built: [
         "A bilingual commission landing built around his real paintings, each with its own inquiry link, in his register rather than a gallery template.",
-        "Two ways in: a WhatsApp conversation that Presencia qualifies first, and a formal inquiry form.",
-        "The form lands in presenciaCM as an email thread; a person reads it, replies by email and hands the conversation to JR.",
+        "Two ways in: a WhatsApp conversation, where wabot classifies the lead and Presencia qualifies it, and a formal inquiry form.",
+        "The form lands in presenciaCM as an email thread; Presencia reads it, replies by email and handles the sale, bringing JR into the creative discussion as agreed.",
         "A public Facebook page with posts that link back to the site, and ads pointed at the page.",
       ],
-      flow: ["Facebook post or ad", "Commission page", "WhatsApp or formal inquiry", "Presencia qualifies", "JR and the buyer talk"],
+      flow: ["Facebook post or ad", "Commission page", "WhatsApp or formal inquiry", "Presencia qualifies", "Presencia handles the sale"],
       state:
         "Page, posts, inquiry inbox and ads live as of 17 October 2026. The campaign is new; no sale is attributed to it yet, and none is claimed here.",
     },
@@ -134,15 +134,17 @@ export const cases: ClientCase[] = [
  * repository (brand card and refinement digest, agent-drafted content with
  * human accept/edit/reject, Herald publishing to the Facebook page, ads on
  * published posts, the landing-event ingest route) and the 2026-10-17 inquiry
- * release (web inquiries as email threads). wabot is a separate service.
+ * release (web inquiries as email threads). wabot is a separate service that
+ * classifies JR's WhatsApp leads; GE's WhatsApp is the company's own number.
+ * No Google campaign evidence is on hand, so no Google claim is made.
  * Not a public product: internal sign-in only.
  */
 export const system = {
   name: "presenciaCM",
   title: "The system behind both",
   body: [
-    "Both cases run on presenciaCM, an internal operating system I built for Presencia Studio: it holds each brand's context and voice, drafts and schedules content that a person approves before it is published to the brand's Facebook page, creates the ads on those posts, and receives the landing-page events and web inquiries as email threads.",
-    "WhatsApp leads are qualified by a separate connected service, wabot; closing stays with a person. presenciaCM is an internal tool, not a product you can sign up for.",
+    "Both cases run on presenciaCM, an internal operating system I built for Presencia Studio: it holds each brand's context and voice, drafts and schedules content that a person approves before it is published, manages the Facebook posts and ad campaigns, receives landing-page analytics events, and turns web inquiries into email threads.",
+    "For JR, WhatsApp leads are classified by wabot, a separate connected service; Guanacaste Earthmoving's WhatsApp goes straight to the company. Qualification and sales stay with a person at Presencia. presenciaCM is an internal tool, not a product you can sign up for.",
   ],
 };
 

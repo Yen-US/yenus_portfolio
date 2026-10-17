@@ -47,11 +47,24 @@ describe("client work copy", () => {
     }
   });
 
+  it("claims only the acquisition sources and handoffs the evidence supports", () => {
+    const ge = visibleStrings(work.cases.find((c) => c.id === "ge")!).join("\n");
+    const jr = visibleStrings(work.cases.find((c) => c.id === "jr")!).join("\n");
+    expect(ge).not.toMatch(/Google|wabot|qualif/i);
+    expect(ge).toMatch(/directly/);
+    expect(jr).toMatch(/wabot/);
+    expect(jr).toMatch(/Presencia handles the sale/);
+    expect(jr).not.toMatch(/JR and the buyer|hands the conversation to JR|direct access/i);
+  });
+
   it("describes presenciaCM within its verified boundaries", () => {
     const note = work.system.body.join(" ");
     expect(note).toMatch(/internal/);
     expect(note).toMatch(/person approves|a person/);
     expect(note).toMatch(/wabot/);
+    expect(note).toMatch(/analytics events/);
+    expect(note).toMatch(/web inquiries into email threads/);
+    expect(note).not.toMatch(/ads on those posts|events and web inquiries as email/);
     expect(note).not.toMatch(/autonomous|self-service|SaaS|sign up now|all channels|unified inbox|every channel|optimi[sz]es|closes sales|AI sales/i);
   });
 

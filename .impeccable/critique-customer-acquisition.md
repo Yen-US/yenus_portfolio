@@ -61,3 +61,10 @@ the JR inquiry line. Claims checked read-only against the presenciaCM repository
 boundaries stated (wabot separate, a person approves and closes, internal tool, not a product to sign up for). No
 screenshot of the system. Re-verified: 0 overflow, 0 errors, interactions unchanged; visible words 582 / 574.
 Slop re-score: 0/10 (a text section, no new composition).
+
+## Addendum 2: claims corrections after Jarvis's review of the public preview (same day)
+Four wording fixes, no design change: GE source no longer names Google (no campaign evidence on hand); the system
+note separates analytics events from inquiry email threads and says "manages the Facebook posts and ad campaigns";
+the JR flow ends in "Presencia handles the sale" with JR brought into the creative discussion as agreed; GE's direct
+WhatsApp is distinguished from JR's wabot-classified leads. Tests lock each wording. Re-verified on the rebuilt
+page: 0 overflow, 0 console errors, interactions unchanged.
