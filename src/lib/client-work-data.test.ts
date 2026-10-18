@@ -1,0 +1,74 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { describe, expect, it } from "vitest";
+import * as work from "./client-work-data";
+
+function visibleStrings(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(visibleStrings);
+  if (value && typeof value === "object") return Object.values(value).flatMap(visibleStrings);
+  return [];
+}
+
+const copy = visibleStrings(work);
+const joined = copy.join("\n");
+
+describe("client work copy", () => {
+  it("publishes no performance, money or social-proof claims", () => {
+    expect(joined).not.toMatch(/\b\d+ (leads?|inquiries|customers|clients|sales|followers|subscribers)\b/i);
+    expect(joined).not.toMatch(/revenue|ROAS|conversion rate|lift|%|\$\s?\d|USD|budget|testimonial|award|minimum/i);
+    expect(joined).not.toMatch(/sold|paying customer|closed deal/i);
+  });
+
+  it("keeps JR as the painter and Presencia as the builder", () => {
+    const jr = work.cases.find((c) => c.id === "jr")!;
+    expect(jr.role).toMatch(/The paintings are his/);
+    expect(visibleStrings(jr).join("\n")).not.toMatch(/we paint|our paintings|painted by Presencia/i);
+  });
+
+  it("exposes no private identifiers", () => {
+    expect(joined).not.toMatch(/act_\d|\b\d{15,}\b|sslip\.io|resend\.app|supabase|brand_id|[0-9a-f]{8}-[0-9a-f]{4}-/i);
+    expect(joined).not.toMatch(/\+?506\s?\d{4}\s?\d{4}/);
+  });
+
+  it("uses no em or en dashes", () => {
+    expect(copy.filter((s) => /[–—]/.test(s))).toEqual([]);
+  });
+
+  it("ships every image it references and links only public pages", () => {
+    for (const c of work.cases) {
+      for (const s of [...c.screens, ...c.gallery, c.logo]) {
+        expect(existsSync(path.join(process.cwd(), "public", s.src))).toBe(true);
+      }
+      for (const l of [...c.links, { href: c.url }, c.altUrl ?? { href: c.url }]) {
+        expect(l.href).toMatch(/^https:\/\/(www\.presencia\.studio\/|juniorrodriguezartgallery\.com|www\.instagram\.com\/)/);
+      }
+      expect(c.screens.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("claims only the acquisition sources and handoffs the evidence supports", () => {
+    const ge = visibleStrings(work.cases.find((c) => c.id === "ge")!).join("\n");
+    const jr = visibleStrings(work.cases.find((c) => c.id === "jr")!).join("\n");
+    expect(ge).not.toMatch(/Google|wabot|qualif/i);
+    expect(ge).toMatch(/directly/);
+    expect(jr).toMatch(/wabot/);
+    expect(jr).toMatch(/Presencia handles the sale/);
+    expect(jr).not.toMatch(/JR and the buyer|hands the conversation to JR|direct access/i);
+  });
+
+  it("describes presenciaCM within its verified boundaries", () => {
+    const note = work.system.body.join(" ");
+    expect(note).toMatch(/internal/);
+    expect(note).toMatch(/person approves|a person/);
+    expect(note).toMatch(/wabot/);
+    expect(note).toMatch(/analytics events/);
+    expect(note).toMatch(/web inquiries into email threads/);
+    expect(note).not.toMatch(/ads on those posts|events and web inquiries as email/);
+    expect(note).not.toMatch(/autonomous|self-service|SaaS|sign up now|all channels|unified inbox|every channel|optimi[sz]es|closes sales|AI sales/i);
+  });
+
+  it("dates every state claim", () => {
+    for (const c of work.cases) expect(c.story.state).toMatch(/17 October 2026/);
+  });
+});

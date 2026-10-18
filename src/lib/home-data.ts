@@ -118,6 +118,7 @@ export const contact = {
 export const navigation = [
   { href: "/#work", label: "Products" },
   { href: "/#also", label: "Also built" },
+  { href: "/work/customer-acquisition", label: "Client work" },
   { href: "/#experience", label: "Experience" },
   { href: "/cv", label: "CV" },
   { href: "/consulting", label: "Consulting" },

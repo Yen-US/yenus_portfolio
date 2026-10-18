@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ArrowRight, Compass, Layers3, ShieldCheck, Users } from "lucide-react";
 import {
   caseFields,
@@ -109,6 +110,13 @@ export default function WorkPage() {
                 ))}
               </div>
             </div>
+            <p className="mt-8 text-sm leading-6 text-muted-foreground">
+              Client systems built through Presencia Studio, with screens and public links:{" "}
+              <Link href="/work/customer-acquisition" className="underline underline-offset-4 hover:text-signal">
+                Customer-acquisition work
+              </Link>
+              .
+            </p>
           </div>
         </section>
       </main>
